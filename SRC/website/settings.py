@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-psd(*&r8aw5-ui(pzd#8gsfahf3^6lxysdy37ylnjm2d@49+jh'
+SECRET_KEY = 'django-insecure-!y*cdqk2#drd&j)0dc9%5$&(6306#+q26d&rcv-l7_mypph_pk'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'dwarfs4MOSAIC.apps.Dwarfs4MOSAICConfig',
 ]
 
 MIDDLEWARE = [
