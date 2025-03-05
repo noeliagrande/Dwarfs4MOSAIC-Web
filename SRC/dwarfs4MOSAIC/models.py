@@ -5,7 +5,7 @@ Table 'observatory'
 - name: observatory name
 '''
 class Tbl_observatory(models.Model):
-    name = models.CharField(max_length=200, default="")
+    name = models.CharField(max_length=200, verbose_name = "Name")
 
     def __str__(self):
         return self.name
@@ -20,8 +20,8 @@ Table 'telescope'
 - obs_tel: observatory where the telescope is located
 '''
 class Tbl_telescope(models.Model):
-    name = models.CharField(max_length=200, default="")
-    obs_tel = models.ForeignKey(Tbl_observatory, on_delete = models.CASCADE)
+    name = models.CharField(max_length=200, verbose_name = "Name")
+    obs_tel = models.ForeignKey(Tbl_observatory, on_delete = models.CASCADE, verbose_name = "Observatory")
 
     def __str__(self):
         return self.name
@@ -36,8 +36,8 @@ Table 'instrument'
 - tel_ins: telescope where the instrument stands
 '''
 class Tbl_instrument(models.Model):
-    name = models.CharField(max_length=200, default="")
-    tel_ins = models.ForeignKey(Tbl_telescope, on_delete = models.CASCADE)
+    name = models.CharField(max_length=200, verbose_name = "Name")
+    tel_ins = models.ForeignKey(Tbl_telescope, on_delete = models.CASCADE, verbose_name = "Telescope")
 
     def __str__(self):
         return self.name
