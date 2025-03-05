@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Argument: 'lst_instruments'  -->
+
+<head>
+    <meta charset="UTF-8">
+    <title>Instruments</title>
+</head>
+<body>
+    <h1>Instruments</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>NAME</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for instrument in lst_instruments %}
+            <tr>
+                <td><a href="{% url 'instrument' instrument_name=instrument.1 %}">{{ instrument.1 }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Back links-->
+    <br>
+    <h2>Back to ...</h2>
+    <a href="{% url 'home' %}">Home Page</a>
+</body>
+</html>

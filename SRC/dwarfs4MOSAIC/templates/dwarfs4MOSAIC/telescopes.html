@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Argument: 'lst_telescopes'  -->
+
+<head>
+    <meta charset="UTF-8">
+    <title>Telescopes</title>
+</head>
+<body>
+    <h1>Telescopes</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>NAME</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for telescope in lst_telescopes %}
+            <tr>
+                <td><a href="{% url 'telescope' telescope_name=telescope.1 %}">{{ telescope.1 }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Back links-->
+    <br>
+    <h2>Back to ...</h2>
+    <a href="{% url 'home' %}">Home Page</a>
+</body>
+</html>

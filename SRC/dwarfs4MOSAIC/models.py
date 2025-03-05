@@ -4,8 +4,8 @@ from django.db import models
 Table 'observatory'
 - name: observatory name
 '''
-class observatory(models.Model):
-    name = models.CharField(max_length=200)
+class Tbl_observatory(models.Model):
+    name = models.CharField(max_length=200, default="")
 
     def __str__(self):
         return self.name
@@ -19,9 +19,9 @@ Table 'telescope'
 - name: telescope name
 - obs_tel: observatory where the telescope is located
 '''
-class telescope(models.Model):
-    name = models.CharField(max_length=200)
-    obs_tel = models.ForeignKey(observatory, on_delete = models.CASCADE)
+class Tbl_telescope(models.Model):
+    name = models.CharField(max_length=200, default="")
+    obs_tel = models.ForeignKey(Tbl_observatory, on_delete = models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -35,9 +35,9 @@ Table 'instrument'
 - name: instrument name
 - tel_ins: telescope where the instrument stands
 '''
-class instrument(models.Model):
-    name = models.CharField(max_length=200)
-    tel_ins = models.ForeignKey(telescope, on_delete = models.CASCADE)
+class Tbl_instrument(models.Model):
+    name = models.CharField(max_length=200, default="")
+    tel_ins = models.ForeignKey(Tbl_telescope, on_delete = models.CASCADE)
 
     def __str__(self):
         return self.name

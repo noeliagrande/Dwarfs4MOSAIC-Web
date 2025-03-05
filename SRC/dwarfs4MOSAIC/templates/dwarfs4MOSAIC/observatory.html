@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Arguments: 'observatory', 'lst_telescopes'  -->
+
+<head>
+    <meta charset="UTF-8">
+    <title>Observatory: {{ observatory.name }}</title>
+</head>
+<body>
+    <h1>Observatory: {{ observatory.name }}</h1>
+
+    <h2>Telescopes located at the observatory</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>NAME</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for telescope in lst_telescopes %}
+            <tr>
+                <td><a href="{% url 'telescope' telescope_name=telescope.name %}">{{ telescope.name }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Back links-->
+    <br>
+    <h2>Back to ...</h2>
+    <a href="{% url 'observatories' %}">Observatories List</a>
+    <br>
+    <a href="{% url 'home' %}">Home Page</a>
+
+</body>
+</html>

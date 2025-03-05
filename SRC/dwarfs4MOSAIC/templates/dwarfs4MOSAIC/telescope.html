@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Arguments: 'telescope', 'lst_instruments'  -->
+
+<head>
+    <meta charset="UTF-8">
+    <title>Telescope: {{ telescope.name }}</title>
+</head>
+<body>
+    <h1>Telescope: {{ telescope.name }}</h1>
+
+    <h2>Instruments mounted on the telescope</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>NAME</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for instrument in lst_instruments %}
+            <tr>
+                <td><a href="{% url 'instrument' instrument_name=instrument.name %}">{{ instrument.name }}</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Back links-->
+    <br>
+    <h2>Back to ...</h2>
+    <a href="{% url 'instruments' %}">Instrument List</a>
+    <br>
+    <a href="{% url 'home' %}">Home Page</a>
+
+</body>
+</html>

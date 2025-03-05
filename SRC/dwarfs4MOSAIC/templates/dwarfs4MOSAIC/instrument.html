@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Instrument: {{ Tbl_instrument.name }}</title>
+</head>
+<body>
+
+    <h1>Instrument: {{ Tbl_instrument.name }}</h1>
+
+    Information related to instrument {{ Tbl_instrument.name }}.
+
+    <!-- Back links-->
+    <br>
+    <h2>Back to ...</h2>
+    <a href="{% url 'instruments' %}">Instrument List</a>
+    <br>
+    <a href="{% url 'home' %}">Home Page</a>
+
+</body>
+</html>
+
