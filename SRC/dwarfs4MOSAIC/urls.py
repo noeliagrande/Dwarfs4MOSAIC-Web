@@ -6,6 +6,9 @@ urlpatterns = [
     # Home page
     path('home/', views.home_view, name='home'),
 
+    # Database page
+    path('database/', views.database_view, name='database'),
+
     # 'Observatories table' page.
     path('observatories/', views.observatories_view, name='observatories'),
 

@@ -1,40 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
 
-{% load static %}
+<!-- Arguments: 'telescope', 'lst_instruments'  -->
 
-<!-- Arguments: 'telescope', 'lst_instruments', 'previous_page'  -->
-<head>
-    <meta charset="UTF-8">
-    <title>Telescope: {{ telescope.name }}</title>
-    <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">
-</head>
-<body>
-    <h1>Telescope: {{ telescope.name }}</h1>
+{% extends 'dwarfs4MOSAIC/base.html' %}
 
-    <h2>Instruments mounted on the telescope</h2>
+{% block title %} Telescope: {{ telescope.name }} {% endblock %}
 
-    <table>
-        <thead>
-            <tr>
-                <th>NAME</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for instrument in lst_instruments %}
-            <tr>
-                <td><a href="{% url 'instrument' instrument_name=instrument.name %}">{{ instrument.name }}</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% block breadcrumb %}
+    <a href="{% url 'database' %}">Database</a> &gt
+    <a href="{% url 'telescopes' %}">Telescopes</a> &gt
+    {{ telescope.name }}
+{% endblock %}
 
-    <!-- Back links-->
-    <br>
-    <h2>Back to ...</h2>
-    <a href="{{ previous_page }}">Previous page</a>
-    <br>
-    <a href="{% url 'home' %}">Home Page</a>
+{% block content %}
+    <body>
+        <h1>Telescope: {{ telescope.name }}</h1>
 
-</body>
-</html>
+        <table>
+            <thead>
+                <tr>
+                    <th>INSTRUMENT</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for instrument in lst_instruments %}
+                <tr>
+                    <td><a href="{% url 'instrument' instrument_name=instrument.name %}">{{ instrument.name }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+{% endblock %}

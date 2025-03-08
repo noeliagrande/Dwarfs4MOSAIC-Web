@@ -19,7 +19,7 @@ th, td {
 
 /* Table heading */
 th {
-    background-color: #0e0340;
+    background-color: var(--th-color);
     color: white;
 }
 
@@ -32,4 +32,9 @@ tr:nth-child(even) {
 /* Changes background colour when user hovers mouse over row*/
 tr:hover {
     background-color: #ddd;
+}
+
+/* Mouse-over colour change */
+table a:hover {
+    color: var(--th-color);
 }

@@ -1,0 +1,24 @@
+
+{% extends 'dwarfs4MOSAIC/base.html' %}
+
+{% block title %} database {% endblock %}
+
+{% block breadcrumb %} Database {% endblock %}
+
+{% block content %}
+    <body>
+        <h1>Database</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>TABLE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td><a href="{% url 'observatories' %}">Observatories</a></td></tr>
+                <tr><td><a href="{% url 'telescopes' %}">Telescopes</a></td></tr>
+                <tr><td><a href="{% url 'instruments' %}">Instruments</a></td></tr>
+            </tbody>
+        </table>
+    </body>
+{% endblock %}

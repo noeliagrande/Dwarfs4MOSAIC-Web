@@ -1,22 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'dwarfs4MOSAIC/base.html' %}
 
-{% load static %}
+{% block title %} Home {% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>home</title>
-    <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/home.css' %}">
-</head>
-<body>
-    <h1>Dwarfs4MOSAIC Home Page</h1>
+{% block breadcrumb %} Home {% endblock %}
 
-    <nav>
-        <ul>
-            <li><a href="{% url 'observatories' %}">Observatories</a></li>
-            <li><a href="{% url 'telescopes' %}">Telescopes</a></li>
-            <li><a href="{% url 'instruments' %}">Instruments</a></li>
-        </ul>
-    </nav>
-</body>
-</html>
+{% block content %}
+    Welcome to Dwarfs4MOSAIC Home Page!
+{% endblock %}

@@ -1,0 +1,54 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+    {% load static %}
+
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %} {% endblock %}</title>
+        <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/base.css' %}">
+        <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">
+    </head>
+
+    <body>
+        <!-- Header Section -->
+        <header class="header">
+
+            <!-- Logo Section -->
+            <div class="logo">
+                <img src="{% static 'dwarfs4MOSAIC/images/logo_mosaic_horiz.png' %}" alt="Logo">
+            </div>
+
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="{% url 'home' %}">HOME</a></li>
+                    <li><a href="{% url 'database' %}">DATABASE</a></li>
+                    <li><a href="{% url 'admin:index' %}">ADMIN</a></li>
+                </ul>
+            </nav>
+
+        </header>
+
+        <!-- Divider Line (custom) -->
+        <div class='custom-divider'></div>
+
+        <!-- Breadcrumb Section (you can add this later) -->
+        <div class="breadcrumb">
+            <p>
+                You are here:
+                {% block breadcrumb %} {% endblock %}
+            </p>
+        </div>
+
+        <!-- Divider Line (custom) -->
+        <div class='custom-divider'></div>
+
+        <!-- Main content area -->
+        <main>
+            {% block content %}
+            <!-- Each view's content will go here -->
+            {% endblock %}
+        </main>
+    </body>
+</html>

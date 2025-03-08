@@ -1,34 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-
-{% load static %}
 
 <!-- Argument: 'lst_observatories'  -->
-<head>
-    <meta charset="UTF-8">
-    <title>Observatories</title>
-    <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">
-</head>
-<body>
-    <h1>Observatories</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>NAME</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for observatory in lst_observatories %}
-            <tr>
-                <td><a href="{% url 'observatory' observatory_name=observatory.1 %}">{{ observatory.1 }}</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
-    <!-- Back links-->
-    <br>
-    <h2>Back to ...</h2>
-    <a href="{% url 'home' %}">Home Page</a>
-</body>
-</html>
+{% extends 'dwarfs4MOSAIC/base.html' %}
+
+{% block title %} observatories {% endblock %}
+
+{% block breadcrumb %}
+    <a href="{% url 'database' %}">Database</a> &gt
+    Observatories
+{% endblock %}
+
+{% block content %}
+    <body>
+        <h1>Observatories</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for observatory in lst_observatories %}
+                <tr>
+                    <td><a href="{% url 'observatory' observatory_name=observatory.1 %}">{{ observatory.1 }}</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+{% endblock %}

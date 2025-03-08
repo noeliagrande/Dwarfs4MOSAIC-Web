@@ -1,24 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<!-- Arguments: 'previous_page'  -->
-<head>
-    <meta charset="UTF-8">
-    <title>Instrument: {{ Tbl_instrument.name }}</title>
-</head>
-<body>
+<!-- Arguments: 'instrument'  -->
 
-    <h1>Instrument: {{ Tbl_instrument.name }}</h1>
+{% extends 'dwarfs4MOSAIC/base.html' %}
 
-    Information related to instrument {{ Tbl_instrument.name }}.
+{% block title %} Instrument: {{ instrument.name }} {% endblock %}
 
-    <!-- Back links-->
-    <br>
-    <h2>Back to ...</h2>
-    <a href="{{ previous_page }}">Previous page</a>
-    <br>
-    <a href="{% url 'home' %}">Home Page</a>
+{% block breadcrumb %}
+    <a href="{% url 'database' %}">Database</a> &gt
+    <a href="{% url 'instruments' %}">Instruments</a> &gt
+    {{ instrument.name }}
+{% endblock %}
 
-</body>
-</html>
+{% block content %}
+    <body>
+        <h1>Instrument: {{ instrument.name }}</h1>
+    </body>
+{% endblock %}
 

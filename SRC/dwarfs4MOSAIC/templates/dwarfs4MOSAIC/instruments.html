@@ -1,34 +1,33 @@
-<!DOCTYPE html>
-<html lang="en">
-
-{% load static %}
 
 <!-- Argument: 'lst_instruments'  -->
-<head>
-    <meta charset="UTF-8">
-    <title>Instruments</title>
-    <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">
-</head>
-<body>
-    <h1>Instruments</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>NAME</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for instrument in lst_instruments %}
-            <tr>
-                <td><a href="{% url 'instrument' instrument_name=instrument.1 %}">{{ instrument.1 }}</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
 
-    <!-- Back links-->
-    <br>
-    <h2>Back to ...</h2>
-    <a href="{% url 'home' %}">Home Page</a>
-</body>
-</html>
+{% extends 'dwarfs4MOSAIC/base.html' %}
+
+{% block title %} instruments {% endblock %}
+
+{% block breadcrumb %}
+    <a href="{% url 'database' %}">Database</a> &gt
+    Instruments
+{% endblock %}
+
+{% block content %}
+    <body>
+        <h1>Instruments</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>TELESCOPE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for instrument in lst_instruments %}
+                <tr>
+                    <td><a href="{% url 'instrument' instrument_name=instrument.instrument_name %}">{{ instrument.instrument_name }}</a></td>
+                    <td>{{ instrument.telescope_name }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+{% endblock %}
