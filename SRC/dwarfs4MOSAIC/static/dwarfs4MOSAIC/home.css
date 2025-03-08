@@ -1,0 +1,4 @@
+/* Background image */
+body {
+    background: white url("images/background.png") no-repeat;
+}

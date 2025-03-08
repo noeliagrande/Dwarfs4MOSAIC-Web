@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+
+<!-- Arguments: 'previous_page'  -->
 <head>
     <meta charset="UTF-8">
     <title>Instrument: {{ Tbl_instrument.name }}</title>
@@ -13,7 +15,7 @@
     <!-- Back links-->
     <br>
     <h2>Back to ...</h2>
-    <a href="{% url 'instruments' %}">Instrument List</a>
+    <a href="{{ previous_page }}">Previous page</a>
     <br>
     <a href="{% url 'home' %}">Home Page</a>
 

@@ -1,0 +1,35 @@
+/* Basic table style */
+table {
+    width: 100%; /* Percentage of available space */
+    max-width: 25%; /* Table shall not exceed % of view width */
+    #width: auto;  /* Table resizes columns according to content */
+    table-layout: auto; /* Allows for dynamic column widths */
+    margin: 20px 0; /* left alignment  */
+    border-collapse: collapse;
+    text-align: left;
+    font-family: Arial, sans-serif;
+}
+
+/* Cell styling */
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px 10px;
+    white-space: nowrap; /* Prevents text from splitting into multiple lines */
+}
+
+/* Table heading */
+th {
+    background-color: #0e0340;
+    color: white;
+}
+
+/* Alternate colours in rows
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}*/
+
+/* Hover effect */
+/* Changes background colour when user hovers mouse over row*/
+tr:hover {
+    background-color: #ddd;
+}

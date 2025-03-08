@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Arguments: 'telescope', 'lst_instruments'  -->
+{% load static %}
 
+<!-- Arguments: 'telescope', 'lst_instruments', 'previous_page'  -->
 <head>
     <meta charset="UTF-8">
     <title>Telescope: {{ telescope.name }}</title>
+    <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">
 </head>
 <body>
     <h1>Telescope: {{ telescope.name }}</h1>
@@ -30,7 +32,7 @@
     <!-- Back links-->
     <br>
     <h2>Back to ...</h2>
-    <a href="{% url 'instruments' %}">Instrument List</a>
+    <a href="{{ previous_page }}">Previous page</a>
     <br>
     <a href="{% url 'home' %}">Home Page</a>
 
