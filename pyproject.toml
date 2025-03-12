@@ -10,7 +10,7 @@ description = "A web project for MOSAIC at ELT."
 readme = "README.md"
 requires-python = ">=3.13.1"
 license = { file = "LICENSE.txt" }
-authors = [{ name = "Noela Grande", email = "nogrande@ucm.es" }]
+authors = [{ name = "Noelia Grande", email = "nogrande@ucm.es" }]
 dependencies = [
     "django>=5.1.5",
     "djangorestframework",
@@ -25,6 +25,10 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web"
 Repository = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web.git"
+
+[tool.setuptools]
+packages = { find = { where = ["src"] } }
+include-package-data = true
 
 [tool.black]
 line-length = 79
