@@ -1,2 +1,3 @@
+include src/manage.py
 recursive-include src/dwarfs4MOSAIC/templates *
 recursive-include src/dwarfs4MOSAIC/static *
