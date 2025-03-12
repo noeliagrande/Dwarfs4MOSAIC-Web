@@ -2,11 +2,12 @@
 
 A pilot study for MOSAIC at ELT.
 
-## 🚀 Instalation
+## 🚀 Installation
 
 ```bash
 git clone https://github.com/noeliagrande/Dwarfs4MOSAIC-Web
 cd Dwarfs4MOSAIC-Web
+```  
 
 ## 🛠 Used Technologies
 - Python
