@@ -15,17 +15,16 @@ dependencies = [
     "django>=5.1.5",
     "djangorestframework",
 ]
-
-[project.urls]
-Homepage = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web"
-Repository = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web.git"
-
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3.13",
     "Framework :: Django",
 ]
+
+[project.urls]
+Homepage = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web"
+Repository = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web.git"
 
 [tool.black]
 line-length = 79
