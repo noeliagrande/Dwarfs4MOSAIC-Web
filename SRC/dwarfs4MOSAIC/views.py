@@ -39,7 +39,7 @@ def telescopes_view(request):
     with connection.cursor() as cursor:
         #cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_telescope")
         cursor.execute("""
-            SELECT telescope.name AS telescope_name, observatory.name AS observatory_name 
+            SELECT telescope.*, observatory.name AS observatory_name 
             FROM dwarfs4MOSAIC_Tbl_telescope telescope
             JOIN dwarfs4MOSAIC_Tbl_observatory observatory
             ON telescope.obs_tel_id = observatory.id
@@ -63,7 +63,7 @@ def instruments_view(request):
     with connection.cursor() as cursor:
         #cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_instrument")
         cursor.execute("""
-            SELECT instrument.name AS instrument_name, telescope.name AS telescope_name 
+            SELECT instrument.*, telescope.name AS telescope_name 
             FROM dwarfs4MOSAIC_Tbl_instrument instrument
             JOIN dwarfs4MOSAIC_Tbl_telescope telescope
             ON instrument.tel_ins_id = telescope.id

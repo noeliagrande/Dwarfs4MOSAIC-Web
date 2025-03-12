@@ -91,7 +91,7 @@ class ObservatoryAdminForm(forms.ModelForm):
         latitude_min = cleaned_data.get('latitude_min')
         latitude_sec = cleaned_data.get('latitude_sec')
 
-        # It is allowed not to define coordinates (all fields empty).
+        # It is allowed not to define longitude (all its fields empty).
         if all(data in [None, ''] for data in [longitude_ew, longitude_deg, longitude_min, longitude_sec,
                                          latitude_ns, latitude_deg, latitude_min, latitude_sec]):
             cleaned_data['longitude'] = None
