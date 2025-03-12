@@ -1,4 +1,6 @@
 from django.contrib import admin
+from .forms import ObservatoryAdminForm
+from django.core.exceptions import ValidationError
 
 from .models import Tbl_observatory, Tbl_telescope, Tbl_instrument
 
@@ -6,9 +8,13 @@ admin.site.site_header = "Dwarfs4MOSAIC Database Administration"
 
 # 'observatory' table
 class ObservatoryAdmin(admin.ModelAdmin):
+    form = ObservatoryAdminForm
+
     fieldsets = [
         (None, {"fields": ["name"]}),
-        ("Observatory information", {"fields": []}),
+        ("Observatory information", {"fields": ["location"]}),
+        ("Longitude", {"fields": ["longitude_ew", "longitude_deg", "longitude_min", "longitude_sec"]}),
+        ("Latitude", {"fields": ["latitude_ns", "latitude_deg", "latitude_min", "latitude_sec"]})
     ]
 
 admin.site.register(Tbl_observatory, ObservatoryAdmin)

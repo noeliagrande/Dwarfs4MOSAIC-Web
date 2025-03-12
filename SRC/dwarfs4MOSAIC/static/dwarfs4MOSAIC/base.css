@@ -9,7 +9,7 @@
 :root {
     --left-padding: 50px;
     --link-color: #1b6e9a;
-    --th-color: #245e6e;
+    --header-color: #245e6e;
 }
 
 main {
@@ -25,6 +25,7 @@ a {
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
+    color: black;
 }
 
 /* Header style */

@@ -18,7 +18,7 @@ def database_view(request):
 def observatories_view(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_observatory")
-        lst_observatories = cursor.fetchall()
+        lst_observatories = dictfetchall(cursor)
 
     return render(request, 'dwarfs4MOSAIC/observatories.html', {'lst_observatories': lst_observatories})
 

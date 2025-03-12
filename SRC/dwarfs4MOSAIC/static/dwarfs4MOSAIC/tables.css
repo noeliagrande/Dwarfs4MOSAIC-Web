@@ -2,7 +2,7 @@
 table {
     width: 100%; /* Percentage of available space */
     max-width: 25%; /* Table shall not exceed % of view width */
-    #width: auto;  /* Table resizes columns according to content */
+    /* width: auto;   Table resizes columns according to content */
     table-layout: auto; /* Allows for dynamic column widths */
     margin: 20px 0; /* left alignment  */
     border-collapse: collapse;
@@ -19,9 +19,10 @@ th, td {
 
 /* Table heading */
 th {
-    background-color: var(--th-color);
+    background-color: var(--header-color);
     color: white;
 }
+
 
 /* Alternate colours in rows
 tr:nth-child(even) {
@@ -36,5 +37,5 @@ tr:hover {
 
 /* Mouse-over colour change */
 table a:hover {
-    color: var(--th-color);
+    color: var(--header-color);
 }

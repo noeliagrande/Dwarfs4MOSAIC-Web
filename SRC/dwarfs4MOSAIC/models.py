@@ -1,4 +1,10 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+'''
+__str__(self): shows how information is displayed when accessing an object from admin
+'''
+
 
 '''
 Table 'observatory'
@@ -6,6 +12,19 @@ Table 'observatory'
 '''
 class Tbl_observatory(models.Model):
     name = models.CharField(max_length=200, verbose_name = "Name")
+    location = models.CharField(max_length=200, verbose_name="Location", default="")
+
+    # Coordinates: when displayed, convert to DEG, MIN, SEC E/W
+    longitude = models.FloatField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(-180), MaxValueValidator(180)]
+    )
+    latitude = models.FloatField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(-90), MaxValueValidator(90)]
+    )
 
     def __str__(self):
         return self.name
