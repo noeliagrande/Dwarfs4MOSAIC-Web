@@ -27,7 +27,11 @@ Homepage = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web"
 Repository = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web.git"
 
 [tool.setuptools]
-packages = { find = { where = ["src"] } }
+package-dir = {"" = "src"}
+packages = [
+    "dwarfs4MOSAIC",
+    "website"
+    ]
 include-package-data = true
 
 [tool.black]
