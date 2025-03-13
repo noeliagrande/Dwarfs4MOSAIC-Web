@@ -1,8 +1,6 @@
 from django.contrib import admin
 from .forms import ObservatoryAdminForm
-from django.core.exceptions import ValidationError
-
-from .models import Tbl_observatory, Tbl_telescope, Tbl_instrument
+from . import models
 
 admin.site.site_header = "Dwarfs4MOSAIC Database Administration"
 
@@ -20,18 +18,18 @@ class ObservatoryAdmin(admin.ModelAdmin):
         (None, {"fields": ["altitude"]}),
     ]
 
-admin.site.register(Tbl_observatory, ObservatoryAdmin)
+admin.site.register(models.Tbl_observatory, ObservatoryAdmin)
 
 
 # 'telescope' table
 class TelescopeAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["name"]}),
-        ("Telescope information", {"fields": ["fullname", "owner", "obs_tel", "website", "status"]}),
+        ("Telescope information", {"fields": ["description", "owner", "obs_tel", "website", "status"]}),
         ("Characteristics", {"fields": ["aperture"]}),
     ]
 
-admin.site.register(Tbl_telescope, TelescopeAdmin)
+admin.site.register(models.Tbl_telescope, TelescopeAdmin)
 
 
 
@@ -39,7 +37,17 @@ admin.site.register(Tbl_telescope, TelescopeAdmin)
 class InstrumentAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["name"]}),
-        ("Instrument information", {"fields": ["fullname", "tel_ins", "website", "status"]}),
+        ("Instrument information", {"fields": ["description", "tel_ins", "website", "status"]}),
     ]
 
-admin.site.register(Tbl_instrument, InstrumentAdmin)
+admin.site.register(models.Tbl_instrument, InstrumentAdmin)
+
+
+# 'member' table
+class MemberAdmin(admin.ModelAdmin):
+    fieldsets = [
+        (None, {"fields": ["name"]}),
+        ("Member information", {"fields": ["role", "institution", "email"]}),
+    ]
+
+admin.site.register(models.Tbl_member, MemberAdmin)

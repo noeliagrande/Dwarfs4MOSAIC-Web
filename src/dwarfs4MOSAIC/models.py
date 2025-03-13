@@ -8,7 +8,6 @@ __str__(self): shows how information is displayed when accessing an object from 
 
 '''
 Table 'observatory'
-- name: observatory name
 '''
 class Tbl_observatory(models.Model):
 
@@ -41,7 +40,6 @@ class Tbl_observatory(models.Model):
         blank=True,
         verbose_name="Altitude (m)"
     )
-    # fields
 
     def __str__(self):
         return self.name
@@ -52,21 +50,19 @@ class Tbl_observatory(models.Model):
 
 '''
 Table 'telescope'
-- name: telescope name
-- obs_tel: observatory where the telescope is located
 '''
 class Tbl_telescope(models.Model):
     name = models.CharField(
         max_length=200,
         verbose_name = "Name"
     )
-    fullname = models.CharField(
+    description = models.CharField(
         max_length=200,
         null=True,
         blank=True,
-        verbose_name="Fullname"
+        verbose_name="Description"
     )
-    obs_tel = models.ForeignKey(
+    obs_tel = models.ForeignKey( #observatory where the telescope is located
         Tbl_observatory,
         on_delete = models.CASCADE,
         verbose_name = "Observatory"
@@ -105,21 +101,19 @@ class Tbl_telescope(models.Model):
 
 '''
 Table 'instrument'
-- name: instrument name
-- tel_ins: telescope where the instrument stands
 '''
 class Tbl_instrument(models.Model):
     name = models.CharField(
         max_length=200,
         verbose_name = "Name"
     )
-    fullname = models.CharField(
+    description = models.CharField(
         max_length=200,
         null=True,
         blank=True,
-        verbose_name="Fullname"
+        verbose_name="Description"
     )
-    tel_ins = models.ForeignKey(
+    tel_ins = models.ForeignKey( # telescope where the instrument stands
         Tbl_telescope,
         on_delete = models.CASCADE,
         verbose_name = "Telescope"
@@ -145,3 +139,39 @@ class Tbl_instrument(models.Model):
     class Meta:
         verbose_name = "Instrument"
         verbose_name_plural = "Instruments"
+
+
+'''
+Table 'member'
+'''
+class Tbl_member(models.Model):
+    name = models.CharField(
+        max_length=200,
+        verbose_name="Name"
+    )
+    role = models.CharField(
+        max_length=50,
+        choices=[
+            ('admin', 'Administrator'),
+            ('user', 'User'),
+            ('stuff', 'Stuff'),
+        ],
+        default='user',
+        verbose_name = "Role"
+    )
+    institution = models.CharField(
+        max_length=200,
+        default="",
+        verbose_name="Institution",
+    )
+    email = models.EmailField(
+        unique=True,
+        verbose_name="email",
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Member"
+        verbose_name_plural = "Members"

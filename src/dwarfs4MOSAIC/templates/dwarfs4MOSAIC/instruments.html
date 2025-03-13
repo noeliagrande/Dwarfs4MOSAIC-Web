@@ -17,7 +17,7 @@
             <thead>
                 <tr>
                     <th>NAME</th>
-                    <th>FULLNAME</th>
+                    <th>DESCRIPTION</th>
                     <th>TELESCOPE</th>
                     <th>STATUS</th>
                     <th>WEBSITE</th>
@@ -27,7 +27,11 @@
                 {% for instrument in lst_instruments %}
                 <tr>
                     <td><a href="{% url 'instrument' instrument_name=instrument.name %}">{{ instrument.name }}</a></td>
-                    <td>{{ instrument.fullname }}</td>
+                    {% if instrument.description %}
+                         <td> {{ instrument.description }} </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
                     <td>{{ instrument.telescope_name }}</td>
                     <td style="color: {% if instrument.status == 'inoperative' %}red{% else %}black{% endif %};">
                         {{ instrument.status }}

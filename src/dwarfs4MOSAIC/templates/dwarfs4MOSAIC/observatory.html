@@ -20,7 +20,7 @@
             <thead>
                 <tr>
                     <th>TELESCOPE</th>
-                    <th>FULLNAME</th>
+                    <th>DESCRIPTION</th>
                     <th>OWNER</th>
                     <th>STATUS</th>
                     <th>APERTURE (m)</th>
@@ -31,7 +31,11 @@
                 {% for telescope in lst_telescopes %}
                 <tr>
                     <td><a href="{% url 'telescope' telescope_name=telescope.name %}">{{ telescope.name }}</a></td>
-                    <td>{{ telescope.fullname }}</td>
+                    {% if telescope.description %}
+                         <td> {{ telescope.description }} </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
                     <td style="padding: 5px;">
                         <div style="white-space: normal; word-wrap: break-word; width: 100%; max-width: 1000px;
                                     resize: horizontal; overflow: auto;">
