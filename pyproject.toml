@@ -30,7 +30,7 @@ Repository = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web.git"
 package-dir = {"" = "src"}
 packages = [
     "dwarfs4MOSAIC",
-    "website"
+    "dwarfs4MOSAIC_website"
     ]
 include-package-data = true
 
