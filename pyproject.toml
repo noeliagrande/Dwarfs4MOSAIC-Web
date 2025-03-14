@@ -26,11 +26,20 @@ classifiers = [
 Homepage = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web"
 Repository = "https://github.com/noeliagrande/Dwarfs4MOSAIC-Web.git"
 
+[tool.setuptools]
+include-package-data = true
+
 [tool.setuptools.packages.find]
 where = ["src"]
 include = [
     "dwarfs4MOSAIC*", 
     "dwarfs4MOSAIC_website*"
+]
+
+[tool.setuptools.package-data]
+dwarfs4MOSAIC = [
+    "templates/**", 
+    "static/**"
 ]
 
 [tool.black]
