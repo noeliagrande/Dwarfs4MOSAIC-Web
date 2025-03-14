@@ -55,23 +55,23 @@ admin.site.register(models.Tbl_member, MemberAdmin)
 # 'observing_run' table
 class ObservingRunAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("General Information", {"fields": ["name", "description", "start_date", "end_date", ]}),
+        ("General Information", {"fields": ["name", "description", "start_date", "end_date", ]}), #targets
         ("Participants", {"fields": ["leader"]}), # "members"
         ("Additional Data", {"fields": ["notes"]}),
     ]
 
 admin.site.register(models.Tbl_observing_run, ObservingRunAdmin)
 
-'''
+
 # 'observing_block' table
 class ObservingBlockAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("General Information", {"fields": ["name", "description", "instrument", "start_date", "start_time", "end_time", ]}),
-        ("Participants", {"fields": ["leader"]}), # "members"
-        ("Observation Information", {"fields": ["target", "observation_mode", "filters", "exposure_time", "seeing", "weather_conditions"]}),  # "members"
+        ("General Information", {"fields": ["name", "description", "instrument", "start_time", "end_time", ]}),
+        ("Participants", {"fields": []}), # "members"
+        ("Observation Information", {"fields": ["observation_mode", "filters", "exposure_time", "seeing", "weather_conditions"]}),  # "members", "target"
         ("Additional Data", {"fields": ["notes"]}),
     ]
 
 admin.site.register(models.Tbl_observing_block, ObservingBlockAdmin)
-'''
+
 

@@ -16,6 +16,13 @@ main {
     padding: 20px var(--left-padding);
 }
 
+/* Container with horizontal scrolling */
+.table-container {
+    margin-top: 20px;
+    overflow-x: auto;  /* Activates horizontal scrolling */
+    max-width: 100%;  /* Ensures that the container does not exceed the width of the screen. */
+}
+
 a {
     color: var(--link-color);
     text-decoration: none;

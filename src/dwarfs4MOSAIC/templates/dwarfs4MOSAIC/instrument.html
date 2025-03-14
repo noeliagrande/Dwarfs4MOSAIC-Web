@@ -13,7 +13,12 @@
 
 {% block content %}
     <body>
-        <h1>Instrument: {{ instrument.name }}</h1>
+        <h1>
+            Instrument: {{ instrument.name }}
+            {% if instrument.description %}
+                <td> ({{ instrument.description }}) </td>
+            {% endif %}
+        </h1>
     </body>
 {% endblock %}
 

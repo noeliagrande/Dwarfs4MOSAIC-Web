@@ -1,0 +1,43 @@
+
+<!-- Argument: 'lst_members'  -->
+
+{% extends 'dwarfs4MOSAIC/base.html' %}
+
+{% block title %} members {% endblock %}
+
+{% block breadcrumb %}
+    <a href="{% url 'database' %}">Database</a> &gt
+    Members
+{% endblock %}
+
+{% block content %}
+    <body>
+        <h1>Members</h1>
+        <section class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>ROLE</th>
+                        <th>INSTITUTION</th>
+                        <th>EMAIL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for member in lst_members %}
+                    <tr>
+                        <td>{{ member.name }}</td>
+                        <td>{{ member.role }}</td>
+                        <td>{{ member.institution }}</td>
+                        {% if member.email %}
+                            <td style="text-align: center;"> {{ member.email }} </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </body>
+{% endblock %}

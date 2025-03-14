@@ -13,39 +13,47 @@
 
 {% block content %}
     <body>
-        <h1>Telescope: {{ telescope.name }}</h1>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>INSTRUMENT</th>
-                    <th>DESCRIPTION</th>
-                    <th>STATUS</th>
-                    <th>WEBSITE</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for instrument in lst_instruments %}
-                <tr>
-                    <td><a href="{% url 'instrument' instrument_name=instrument.name %}">{{ instrument.name }}</a></td>
-                    {% if instrument.description %}
-                         <td> {{ instrument.description }} </td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                    <td style="color: {% if instrument.status == 'inoperative' %}red{% else %}black{% endif %};">
-                        {{ instrument.status }}
-                    </td>
-                    {% if instrument.website %}
-                        <td style="text-align: center;">
-                            <a href="{{ instrument.website }}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+        <h1>
+            Telescope: {{ telescope.name }}
+            {% if telescope.description %}
+                <td> ({{ telescope.description }}) </td>
+            {% endif %}
+        </h1>
+        <section class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>INSTRUMENT</th>
+                        <th>DESCRIPTION</th>
+                        <th>STATUS</th>
+                        <th>WEBSITE</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for instrument in lst_instruments %}
+                    <tr>
+                        <td><a href="{% url 'instrument' instrument_name=instrument.name %}">{{ instrument.name }}</a></td>
+                        {% if instrument.description %}
+                             <td> {{ instrument.description }} </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td style="color: {% if instrument.status == 'inoperative' %}red{% else %}black{% endif %};">
+                            {{ instrument.status }}
                         </td>
-                    {% else %}
-                        <td></td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                        {% if instrument.website %}
+                            <td style="text-align: center;">
+                                <a href="{{ instrument.website }}" target="_blank">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
+                            </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
     </body>
 {% endblock %}

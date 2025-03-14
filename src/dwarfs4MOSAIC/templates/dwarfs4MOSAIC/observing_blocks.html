@@ -1,0 +1,67 @@
+
+<!-- Argument: 'lst_observing_blocks'  -->
+
+{% extends 'dwarfs4MOSAIC/base.html' %}
+
+{% block title %} observing_blocks {% endblock %}
+
+{% block breadcrumb %}
+    <a href="{% url 'database' %}">Database</a> &gt
+    Observing Blocks
+{% endblock %}
+
+{% block content %}
+    <body>
+        <h1>Observing Blocks</h1>
+        <section class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>OBSERVING RUN</th>
+                        <th>DESCRIPTION</th>
+                        <th>START TIME</th>
+                        <th>END TIME</th>
+                        <th>INSTRUMENT</th>
+                        <th>MEMBERS</th>
+                        <th>TARGET</th>
+                        <th>OBSERVATION MODE</th>
+                        <th>FILTERS</th>
+                        <th>EXPOSURE TIME</th>
+                        <th>SEEING</th>
+                        <th>WEATHER CONDITIONS</th>
+                        <th>NOTES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for block in lst_observing_blocks %}
+                    <tr>
+                        <td>{{ block.name }}</td>
+                        <td>{{ block.observing_run_name }}</td>
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ block.description }}
+                            </div>
+                        </td>
+                        <td>{{ block.start_time }}</td>
+                        <td>{{ block.end_time }}</td>
+                        <td>{{ block.instrument }}</td>
+                        <td> TBD </td>
+                        <td> TBD </td>
+                        <td>{{ block.observation_mode }}</td>
+                        <td>{{ block.filters }}</td>
+                        <td>{{ block.exposure_time }}</td>
+                        <td>{{ block.seeing }}</td>
+                        <td>{{ block.weather_conditions }}</td>
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ block.notes }}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </body>
+{% endblock %}

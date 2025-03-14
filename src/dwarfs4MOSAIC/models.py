@@ -64,7 +64,8 @@ class Tbl_telescope(models.Model):
 
     obs_tel = models.ForeignKey( #observatory where the telescope is located
         Tbl_observatory,
-        on_delete = models.CASCADE,
+        on_delete=models.PROTECT,
+        null=True,
         verbose_name = "Observatory")
 
     owner = models.TextField(
@@ -114,7 +115,8 @@ class Tbl_instrument(models.Model):
 
     tel_ins = models.ForeignKey( # telescope where the instrument stands
         Tbl_telescope,
-        on_delete = models.CASCADE,
+        on_delete=models.PROTECT,
+        null=True,
         verbose_name = "Telescope")
 
     status = models.CharField(
@@ -151,7 +153,7 @@ class Tbl_member(models.Model):
         choices=[
             ('admin', 'Administrator'),
             ('user', 'User'),
-            ('stuff', 'Stuff')],
+            ('stuff', 'Staff')],
         default='user',
         verbose_name = "Role")
 
@@ -196,7 +198,7 @@ class Tbl_observing_run(models.Model):
 
     leader = models.ForeignKey(
         Tbl_member,
-        on_delete=models.SET_NULL,
+        on_delete=models.DO_NOTHING,
         null=True,
         related_name='led_observing_runs',
         verbose_name="Leader")
@@ -209,55 +211,56 @@ class Tbl_observing_run(models.Model):
         verbose_name="Notes")
 
     def __str__(self):
-        return self.title
+        return self.name
 
     class Meta:
         verbose_name = "Observing Run"
         verbose_name_plural = "Observing Runs"
 
-
 '''
 Table 'observing_block'
-
+'''
 class Tbl_observing_block(models.Model):
     name = models.CharField(
         max_length=200,
         verbose_name="Name")
 
+    obs_run = models.ForeignKey(  # observing_run where the observing_block is executed
+        Tbl_observing_run,
+        on_delete=models.PROTECT,
+        null=True,
+        verbose_name="Observatory")
+
     description = models.TextField(
         null=True,
         blank=True,
         verbose_name="Description")
-        
-    start_date = models.DateField(
-        verbose_name="Start Date")
-        
-    start_time = models.DateField(
+              
+    start_time = models.DateTimeField( # date and time
         verbose_name="Start Time")
         
-    end_time = models.DateField(
+    end_time = models.TimeField(
         null=True,
         blank=True,
         verbose_name="End Time")
 
     instrument = models.ForeignKey(
         Tbl_instrument,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         null=True,
         verbose_name="Instument")
 
     #members = models.ManyToManyField(Tbl_member)
 
-    #target = models.ForeignKey(
+    '''target = models.ForeignKey(
         Tbl_target,
-        on_delete=models.SET_NULL,
+        on_delete=models.PROTECT,
         null=True,
-        verbose_name="Target")
+        verbose_name="Target")'''
 
     observation_mode = models.CharField(
         max_length=50,
         choices=[('photometry', 'Photometry'), ('spectroscopy', 'Spectroscopy'), ('imaging', 'Imaging')],
-        default='photometry',
         verbose_name="Observation Mode")
 
     filters = models.CharField(
@@ -269,6 +272,7 @@ class Tbl_observing_block(models.Model):
     exposure_time = models.DurationField(
         null=True, 
         blank=True,
+        help_text="Exposure time in seconds",
         verbose_name="Exposure Time")
         
     seeing = models.FloatField(
@@ -286,12 +290,11 @@ class Tbl_observing_block(models.Model):
         blank=True,
         null=True,
         verbose_name="Notes")
-    
-   def __str__(self):
-        return self.title
-        
+
+    def __str__(self):
+        return self.name
+
     class Meta:
         verbose_name = "Observing Block"
-        verbose_name_plural = "Observing Block"
+        verbose_name_plural = "Observing Blocks"
 
-'''

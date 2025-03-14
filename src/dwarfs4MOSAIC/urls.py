@@ -26,4 +26,13 @@ urlpatterns = [
 
     # Page with information about a specific instrument
     path('instrument/<str:instrument_name>/', views.instrument_view, name='instrument'),
+
+    # 'Members table' page.
+    path('members/', views.members_view, name='members'),
+
+    # 'Observing_run table' page.
+    path('observing_runs/', views.observing_runs_view, name='observing_runs'),
+
+    # 'Observing_block table' page.
+    path('observing_blocks/', views.observing_blocks_view, name='observing_blocks'),
 ]

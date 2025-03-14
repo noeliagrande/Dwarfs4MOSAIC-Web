@@ -9,18 +9,17 @@
         <title>{% block title %} {% endblock %}</title>
         <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/base.css' %}">
         <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">
+        <!-- CSS file providing styles from Font Awesome, a popular vector icon library. -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     </head>
 
     <body>
-        <!-- Header Section -->
+        <!-- Header -->
         <header class="header">
-
-            <!-- Logo Section -->
+            <!-- Logo -->
             <div class="logo">
                 <img src="{% static 'dwarfs4MOSAIC/images/logo_mosaic_horiz.png' %}" alt="Logo">
             </div>
-
             <nav class="nav-links">
                 <ul>
                     <li><a href="{% url 'home' %}">HOME</a></li>
@@ -28,13 +27,12 @@
                     <li><a href="{% url 'admin:index' %}">ADMIN</a></li>
                 </ul>
             </nav>
-
         </header>
 
-        <!-- Divider Line (custom) -->
+        <!-- Divider Line -->
         <div class='custom-divider'></div>
 
-        <!-- Breadcrumb Section (you can add this later) -->
+        <!-- Breadcrumb -->
         <div class="breadcrumb">
             <p>
                 You are here:
@@ -42,7 +40,7 @@
             </p>
         </div>
 
-        <!-- Divider Line (custom) -->
+        <!-- Divider Line -->
         <div class='custom-divider'></div>
 
         <!-- Main content area -->

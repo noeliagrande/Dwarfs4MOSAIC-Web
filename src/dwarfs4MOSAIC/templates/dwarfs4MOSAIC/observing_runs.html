@@ -1,0 +1,55 @@
+
+<!-- Argument: 'lst_observing_runs'  -->
+
+{% extends 'dwarfs4MOSAIC/base.html' %}
+
+{% block title %} observing_runs {% endblock %}
+
+{% block breadcrumb %}
+    <a href="{% url 'database' %}">Database</a> &gt
+    Observing Runs
+{% endblock %}
+
+{% block content %}
+    <body>
+        <h1>Observing Runs</h1>
+        <section class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>DESCRIPTION</th>
+                        <th>LEADER</th>
+                        <th>MEMBERS</th>
+                        <th>TARGET</th>
+                        <th>START DATE</th>
+                        <th>END DATE</th>
+                        <th>NOTES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for run in lst_observing_runs %}
+                    <tr>
+                        <td>{{ run.name }}</td>
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ run.description }}
+                            </div>
+                        </td>
+                        <td>{{ run.leader_name }}</td>
+                        <td> TBD </td>
+                        <td> TBD </td>
+                        <td>{{ run.start_date }}</td>
+                        <td>{{ run.end_date }}</td>
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ run.notes }}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </body>
+{% endblock %}

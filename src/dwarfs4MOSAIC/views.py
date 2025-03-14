@@ -17,7 +17,7 @@ def database_view(request):
 # 'Observatories table' page.
 def observatories_view(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_observatory")
+        cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_observatory ORDER BY name")
         lst_observatories = dictfetchall(cursor)
 
     return render(request, 'dwarfs4MOSAIC/observatories.html', {'lst_observatories': lst_observatories})
@@ -43,6 +43,7 @@ def telescopes_view(request):
             FROM dwarfs4MOSAIC_Tbl_telescope telescope
             JOIN dwarfs4MOSAIC_Tbl_observatory observatory
             ON telescope.obs_tel_id = observatory.id
+            ORDER BY name
         """)
         lst_telescopes = dictfetchall(cursor)
 
@@ -67,6 +68,7 @@ def instruments_view(request):
             FROM dwarfs4MOSAIC_Tbl_instrument instrument
             JOIN dwarfs4MOSAIC_Tbl_telescope telescope
             ON instrument.tel_ins_id = telescope.id
+            ORDER BY name
         """)
         lst_instruments = dictfetchall(cursor)
 
@@ -76,3 +78,44 @@ def instruments_view(request):
 def instrument_view(request, instrument_name):
     instrument = get_object_or_404(Tbl_instrument, name=instrument_name) # Get instrument by name
     return render(request, 'dwarfs4MOSAIC/instrument.html', {'instrument': instrument})
+
+# 'Members table' page.
+def members_view(request):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_member ORDER BY name")
+        lst_members = dictfetchall(cursor)
+
+    return render(request, 'dwarfs4MOSAIC/members.html', {'lst_members': lst_members})
+
+# 'Observing runs table' page.
+def observing_runs_view(request):
+    with connection.cursor() as cursor:
+        #cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_observing_run ORDER BY name")
+
+        cursor.execute("""
+            SELECT observing_run.*, member.name AS leader_name 
+            FROM dwarfs4MOSAIC_Tbl_observing_run observing_run
+            LEFT JOIN dwarfs4MOSAIC_Tbl_member member 
+            ON observing_run.leader_id = member.id
+            ORDER BY observing_run.name
+        """)
+
+        lst_observing_runs = dictfetchall(cursor)
+
+    return render(request, 'dwarfs4MOSAIC/observing_runs.html', {'lst_observing_runs': lst_observing_runs})
+
+# 'Observing blocks table' page.
+def observing_blocks_view(request):
+    with connection.cursor() as cursor:
+        #cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_observing_block ORDER BY name")
+        cursor.execute("""
+            SELECT observing_block.*, observing_run.name AS observing_run_name 
+            FROM dwarfs4MOSAIC_Tbl_observing_block observing_block
+            LEFT JOIN dwarfs4MOSAIC_Tbl_observing_run observing_run 
+            ON observing_block.obs_run_id = observing_run.id
+            ORDER BY observing_block.start_time
+        """)
+
+        lst_observing_blocks = dictfetchall(cursor)
+
+    return render(request, 'dwarfs4MOSAIC/observing_blocks.html', {'lst_observing_blocks': lst_observing_blocks})

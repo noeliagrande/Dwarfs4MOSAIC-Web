@@ -17,6 +17,24 @@ th, td {
     white-space: nowrap; /* Prevents text from splitting into multiple lines */
 }
 
+/*Esto no está funcionando muy bien. Hay que completarlo con JavaScript.*/
+.resizable-td {
+    padding: 5px;
+    width: auto;
+}
+
+.resizable-div {
+    white-space: normal;
+    word-wrap: break-word;
+    width: 300px;
+    min-width: 100px;
+    max-width: 1000px;
+    resize: horizontal;
+    overflow: auto;
+    display: inline-block;
+}
+
+
 /* Table heading */
 th {
     background-color: var(--header-color);
