@@ -8,7 +8,7 @@ name = "dwarfs4mosaic"
 version = "0.1.0"
 description = "A web project for MOSAIC at ELT."
 readme = "README.md"
-requires-python = ">=3.13.1"
+requires-python = ">=3.10"
 license = { file = "LICENSE.txt" }
 authors = [{ name = "Noelia Grande", email = "nogrande@ucm.es" }]
 dependencies = [
@@ -18,7 +18,7 @@ dependencies = [
 classifiers = [
     "Development Status :: 3 - Alpha",
     "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.10",
     "Framework :: Django",
 ]
 
