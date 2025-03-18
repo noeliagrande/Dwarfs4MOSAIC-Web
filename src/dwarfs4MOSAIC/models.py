@@ -165,7 +165,8 @@ class Tbl_researcher(models.Model):
         unique=True,
         verbose_name="email")
 
-    # observing_runs: Many-to-many relationship is set in the Tbl_observing_run model.
+    # observing_runs, observing_blocks:
+    # Many-to-many relationship is set in the Tbl_observing_run model.
     # It is not necessary to define it explicitly here, as Django handles it automatically.
 
     def __str__(self):
@@ -248,7 +249,10 @@ class Tbl_observing_block(models.Model):
         blank=True,
         verbose_name="End Time")
 
-    #researchers = models.ManyToManyField(Tbl_researcher)
+    researchers = models.ManyToManyField(
+        'Tbl_researcher',
+        related_name='observing_blocks'
+    )
 
     '''target = models.ForeignKey(
         Tbl_target,

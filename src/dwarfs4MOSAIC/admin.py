@@ -59,7 +59,6 @@ class ObservingRunAdmin(admin.ModelAdmin):
         ("Participants", {"fields": ["researchers"]}),
         ("Additional Data", {"fields": ["notes"]}),
     ]
-
     filter_horizontal = ['researchers']
 
 admin.site.register(models.Tbl_observing_run, ObservingRunAdmin)
@@ -69,10 +68,11 @@ admin.site.register(models.Tbl_observing_run, ObservingRunAdmin)
 class ObservingBlockAdmin(admin.ModelAdmin):
     fieldsets = [
         ("General Information", {"fields": ["name", "obs_run", "description", "start_time", "end_time", ]}),
-        ("Participants", {"fields": []}), # "researchers"
-        ("Observation Information", {"fields": ["observation_mode", "filters", "exposure_time", "seeing", "weather_conditions"]}),  # "researchers", "target"
+        ("Participants", {"fields": ["researchers"]}),
+        ("Observation Information", {"fields": ["observation_mode", "filters", "exposure_time", "seeing", "weather_conditions"]}),  # "target"
         ("Additional Data", {"fields": ["notes"]}),
     ]
+    filter_horizontal = ['researchers']
 
 admin.site.register(models.Tbl_observing_block, ObservingBlockAdmin)
 
