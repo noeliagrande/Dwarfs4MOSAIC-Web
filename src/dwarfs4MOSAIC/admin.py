@@ -56,9 +56,11 @@ admin.site.register(models.Tbl_researcher, ResearcherAdmin)
 class ObservingRunAdmin(admin.ModelAdmin):
     fieldsets = [
         ("General Information", {"fields": ["name", "description", "instrument", "start_date", "end_date", ]}), #targets
-        ("Participants", {"fields": []}), # "researchers"
+        ("Participants", {"fields": ["researchers"]}),
         ("Additional Data", {"fields": ["notes"]}),
     ]
+
+    filter_horizontal = ['researchers']
 
 admin.site.register(models.Tbl_observing_run, ObservingRunAdmin)
 

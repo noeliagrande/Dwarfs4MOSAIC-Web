@@ -118,10 +118,12 @@ def observing_runs_view(request):
 def observing_run_view(request, observing_run_name):
     observing_run = get_object_or_404(Tbl_observing_run, name = observing_run_name) # Get observing_run by name
     observing_blocks = Tbl_observing_block.objects.filter(obs_run = observing_run.id) # Get observing_blocks belonging to the observing_run
+    researchers = observing_run.researchers.all() # Get researchers participating in the observing_run
 
     return render(request, 'dwarfs4MOSAIC/observing_run.html', {
         'observing_run': observing_run,
-        'lst_observing_blocks': observing_blocks
+        'lst_observing_blocks': observing_blocks,
+        'lst_researchers': researchers
     })
 
 # 'Observing blocks table' page.

@@ -18,13 +18,15 @@
         <header class="header">
             <!-- Logo -->
             <div class="logo">
-                <img src="{% static 'dwarfs4MOSAIC/images/logo_mosaic_horiz.png' %}" alt="Logo">
+                <a href="https://elt.eso.org/instrument/MOSAIC/" target="_blank">
+                    <img src="{% static 'dwarfs4MOSAIC/images/logo_mosaic_horiz.png' %}" alt="Logo">
+                </a>
             </div>
             <nav class="nav-links">
                 <ul>
                     <li><a href="{% url 'home' %}">HOME</a></li>
                     <li><a href="{% url 'database' %}">DATABASE</a></li>
-                    <li><a href="{% url 'admin:index' %}">ADMIN</a></li>
+                    <li><a href="{% url 'admin:index' %}">ADMIN </a></li>
                 </ul>
             </nav>
         </header>
