@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 
-from .models import Tbl_observatory, Tbl_telescope, Tbl_instrument
+from .models import *
 from .utils import dictfetchall
 
 # 'Home' page.
@@ -20,18 +20,18 @@ def observatories_view(request):
         cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_observatory ORDER BY name")
         lst_observatories = dictfetchall(cursor)
 
-    return render(request, 'dwarfs4MOSAIC/observatories.html', {'lst_observatories': lst_observatories})
+    return render(request, 'dwarfs4MOSAIC/observatories.html', {
+        'lst_observatories': lst_observatories
+    })
 
 # Page with telescopes for a specific observatory
 def observatory_view(request, observatory_name):
     observatory = get_object_or_404(Tbl_observatory, name = observatory_name) # Get observatory by name
     telescopes = Tbl_telescope.objects.filter(obs_tel = observatory.id) # Get telescopes belonging to the observatory
-    prev_page = request.META.get('HTTP_REFERER', '/') # Get URL of previous page
 
     return render(request, 'dwarfs4MOSAIC/observatory.html', {
         'observatory_name': observatory_name,
-        'lst_telescopes': telescopes,
-        'previous_page': prev_page
+        'lst_telescopes': telescopes
     })
 
 # 'Telescopes table' page.
@@ -47,12 +47,14 @@ def telescopes_view(request):
         """)
         lst_telescopes = dictfetchall(cursor)
 
-    return render(request, 'dwarfs4MOSAIC/telescopes.html', {'lst_telescopes': lst_telescopes})
+    return render(request, 'dwarfs4MOSAIC/telescopes.html', {
+        'lst_telescopes': lst_telescopes
+    })
 
 # Page with information about a specific telescope
 def telescope_view(request, telescope_name):
     telescope = get_object_or_404(Tbl_telescope, name = telescope_name) # Get telescope by name
-    instruments = Tbl_instrument.objects.filter(tel_ins = telescope.id) # Get instruments belonging to the telscope
+    instruments = Tbl_instrument.objects.filter(tel_ins = telescope.id) # Get instruments belonging to the telescope
 
     return render(request, 'dwarfs4MOSAIC/telescope.html', {
         'telescope': telescope,
@@ -72,37 +74,55 @@ def instruments_view(request):
         """)
         lst_instruments = dictfetchall(cursor)
 
-    return render(request, 'dwarfs4MOSAIC/instruments.html', {'lst_instruments': lst_instruments})
+    return render(request, 'dwarfs4MOSAIC/instruments.html', {
+        'lst_instruments': lst_instruments
+    })
 
 # Page with information about a specific instrument
 def instrument_view(request, instrument_name):
     instrument = get_object_or_404(Tbl_instrument, name=instrument_name) # Get instrument by name
-    return render(request, 'dwarfs4MOSAIC/instrument.html', {'instrument': instrument})
+    return render(request, 'dwarfs4MOSAIC/instrument.html', {
+        'instrument': instrument
+    })
 
-# 'Members table' page.
-def members_view(request):
+# 'Researchers table' page.
+def researchers_view(request):
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_member ORDER BY name")
-        lst_members = dictfetchall(cursor)
+        cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_researcher ORDER BY name")
+        lst_researchers = dictfetchall(cursor)
 
-    return render(request, 'dwarfs4MOSAIC/members.html', {'lst_members': lst_members})
+    return render(request, 'dwarfs4MOSAIC/researchers.html', {
+        'lst_researchers': lst_researchers
+    })
 
 # 'Observing runs table' page.
 def observing_runs_view(request):
     with connection.cursor() as cursor:
         #cursor.execute("SELECT * FROM dwarfs4MOSAIC_Tbl_observing_run ORDER BY name")
-
         cursor.execute("""
-            SELECT observing_run.*, member.name AS leader_name 
+            SELECT observing_run.*, instrument.name AS instrument_name 
             FROM dwarfs4MOSAIC_Tbl_observing_run observing_run
-            LEFT JOIN dwarfs4MOSAIC_Tbl_member member 
-            ON observing_run.leader_id = member.id
+            JOIN dwarfs4MOSAIC_Tbl_instrument instrument
+            ON observing_run.instrument_id = instrument.id
             ORDER BY observing_run.name
         """)
 
         lst_observing_runs = dictfetchall(cursor)
+        print(lst_observing_runs)
 
-    return render(request, 'dwarfs4MOSAIC/observing_runs.html', {'lst_observing_runs': lst_observing_runs})
+    return render(request, 'dwarfs4MOSAIC/observing_runs.html', {
+        'lst_observing_runs': lst_observing_runs
+    })
+
+# Page with information about a specific observing_run
+def observing_run_view(request, observing_run_name):
+    observing_run = get_object_or_404(Tbl_observing_run, name = observing_run_name) # Get observing_run by name
+    observing_blocks = Tbl_observing_block.objects.filter(obs_run = observing_run.id) # Get observing_blocks belonging to the observing_run
+
+    return render(request, 'dwarfs4MOSAIC/observing_run.html', {
+        'observing_run': observing_run,
+        'lst_observing_blocks': observing_blocks
+    })
 
 # 'Observing blocks table' page.
 def observing_blocks_view(request):
@@ -118,4 +138,6 @@ def observing_blocks_view(request):
 
         lst_observing_blocks = dictfetchall(cursor)
 
-    return render(request, 'dwarfs4MOSAIC/observing_blocks.html', {'lst_observing_blocks': lst_observing_blocks})
+    return render(request, 'dwarfs4MOSAIC/observing_blocks.html', {
+        'lst_observing_blocks': lst_observing_blocks
+    })

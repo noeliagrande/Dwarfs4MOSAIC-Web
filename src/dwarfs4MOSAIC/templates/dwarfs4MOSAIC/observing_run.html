@@ -1,0 +1,37 @@
+
+<!-- Arguments: 'observing_run', 'lst_observing_blocks'  -->
+
+{% extends 'dwarfs4MOSAIC/base.html' %}
+
+{% block title %} Observing Run: {{ observing_run.name }} {% endblock %}
+
+{% block breadcrumb %}
+    <a href="{% url 'database' %}">Database</a> &gt
+    <a href="{% url 'observing_runs' %}">Observing Runs</a> &gt
+    {{ observing_run.name }}
+{% endblock %}
+
+{% block content %}
+    <body>
+        <h1>
+            Observing Run: {{ observing_run.name }}
+        </h1>
+        <section class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>OBSERVING BLOCK</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for observing_block in lst_observing_blocks %}
+                    <tr>
+                        <td>{{ observing_block.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </body>
+{% endblock %}

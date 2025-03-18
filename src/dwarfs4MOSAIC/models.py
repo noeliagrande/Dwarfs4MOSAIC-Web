@@ -141,9 +141,9 @@ class Tbl_instrument(models.Model):
         verbose_name_plural = "Instruments"
 
 '''
-Table 'member'
+Table 'researcher'
 '''
-class Tbl_member(models.Model):
+class Tbl_researcher(models.Model):
     name = models.CharField(
         max_length=200,
         verbose_name="Name")
@@ -151,9 +151,8 @@ class Tbl_member(models.Model):
     role = models.CharField(
         max_length=50,
         choices=[
-            ('admin', 'Administrator'),
             ('user', 'User'),
-            ('stuff', 'Staff')],
+            ('core', 'Core')],
         default='user',
         verbose_name = "Role")
 
@@ -170,8 +169,8 @@ class Tbl_member(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = "Member"
-        verbose_name_plural = "Members"
+        verbose_name = "Researcher"
+        verbose_name_plural = "Researchers"
 
 '''
 Table 'observing_run'
@@ -186,6 +185,12 @@ class Tbl_observing_run(models.Model):
         blank=True,
         verbose_name="Description")
 
+    instrument = models.ForeignKey(
+        Tbl_instrument,
+        on_delete=models.PROTECT,
+        null=True,
+        verbose_name="Instrument")
+
     start_date = models.DateField(
         verbose_name="Start Date")
 
@@ -194,14 +199,7 @@ class Tbl_observing_run(models.Model):
         blank=True,
         verbose_name="End Date")
 
-    #members = models.ManyToManyField(Tbl_member)
-
-    leader = models.ForeignKey(
-        Tbl_member,
-        on_delete=models.DO_NOTHING,
-        null=True,
-        related_name='led_observing_runs',
-        verbose_name="Leader")
+    #researchers = models.ManyToManyField(Tbl_researcher)
 
     #targets = models.ManyToManyField('Target', blank=True)
 
@@ -229,7 +227,7 @@ class Tbl_observing_block(models.Model):
         Tbl_observing_run,
         on_delete=models.PROTECT,
         null=True,
-        verbose_name="Observatory")
+        verbose_name="Observing Run")
 
     description = models.TextField(
         null=True,
@@ -244,13 +242,7 @@ class Tbl_observing_block(models.Model):
         blank=True,
         verbose_name="End Time")
 
-    instrument = models.ForeignKey(
-        Tbl_instrument,
-        on_delete=models.PROTECT,
-        null=True,
-        verbose_name="Instument")
-
-    #members = models.ManyToManyField(Tbl_member)
+    #researchers = models.ManyToManyField(Tbl_researcher)
 
     '''target = models.ForeignKey(
         Tbl_target,

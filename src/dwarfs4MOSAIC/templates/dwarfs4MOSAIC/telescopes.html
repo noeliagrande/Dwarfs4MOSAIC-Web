@@ -35,7 +35,7 @@
                         {% else %}
                             <td></td>
                         {% endif %}
-                        <td>{{ telescope.observatory_name }}</td>
+                        <td><a href="{% url 'observatory' observatory_name=telescope.observatory_name %}">{{ telescope.observatory_name }}</a></td>
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ telescope.owner }}

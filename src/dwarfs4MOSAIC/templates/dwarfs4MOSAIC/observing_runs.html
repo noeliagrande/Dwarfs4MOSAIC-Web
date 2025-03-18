@@ -18,9 +18,9 @@
                 <thead>
                     <tr>
                         <th>NAME</th>
+                        <th>INSTRUMENT</th>
                         <th>DESCRIPTION</th>
-                        <th>LEADER</th>
-                        <th>MEMBERS</th>
+                        <th>RESEARCHERS</th>
                         <th>TARGET</th>
                         <th>START DATE</th>
                         <th>END DATE</th>
@@ -28,22 +28,22 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for run in lst_observing_runs %}
+                    {% for observing_run in lst_observing_runs %}
                     <tr>
-                        <td>{{ run.name }}</td>
+                        <td><a href="{% url 'observing_run' observing_run_name=observing_run.name %}">{{ observing_run.name }}</a></td>
+                        <td><a href="{% url 'instrument' instrument_name=observing_run.instrument_name %}">{{ observing_run.instrument_name }}</a></td>
                         <td class="resizable-td">
                             <div class="resizable-div">
-                                {{ run.description }}
+                                {{ observing_run.description }}
                             </div>
                         </td>
-                        <td>{{ run.leader_name }}</td>
                         <td> TBD </td>
                         <td> TBD </td>
-                        <td>{{ run.start_date }}</td>
-                        <td>{{ run.end_date }}</td>
+                        <td>{{ observing_run.start_date }}</td>
+                        <td>{{ observing_run.end_date }}</td>
                         <td class="resizable-td">
                             <div class="resizable-div">
-                                {{ run.notes }}
+                                {{ observing_run.notes }}
                             </div>
                         </td>
                     </tr>

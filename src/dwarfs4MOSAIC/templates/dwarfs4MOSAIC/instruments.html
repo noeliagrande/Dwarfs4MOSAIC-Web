@@ -33,7 +33,7 @@
                         {% else %}
                             <td></td>
                         {% endif %}
-                        <td>{{ instrument.telescope_name }}</td>
+                        <td><a href="{% url 'telescope' telescope_name=instrument.telescope_name %}">{{ instrument.telescope_name }}</a></td>
                         <td style="color:
                                 {% if instrument.status == 'inoperative' %} red
                                 {% elif instrument.status == 'maintenance'%} orange

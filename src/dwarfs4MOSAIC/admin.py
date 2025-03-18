@@ -42,21 +42,21 @@ class InstrumentAdmin(admin.ModelAdmin):
 admin.site.register(models.Tbl_instrument, InstrumentAdmin)
 
 
-# 'member' table
-class MemberAdmin(admin.ModelAdmin):
+# 'researcher' table
+class ResearcherAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": ["role", "institution", "email"]}),
     ]
 
-admin.site.register(models.Tbl_member, MemberAdmin)
+admin.site.register(models.Tbl_researcher, ResearcherAdmin)
 
 
 # 'observing_run' table
 class ObservingRunAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("General Information", {"fields": ["name", "description", "start_date", "end_date", ]}), #targets
-        ("Participants", {"fields": ["leader"]}), # "members"
+        ("General Information", {"fields": ["name", "description", "instrument", "start_date", "end_date", ]}), #targets
+        ("Participants", {"fields": []}), # "researchers"
         ("Additional Data", {"fields": ["notes"]}),
     ]
 
@@ -66,9 +66,9 @@ admin.site.register(models.Tbl_observing_run, ObservingRunAdmin)
 # 'observing_block' table
 class ObservingBlockAdmin(admin.ModelAdmin):
     fieldsets = [
-        ("General Information", {"fields": ["name", "description", "instrument", "start_time", "end_time", ]}),
-        ("Participants", {"fields": []}), # "members"
-        ("Observation Information", {"fields": ["observation_mode", "filters", "exposure_time", "seeing", "weather_conditions"]}),  # "members", "target"
+        ("General Information", {"fields": ["name", "obs_run", "description", "start_time", "end_time", ]}),
+        ("Participants", {"fields": []}), # "researchers"
+        ("Observation Information", {"fields": ["observation_mode", "filters", "exposure_time", "seeing", "weather_conditions"]}),  # "researchers", "target"
         ("Additional Data", {"fields": ["notes"]}),
     ]
 
