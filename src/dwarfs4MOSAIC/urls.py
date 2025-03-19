@@ -38,4 +38,5 @@ urlpatterns = [
 
     # 'Observing_block table' page.
     path('observing_blocks/', views.observing_blocks_view, name='observing_blocks'),
+    path('get_researchers/', views.get_researchers, name='get_researchers'),
 ]

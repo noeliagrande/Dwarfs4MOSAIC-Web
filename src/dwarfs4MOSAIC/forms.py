@@ -1,6 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.forms.widgets import TextInput
 
 from .models import Tbl_observatory
 
@@ -9,44 +10,58 @@ class ObservatoryAdminForm(forms.ModelForm):
     longitude_ew = forms.ChoiceField(
         choices=[('', ''), ('E', 'E'), ('W', 'W')],
         required=False,
-        label="E/W",
+        label="",
+        help_text="direction"
     )
     longitude_deg = forms.IntegerField(
         required=False,
-        label="degrees",
-        validators=[MinValueValidator(0), MaxValueValidator(180)]
+        label="Longitude",
+        validators=[MinValueValidator(0), MaxValueValidator(180)],
+        widget=TextInput(attrs={'style': 'width: 50px;'}),
+        help_text="degrees"
     )
     longitude_min = forms.IntegerField(
         required=False,
-        label="minutes",
-        validators=[MinValueValidator(0), MaxValueValidator(59)]
+        label="",
+        validators=[MinValueValidator(0), MaxValueValidator(59)],
+        widget=TextInput(attrs={'style': 'width: 50px;'}),
+        help_text="minutes"
     )
     longitude_sec = forms.FloatField(
         required=False,
-        label="seconds",
-        validators=[MinValueValidator(0), MaxValueValidator(59)]
+        label="",
+        validators=[MinValueValidator(0), MaxValueValidator(59)],
+        widget=TextInput(attrs={'style': 'width: 50px;'}),
+        help_text="seconds"
     )
 
     # Latitude: must be between -90 and 90 degrees
     latitude_ns = forms.ChoiceField(
         choices=[('', ''), ('N', 'N'), ('S', 'S')],
         required=False,
-        label="N/S"
+        label="",
+        help_text="direction"
     )
     latitude_deg = forms.IntegerField(
         required=False,
-        label="degrees",
-        validators=[MinValueValidator(0), MaxValueValidator(90)]
+        label="Latitude",
+        validators=[MinValueValidator(0), MaxValueValidator(90)],
+        widget=TextInput(attrs={'style': 'width: 50px;'}),
+        help_text="degrees"
     )
     latitude_min = forms.IntegerField(
         required=False,
-        label="minutes",
-        validators=[MinValueValidator(0), MaxValueValidator(59)]
+        label="",
+        validators=[MinValueValidator(0), MaxValueValidator(59)],
+        widget=TextInput(attrs={'style': 'width: 50px;'}),
+        help_text="minutes"
     )
     latitude_sec = forms.FloatField(
         required=False,
-        label="seconds",
-        validators=[MinValueValidator(0), MaxValueValidator(59)]
+        label="",
+        validators=[MinValueValidator(0), MaxValueValidator(59)],
+        widget=TextInput(attrs={'style': 'width: 50px;'}),
+        help_text="seconds"
     )
 
     class Meta:

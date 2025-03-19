@@ -17,6 +17,7 @@ class Tbl_observatory(models.Model):
         verbose_name = "Name")
 
     website = models.URLField(
+        blank=True,
         verbose_name = "Website",
         default="")
 
@@ -39,7 +40,7 @@ class Tbl_observatory(models.Model):
         null=True,
         blank=True,
         verbose_name="Altitude",
-        help_text="Altitude in meters")
+        help_text="meters")
 
     def __str__(self):
         return self.name
@@ -76,7 +77,7 @@ class Tbl_telescope(models.Model):
         verbose_name="Aperture",
         default=0,
         validators=[MinValueValidator(0)],
-        help_text="Aperture in meters")
+        help_text="meters")
 
     status = models.CharField(
         max_length=20,
