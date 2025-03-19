@@ -88,13 +88,18 @@ def observing_run_view(request, observing_run_name):
     return render(request, 'dwarfs4MOSAIC/observing_run.html', {
         'observing_run': observing_run,
         'lst_observing_blocks': observing_blocks,
-        'lst_researchers': researchers
-    })
+        'lst_researchers': researchers})
 
 # 'Observing blocks table' page.
 def observing_blocks_view(request):
-    lst_observing_blocks = Tbl_observing_block.objects.all().select_related('obs_run')
+    lst_observing_blocks = Tbl_observing_block.objects.all().select_related('obs_run').prefetch_related('target')
 
     return render(request, 'dwarfs4MOSAIC/observing_blocks.html', {
-        'lst_observing_blocks': lst_observing_blocks
-    })
+        'lst_observing_blocks': lst_observing_blocks})
+
+# 'Target table' page.
+def targets_view(request):
+    lst_targets = Tbl_target.objects.all()
+
+    return render(request, 'dwarfs4MOSAIC/target.html', {
+        'lst_targets': lst_targets})

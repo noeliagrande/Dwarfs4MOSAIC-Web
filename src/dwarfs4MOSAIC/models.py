@@ -250,11 +250,10 @@ class Tbl_observing_block(models.Model):
         blank=True,
         verbose_name="End Time")
 
-    '''target = models.ForeignKey(
-        Tbl_target,
-        on_delete=models.PROTECT,
-        null=True,
-        verbose_name="Target")'''
+    target = models.ManyToManyField(
+        'Tbl_target',
+        related_name='observing_blocks'
+    )
 
     observation_mode = models.CharField(
         max_length=50,
@@ -270,13 +269,13 @@ class Tbl_observing_block(models.Model):
     exposure_time = models.DurationField(
         null=True, 
         blank=True,
-        help_text="Exposure time in seconds",
+        help_text="seconds",
         verbose_name="Exposure Time")
         
     seeing = models.FloatField(
         null=True, 
         blank=True, 
-        help_text="Seeing in arcseconds",
+        help_text="arcseconds",
         verbose_name="Seeing")
         
     weather_conditions = models.TextField(
@@ -296,3 +295,68 @@ class Tbl_observing_block(models.Model):
         verbose_name = "Observing Block"
         verbose_name_plural = "Observing Blocks"
 
+'''
+Table 'target'
+'''
+class Tbl_target(models.Model):
+    name = models.CharField(
+        max_length=200,
+        verbose_name="Name")
+
+    type = models.CharField(
+        max_length=50,
+        choices=[
+            ('star', 'Star'),
+            ('galaxy', 'Galaxy'),
+            ('nebula', 'Nebula'),
+            ('cluster', 'Star Cluster'),
+            ('exoplanet', 'Exoplanet'),
+            ('other', 'Other'),],
+        verbose_name="Type")
+
+    right_ascension = models.CharField(
+        max_length=15,
+        null=True,
+        blank=True,
+        help_text="HH:MM:SS",
+        verbose_name="Right Ascension")
+
+    declination = models.CharField(
+        max_length=15,
+        null=True,
+        blank=True,
+        help_text="+/- deg:min:sec",
+        verbose_name="Declination")
+
+    magnitude = models.FloatField(
+        null=True,
+        blank=True,
+        verbose_name="Magnitude")
+
+    redshift = models.FloatField(
+        null=True,
+        blank=True,
+        verbose_name="Redshift (z)")
+
+    distance = models.FloatField(
+        null=True,
+        blank=True,
+        verbose_name="Distance (pc)")
+
+    size = models.FloatField(
+        null=True,
+        blank=True,
+        help_text="arcmin",
+        verbose_name="Size")
+
+    notes = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Notes")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Target"
+        verbose_name_plural = "Targets"

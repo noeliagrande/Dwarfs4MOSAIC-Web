@@ -47,7 +47,11 @@
                         </td>
                         <td>{{ block.start_time }}</td>
                         <td>{{ block.end_time }}</td>
-                        <td> TBD </td>
+                        <td>
+                            {% for target in block.target.all %}
+                                {{ target.name }} <br>
+                            {% endfor %}
+                        </td>
                         <td>{{ block.observation_mode }}</td>
                         <td>{{ block.filters }}</td>
                         <td>{{ block.exposure_time }}</td>

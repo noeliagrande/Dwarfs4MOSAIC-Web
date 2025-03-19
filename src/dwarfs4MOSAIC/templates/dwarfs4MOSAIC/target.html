@@ -1,0 +1,59 @@
+
+<!-- Argument: 'lst_targets'  -->
+
+{% extends 'dwarfs4MOSAIC/base.html' %}
+
+{% block title %} targets {% endblock %}
+
+{% block breadcrumb %}
+    <a href="{% url 'database' %}">Database</a> &gt
+    Targets
+{% endblock %}
+
+{% block content %}
+    <body>
+        <h1>Targets</h1>
+        <section class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>NAME</th>
+                        <th>OBSERVING BLOCK</th>
+                        <th>TYPE</th>
+                        <th>RA</th>
+                        <th>DEC</th>
+                        <th>MAG</th>
+                        <th>Z</th>
+                        <th>DISTANCE</th>
+                        <th>SIZE (arcmin)</th>
+                        <th>NOTES</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for target in lst_targets %}
+                    <tr>
+                        <td>{{ target.name }}</td>
+                        <td>
+                            {% for block in target.observing_blocks.all %}
+                                {{ block.name }} <br>
+                            {% endfor %}
+                        </td>
+                        <td>{{ target.type }}</td>
+                        <td>{{ target.right_ascension }}</td>
+                        <td>{{ target.declination }}</td>
+                        <td>{{ target.magnitude }}</td>
+                        <td>{{ target.redshift }}</td>
+                        <td>{{ target.distance}}</td>
+                        <td>{{ target.size }}</td>
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ block.notes }}
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </body>
+{% endblock %}
