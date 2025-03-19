@@ -1,15 +1,7 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-from django.http import JsonResponse
 
 from .models import *
-
-def get_researchers(request):
-    """Devuelve los researchers asociados a un observing_run."""
-    observing_run_id = request.GET.get("observing_run_id")
-    print(observing_run_id)
-    researchers = Tbl_researcher.objects.filter(observing_runs=observing_run_id).values("id", "name")
-    return JsonResponse(list(researchers), safe=False)
 
 # 'Home' page.
 def home_view(request):

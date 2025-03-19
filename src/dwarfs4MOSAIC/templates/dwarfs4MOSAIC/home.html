@@ -1,12 +1,19 @@
 {% extends 'dwarfs4MOSAIC/base.html' %}
+{% load static %}
 
 {% block title %} Home {% endblock %}
 
 {% block breadcrumb %} Home {% endblock %}
 
 {% block content %}
-    Welcome to Dwarfs4MOSAIC Home Page!
-    <br> <br>
-    A pilot study for MOSAIC at ELT.
-
+    <div style="position: relative; width: 100%; height: 100vh;
+            background-image: url('{% static 'dwarfs4MOSAIC/images/ELT_night.jpg' %}');
+            background-size: cover; background-position: center;
+            padding: 50px;">
+        <div style="color: white; font-size: 2rem; text-align: center; padding: 20px;">
+            Welcome to Dwarfs4MOSAIC Home Page!
+            <br><br>
+            A pilot study for MOSAIC at ELT.
+        </div>
+    </div>
 {% endblock %}

@@ -250,11 +250,6 @@ class Tbl_observing_block(models.Model):
         blank=True,
         verbose_name="End Time")
 
-    researchers = models.ManyToManyField(
-        'Tbl_researcher',
-        related_name='observing_blocks'
-    )
-
     '''target = models.ForeignKey(
         Tbl_target,
         on_delete=models.PROTECT,

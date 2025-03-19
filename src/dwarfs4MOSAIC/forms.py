@@ -2,9 +2,9 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.forms.widgets import TextInput
-
 from .models import Tbl_observatory
 
+# Management of longitude and latitude fields
 class ObservatoryAdminForm(forms.ModelForm):
     # Longitude: must be between -180 and 180 degrees
     longitude_ew = forms.ChoiceField(
@@ -68,7 +68,7 @@ class ObservatoryAdminForm(forms.ModelForm):
         model = Tbl_observatory
         fields = '__all__'
 
-    # Shows init values
+    # Show init values
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

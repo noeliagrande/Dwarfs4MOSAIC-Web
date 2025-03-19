@@ -8,7 +8,6 @@ admin.site.site_header = "Dwarfs4MOSAIC Database Administration"
 @admin.register(Tbl_observatory)
 class ObservatoryAdmin(admin.ModelAdmin):
     form = ObservatoryAdminForm
-
     empty_value_display = ""  # Shows empty field instead of 'None'
 
     fieldsets = [
@@ -61,26 +60,9 @@ class ObservingRunAdmin(admin.ModelAdmin):
 # 'observing_block' table
 @admin.register(Tbl_observing_block)
 class ObservingBlockAdmin(admin.ModelAdmin):
-    # Display the researchers of the selected observing_run
-
-    #def formfield_for_manytomany(self, db_field, request, **kwargs):
-    #    if db_field.name == 'researchers':
-    #        obj_id = request.resolver_match.kwargs.get('object_id')
-    #        if obj_id:
-    #            obj = Tbl_observing_block.objects.get(pk=obj_id)
-    #            kwargs['queryset'] = Tbl_researcher.objects.filter(observing_runs=obj.obs_run)
-    #        else:
-    #            kwargs['queryset'] = Tbl_researcher.objects.none()
-    #    return super().formfield_for_manytomany(db_field, request, **kwargs)
-
-    #class Media:
-    #    js = ("dwarfs4MOSAIC/admin/js/observing_block.js",)
-
     fieldsets = [
         ("General Information", {"fields": ["name", "obs_run", "description", "start_time", "end_time", ]}),
-        ("Participants", {"fields": ["researchers"]}),
         ("Observation Information", {"fields": ["observation_mode", "filters", "exposure_time", "seeing", "weather_conditions"]}),  # "target"
         ("Additional Data", {"fields": ["notes"]}),
     ]
-    filter_horizontal = ['researchers']
 
