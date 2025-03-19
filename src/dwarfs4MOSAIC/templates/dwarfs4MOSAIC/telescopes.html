@@ -22,20 +22,28 @@
                         <th>OBSERVATORY</th>
                         <th>OWNER</th>
                         <th>STATUS</th>
-                        <th>APERTURE (m)</th>
+                        <th style="text-align: center;">APERTURE<br>(m)</th>
                         <th>WEBSITE</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for telescope in lst_telescopes %}
                     <tr>
-                        <td><a href="{% url 'telescope' telescope_name=telescope.name %}">{{ telescope.name }}</a></td>
+                        <td>
+                            <a href="{% url 'telescope' telescope_name=telescope.name %}">
+                                {{ telescope.name }}
+                            </a>
+                        </td>
                         {% if telescope.description %}
                              <td> {{ telescope.description }} </td>
                         {% else %}
                             <td></td>
                         {% endif %}
-                        <td><a href="{% url 'observatory' observatory_name=telescope.observatory_name %}">{{ telescope.observatory_name }}</a></td>
+                        <td>
+                            <a href="{% url 'observatory' observatory_name=telescope.obs_tel.name %}">
+                                {{ telescope.obs_tel.name }}
+                            </a>
+                        </td>
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ telescope.owner }}

@@ -20,6 +20,7 @@
                         <th>NAME</th>
                         <th>ROLE</th>
                         <th>INSTITUTION</th>
+                        <th>OBSERVING RUNS</th>
                         <th>EMAIL</th>
                     </tr>
                 </thead>
@@ -29,6 +30,14 @@
                         <td>{{ researcher.name }}</td>
                         <td>{{ researcher.role }}</td>
                         <td>{{ researcher.institution }}</td>
+                        <td>
+                            {% for observing_run in researcher.observing_runs.all %}
+                                <a href="{% url 'observing_run' observing_run_name=observing_run.name %}">
+                                    {{ observing_run.name }}
+                                </a>
+                                <br>
+                            {% endfor %}
+                        </td>
                         {% if researcher.email %}
                             <td style="text-align: center;"> {{ researcher.email }} </td>
                         {% else %}

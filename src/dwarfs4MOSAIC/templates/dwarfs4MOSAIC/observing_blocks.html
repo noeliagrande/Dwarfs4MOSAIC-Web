@@ -36,7 +36,11 @@
                     {% for block in lst_observing_blocks %}
                     <tr>
                         <td>{{ block.name }}</td>
-                        <td><a href="{% url 'observing_run' observing_run_name=block.observing_run_name %}">{{ block.observing_run_name }}</a></td>
+                        <td>
+                            <a href="{% url 'observing_run' observing_run_name=block.obs_run.name %}">
+                                {{ block.obs_run.name }}
+                            </a>
+                        </td>
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ block.description }}

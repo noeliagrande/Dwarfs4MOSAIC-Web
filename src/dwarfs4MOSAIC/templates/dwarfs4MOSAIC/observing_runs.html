@@ -29,8 +29,16 @@
                 <tbody>
                     {% for observing_run in lst_observing_runs %}
                     <tr>
-                        <td><a href="{% url 'observing_run' observing_run_name=observing_run.name %}">{{ observing_run.name }}</a></td>
-                        <td><a href="{% url 'instrument' instrument_name=observing_run.instrument_name %}">{{ observing_run.instrument_name }}</a></td>
+                        <td>
+                            <a href="{% url 'observing_run' observing_run_name=observing_run.name %}">
+                                {{ observing_run.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'instrument' instrument_name=observing_run.instrument.name %}">
+                                {{ observing_run.instrument.name }}
+                            </a>
+                        </td>
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ observing_run.description }}

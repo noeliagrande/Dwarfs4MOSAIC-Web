@@ -27,13 +27,21 @@
                 <tbody>
                     {% for instrument in lst_instruments %}
                     <tr>
-                        <td><a href="{% url 'instrument' instrument_name=instrument.name %}">{{ instrument.name }}</a></td>
+                        <td>
+                            <a href="{% url 'instrument' instrument_name=instrument.name %}">
+                                {{ instrument.name }}
+                            </a>
+                        </td>
                         {% if instrument.description %}
                              <td> {{ instrument.description }} </td>
                         {% else %}
                             <td></td>
                         {% endif %}
-                        <td><a href="{% url 'telescope' telescope_name=instrument.telescope_name %}">{{ instrument.telescope_name }}</a></td>
+                        <td>
+                            <a href="{% url 'telescope' telescope_name=instrument.tel_ins.name %}">
+                                {{ instrument.tel_ins.name }}
+                            </a>
+                        </td>
                         <td style="color:
                                 {% if instrument.status == 'inoperative' %} red
                                 {% elif instrument.status == 'maintenance'%} orange

@@ -16,32 +16,49 @@
         <h1>
             Observing Run: {{ observing_run.name }}
         </h1>
+        <br><br>
+        <h2>
+            Researchers
+        </h2>
         <section class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>RESEARCHERS</th>
+                        <th>NAME</th>
+                        <th>ROLE</th>
+                        <th>INSTITUTION</th>
+                        <th>EMAIL</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for researcher in lst_researchers %}
-                    <tr>
-                        <td>{{ researcher.name }}</td>
-                    </tr>
+                        <tr>
+                            <td>{{ researcher.name }}</td>
+                            <td>{{ researcher.role }}</td>
+                            <td>{{ researcher.institution }}</td>
+                            {% if researcher.email %}
+                                <td style="text-align: center;"> {{ researcher.email }} </td>
+                            {% else %}
+                                <td></td>
+                            {% endif %}
+                        </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </section>
-        <br>
+        <br><br>
+        <h2>
+            Observing blocks
+        </h2>
         <section class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>OBSERVING BLOCK</th>
+                        <th>BLOCK NAME</th>
                         <th>DESCRIPTION</th>
                         <th>START TIME</th>
                         <th>END TIME</th>
-                        <th>RESEARCHERS</th>
+                        <th>BLOCK RESEARCHERS</th>
                         <th>TARGET</th>
                         <th>OBSERVATION MODE</th>
                         <th>FILTERS</th>
