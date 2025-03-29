@@ -80,12 +80,12 @@ class Tbl_telescope(models.Model):
         help_text="meters")
 
     status = models.CharField(
-        max_length=20,
         choices=[
             ('unknown', 'Unknown'),
             ('operational', 'Operational'),
             ('inoperative', 'Inoperative'),
             ('maintenance', 'Under Maintenance')],
+        max_length=11, #maximum length in choices
         default='unknown',
         verbose_name="Status")
 
@@ -121,12 +121,12 @@ class Tbl_instrument(models.Model):
         verbose_name = "Telescope")
 
     status = models.CharField(
-        max_length=20,
         choices=[
             ('unknown', 'Unknown'),
             ('operational', 'Operational'),
             ('inoperative', 'Inoperative'),
             ('maintenance', 'Under Maintenance')],
+        max_length=11,  # maximum length in choices
         default='unknown',
         verbose_name="Status")
 
@@ -150,11 +150,11 @@ class Tbl_researcher(models.Model):
         verbose_name="Name")
 
     role = models.CharField(
-        max_length=50,
         choices=[
-            ('user', 'User'),
-            ('core', 'Core')],
-        default='user',
+            ('core', 'Core Team'),
+            ('collaborator', 'Collaborator')],
+        max_length=12,  # maximum length in choices
+        default='core',
         verbose_name = "Role")
 
     institution = models.CharField(
@@ -211,10 +211,10 @@ class Tbl_observing_run(models.Model):
 
     #targets = models.ManyToManyField('Target', blank=True)
 
-    notes = models.TextField(
+    comments = models.TextField(
         blank=True,
         null=True,
-        verbose_name="Notes")
+        verbose_name="Comments")
 
     def __str__(self):
         return self.name
@@ -256,8 +256,12 @@ class Tbl_observing_block(models.Model):
     )
 
     observation_mode = models.CharField(
-        max_length=50,
-        choices=[('photometry', 'Photometry'), ('spectroscopy', 'Spectroscopy'), ('imaging', 'Imaging')],
+        choices=[
+            ('photometry', 'Photometry'),
+            ('spectroscopy', 'Spectroscopy'),
+            ('imaging', 'Imaging')],
+        max_length=12,  # maximum length in choices
+        default='photometry',
         verbose_name="Observation Mode")
 
     filters = models.CharField(
@@ -269,24 +273,24 @@ class Tbl_observing_block(models.Model):
     exposure_time = models.DurationField(
         null=True, 
         blank=True,
-        help_text="seconds",
-        verbose_name="Exposure Time")
+        verbose_name="Exposure Time",
+        help_text="seconds")
         
     seeing = models.FloatField(
         null=True, 
-        blank=True, 
-        help_text="arcseconds",
-        verbose_name="Seeing")
+        blank=True,
+        verbose_name="Seeing",
+        help_text="arcseconds")
         
     weather_conditions = models.TextField(
         blank=True, 
         null=True,
         verbose_name="Weather Conditions")
     
-    notes = models.TextField(
+    comments = models.TextField(
         blank=True,
         null=True,
-        verbose_name="Notes")
+        verbose_name="Comments")
 
     def __str__(self):
         return self.name
@@ -304,7 +308,6 @@ class Tbl_target(models.Model):
         verbose_name="Name")
 
     type = models.CharField(
-        max_length=50,
         choices=[
             ('star', 'Star'),
             ('galaxy', 'Galaxy'),
@@ -312,21 +315,23 @@ class Tbl_target(models.Model):
             ('cluster', 'Star Cluster'),
             ('exoplanet', 'Exoplanet'),
             ('other', 'Other'),],
+        max_length=9,  # maximum length in choices
+        default='galaxy',
         verbose_name="Type")
 
     right_ascension = models.CharField(
         max_length=15,
         null=True,
         blank=True,
-        help_text="HH:MM:SS",
-        verbose_name="Right Ascension")
+        verbose_name="Right Ascension",
+        help_text="HH:MM:SS")
 
     declination = models.CharField(
         max_length=15,
         null=True,
         blank=True,
-        help_text="+/- deg:min:sec",
-        verbose_name="Declination")
+        verbose_name="Declination",
+        help_text="+/- deg:min:sec")
 
     magnitude = models.FloatField(
         null=True,
@@ -338,23 +343,34 @@ class Tbl_target(models.Model):
         blank=True,
         verbose_name="Redshift (z)")
 
-    distance = models.FloatField(
-        null=True,
-        blank=True,
-        verbose_name="Distance (pc)")
-
     size = models.FloatField(
         null=True,
         blank=True,
-        help_text="arcmin",
-        verbose_name="Size")
+        verbose_name="Size",
+        help_text="arcsec",)
 
-    notes = models.TextField(
+    semester = models.CharField(
+        choices=[
+            ('first', 'First'),
+            ('second', 'Second')],
+        max_length=6,  # maximum length in choices
+        default='first',
+        verbose_name="Visibility semester")
+
+    comments = models.TextField(
         blank=True,
         null=True,
-        verbose_name="Notes")
+        verbose_name="Comments")
+
+    image = models.ImageField(
+        upload_to='images/',  # folder were images are stored
+        null=True,
+        blank=True,
+        verbose_name="Image"
+    )
 
     def __str__(self):
+        #return self.name
         return self.name
 
     class Meta:

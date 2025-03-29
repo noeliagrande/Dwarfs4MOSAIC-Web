@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -63,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -128,3 +130,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_AGE = 900  # Session timeout in seconds
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Session expires when the browser is closed
 SESSION_SAVE_EVERY_REQUEST = True # Save the session on every request
+
+# Media files
+MEDIA_URL = '/media/' # URL to access media files from navigator
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/') # Path where media files are stored (where manage.py is)

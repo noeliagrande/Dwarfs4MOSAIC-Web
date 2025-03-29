@@ -55,7 +55,7 @@ class ObservingRunAdmin(admin.ModelAdmin):
         ("Participants", {"fields": [
             "researchers"]}),
         ("Additional Data", {"fields": [
-            "notes"]}),]
+            "comments"]}),]
 
     filter_horizontal = ['researchers']
 
@@ -69,7 +69,7 @@ class ObservingBlockAdmin(admin.ModelAdmin):
         ("Observation Information", {"fields": [
             "observation_mode", "filters", "exposure_time", "seeing", "weather_conditions", "target"]}),
         ("Additional Data", {"fields": [
-            "notes"]}),]
+            "comments"]}),]
 
     filter_horizontal = ['target']
 
@@ -79,6 +79,6 @@ class TargetAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
-            "type", "right_ascension", "declination", "magnitude", "redshift", "distance", "size"]}),
+            "type", "right_ascension", "declination", "magnitude", "redshift", "size"]}),
         ("Additional Data", {"fields": [
-            "notes"]}),]
+            "semester", "comments", 'image']}),]

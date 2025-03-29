@@ -24,9 +24,10 @@
                         <th>DEC</th>
                         <th>MAG</th>
                         <th>Z</th>
-                        <th>DISTANCE</th>
-                        <th>SIZE (arcmin)</th>
-                        <th>NOTES</th>
+                        <th>SIZE (arcsec)</th>
+                        <th>VISIBILITY SEMESTER</th>
+                        <th>COMMENTS</th>
+                        <th>IMAGE</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -43,12 +44,19 @@
                         <td>{{ target.declination }}</td>
                         <td>{{ target.magnitude }}</td>
                         <td>{{ target.redshift }}</td>
-                        <td>{{ target.distance}}</td>
                         <td>{{ target.size }}</td>
+                        <td>{{ target.semester }}</td>
                         <td class="resizable-td">
                             <div class="resizable-div">
-                                {{ block.notes }}
+                                {{ block.comments }}
                             </div>
+                        </td>
+                        <td>
+                            {% if target.image %}
+                                <img src="{{ target.image.url }}" alt="{{ target.name }}" style="width: 200px;">
+                            {% else %}
+                                <p>No image available</p>
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
