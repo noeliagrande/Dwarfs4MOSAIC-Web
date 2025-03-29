@@ -14,6 +14,7 @@ authors = [{ name = "Noelia Grande", email = "nogrande@ucm.es" }]
 dependencies = [
     "django>=5.1.5",
     "djangorestframework",
+    "Pillow"
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
