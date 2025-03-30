@@ -99,7 +99,6 @@
         <script>
             window.addEventListener("beforeunload", function (event) {
                 if (!document.referrer.startsWith(window.location.origin)) {
-                    // Solo ejecuta logout si el usuario está saliendo de la web
                     fetch("{% url 'logout' %}", {
                         method: "POST",
                         headers: { "X-CSRFToken": "{{ csrf_token }}" },

@@ -63,7 +63,14 @@
                         </td>
                         <td>
                             {% for block in target.observing_blocks.all %}
-                                {{ block.obs_run.instrument }} <br>
+                                {% if block.obs_run.instrument.website %}
+                                    <a href="{{ block.obs_run.instrument.website }}" target="_blank">
+                                        {{ block.obs_run.instrument }}
+                                    </a>
+                                {% else %}
+                                    {{ block.obs_run.instrument }}
+                                {% endif %}
+                                <br>
                             {% endfor %}
                         </td>
                         <td class="resizable-td">
