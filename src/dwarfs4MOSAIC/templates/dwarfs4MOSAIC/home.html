@@ -41,11 +41,11 @@
                 <tbody>
                     {% for target in lst_targets %}
                     <tr>
-                        <td>
+                        <td style="text-align: center;">
                             {% if target.image %}
                                 <img src="{{ target.image.url }}" alt="{{ target.name }}" style="width: 200px;">
                             {% else %}
-                                <p>No image available</p>
+                                <p>NO IMAGE AVAILABLE</p>
                             {% endif %}
                         </td>
                         <td>{{ target.name }}</td>
@@ -71,7 +71,6 @@
                                 {{ block.comments }}
                             </div>
                         </td>
-
                     </tr>
                     {% endfor %}
                 </tbody>
