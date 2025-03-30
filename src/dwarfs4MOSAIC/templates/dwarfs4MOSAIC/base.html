@@ -19,14 +19,47 @@
             <!-- Logo -->
             <div class="logo">
                 <a href="https://elt.eso.org/instrument/MOSAIC/" target="_blank">
-                    <img src="{% static 'dwarfs4MOSAIC/images/logo_mosaic_horiz.png' %}" alt="Logo">
+                    <img src="{% static 'dwarfs4MOSAIC/images/logo_mosaic_horiz.png' %}" alt="">
                 </a>
             </div>
+            <!-- Options -->
             <nav class="nav-links">
                 <ul>
-                    <li><a href="{% url 'home' %}">HOME</a></li>
-                    <li><a href="{% url 'database' %}">DATABASE</a></li>
-                    <li><a href="{% url 'admin:index' %}">ADMIN </a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="{% url 'home' %}">HOME</a></li>
+                        {% if user.groups.all.0.name == 'Collaborator' %}
+
+                        {% elif user.groups.all.0.name == 'Core Team' %}
+                            <li><a href="{% url 'admin:index' %}">ADMIN</a></li>
+
+                        {% elif user.is_superuser %}
+                            <li><a href="{% url 'database' %}">DATABASE</a></li>
+                            <li><a href="{% url 'admin:index' %}">ADMIN</a></li>
+
+                        {% endif %}
+                    {% endif %}
+                </ul>
+            </nav>
+            <!-- Login / logout -->
+            <nav class="nav-links">
+                <ul>
+                    {% if user.is_authenticated %}
+                        <!-- Logout button -->
+                        <form method="post" action="{% url 'logout' %}" >
+                            {% csrf_token %}
+                            <button type="submit" style="cursor:pointer; background-color: var(--header-color);
+                                    color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;
+                                    font-size: 16px;">
+                                Logout
+                            </button>
+                        </form>
+                    {% else %}
+                        <li><a href="{% url 'admin:login' %}?next=/home/" style="cursor:pointer;
+                               background-color: var(--header-color); color: white;
+                               padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+                            Login
+                        </a></li>
+                    {% endif %}
                 </ul>
             </nav>
         </header>
@@ -35,12 +68,22 @@
         <div class='custom-divider'></div>
 
         <!-- Breadcrumb -->
-        <div class="breadcrumb">
-            <p>
-                You are here:
-                {% block breadcrumb %} {% endblock %}
-            </p>
-        </div>
+        {% if user.is_authenticated %}
+            <div class="breadcrumb">
+                <p>
+                    Welcome
+                    {% if user.is_superuser %}
+                        ADMIN
+                    {% else %}
+                        {{ user.first_name|upper }}
+                    {% endif %}
+                </p>
+                <p>
+                    You are here:
+                    {% block breadcrumb %} {% endblock %}
+                </p>
+            </div>
+        {% endif %}
 
         <!-- Divider Line -->
         <div class='custom-divider'></div>
@@ -51,5 +94,47 @@
             <!-- Each view's content will go here -->
             {% endblock %}
         </main>
+
+        <!-- Logout when closing tab or browser -->
+        <script>
+            window.addEventListener("beforeunload", function (event) {
+                if (!document.referrer.startsWith(window.location.origin)) {
+                    // Solo ejecuta logout si el usuario está saliendo de la web
+                    fetch("{% url 'logout' %}", {
+                        method: "POST",
+                        headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                        keepalive: true
+                    });
+                }
+            });
+        </script>
+
+        <!-- Logout when after inactivity -->
+        <script>
+            let timeout;
+
+            function resetTimer() {
+                clearTimeout(timeout);
+                timeout = setTimeout(logout, 10000); // 900,000 ms = 15 minutes
+            }
+
+            function logout() {
+                fetch("{% url 'logout' %}", {
+                    method: "POST",
+                    headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                    keepalive: true
+                }).then(() => {
+                    window.location.href = "{% url 'admin:login' %}?next=/home/"; // redirect to login
+                });
+            }
+
+            document.addEventListener("mousemove", resetTimer);
+            document.addEventListener("keypress", resetTimer);
+            document.addEventListener("click", resetTimer);
+            document.addEventListener("scroll", resetTimer);
+
+            resetTimer(); // Start timer
+        </script>
+
     </body>
 </html>

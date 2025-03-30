@@ -38,15 +38,22 @@ body {
 /* Header style */
 .header {
     background-color: #ffffff;
-    padding: 10px var(--left-padding); /* lateral spacing (hight, width) */
+    padding: 10px var(--left-padding); /* lateral spacing (high, width) */
     display: flex; /* element alignment */
     justify-content: space-between;  /* Distribute space between logo and links */
     align-items: center; /* Vertical centering of content */
+    width: 100%;
 }
 
 /* Logo style */
+.logo {
+    flex-shrink: 0;  /* Prevents logo shrinkage if space is limited */
+    /*border: 2px solid red;*/
+    max-width: 20%;
+}
+
 .header .logo img {
-    width: 50%; /* logo size */
+    width: 100%; /* logo size */
     height: auto; /* Maintains logo proportions */
 }
 
@@ -73,23 +80,40 @@ body {
 
 /* Navigation links */
 .nav-links ul {
-    list-style: none;
-    display: flex;  /* aligns list items in a row */
+    display: flex; /* aligns list items in a row */
+    align-items: center;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    height: 100%; /* Ensures the ul takes the full height of its parent */
+    justify-content: center;
 }
 
 .nav-links li {
     margin-left: 20px;  /* Space between links */
+    height: 100%; /* Ensures the ul takes the full height of its parent */
+    justify-content: center;
 }
 
 .nav-links a {
     text-decoration: none;  /* Remove underlining */
     color: #000;
-    font-size: 16px;
+    font-size: 25px;
     #font-weight: bold;
     display: block;
+    justify-content: center;
 }
 
 /* Add hover for links */
 .nav-links a:hover {
     color: var(--link-color);
 }
+
+.nav-links {
+    display: flex;
+    align-items: center; /* Center the content vertically */
+    padding: 0 20px; /* Optional, adds some padding around the nav */
+    justify-content: center;
+    /*border: 2px solid red;*/
+}
+

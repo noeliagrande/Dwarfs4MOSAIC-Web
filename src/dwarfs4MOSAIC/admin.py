@@ -2,7 +2,7 @@ from django.contrib import admin
 from .forms import ObservatoryAdminForm
 from .models import *
 
-admin.site.site_header = "Dwarfs4MOSAIC Database Administration"
+admin.site.site_header = "Dwarfs4MOSAIC Login"
 
 # 'observatory' table
 @admin.register(Tbl_observatory)

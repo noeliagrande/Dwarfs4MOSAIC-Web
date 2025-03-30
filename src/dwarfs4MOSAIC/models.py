@@ -363,7 +363,7 @@ class Tbl_target(models.Model):
         verbose_name="Comments")
 
     image = models.ImageField(
-        upload_to='images/',  # folder were images are stored
+        upload_to='images/',  # images are stored in MEDIA_ROOT/images
         null=True,
         blank=True,
         verbose_name="Image"
