@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from django.contrib.auth.models import User
 
 '''
 __str__(self): shows how information is displayed when accessing an object from admin
@@ -145,33 +146,46 @@ class Tbl_instrument(models.Model):
 Table 'researcher'
 '''
 class Tbl_researcher(models.Model):
-    name = models.CharField(
-        max_length=200,
-        verbose_name="Name")
+    # Relates the researcher to a Django user (auth_user)
+    user = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,  # If user is deleted, so is the researcher
+        related_name='researcher',
+        verbose_name="User",
+        null=True,
+        blank=True,
+    )
 
-    role = models.CharField(
-        choices=[
-            ('core', 'Core Team'),
-            ('collaborator', 'Collaborator')],
-        max_length=12,  # maximum length in choices
-        default='core',
-        verbose_name = "Role")
+    @property
+    def name(self):
+        # Return the full name (first name and last name)
+        return f"{self.user.first_name} {self.user.last_name}"
+
+    @property
+    def role(self):
+        # Return group
+        if not self.user.groups.exists():
+            return ""
+        else:
+            return self.user.groups.first().name
+
+    @property
+    def email(self):
+        return self.user.email
 
     institution = models.CharField(
         max_length=200,
         default="",
+        null=True,
+        blank=True,
         verbose_name="Institution")
-
-    email = models.EmailField(
-        unique=True,
-        verbose_name="email")
 
     # observing_runs, observing_blocks:
     # Many-to-many relationship is set in the Tbl_observing_run model.
     # It is not necessary to define it explicitly here, as Django handles it automatically.
 
     def __str__(self):
-        return self.name
+        return self.user.username
 
     class Meta:
         verbose_name = "Researcher"
@@ -371,7 +385,6 @@ class Tbl_target(models.Model):
     )
 
     def __str__(self):
-        #return self.name
         return self.name
 
     class Meta:

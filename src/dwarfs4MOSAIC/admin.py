@@ -41,9 +41,14 @@ class InstrumentAdmin(admin.ModelAdmin):
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {"fields": ["name"]}),
-        ("General Information", {"fields": [
-            "role", "institution", "email"]}),]
+        (None, {"fields": ["user", "institution"]})]
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == "user":
+            # Excludes users already assigned to a Tbl_researcher
+            kwargs["queryset"] = User.objects.exclude(researcher__isnull=False).exclude(username='admin')
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
 
 # 'observing_run' table
 @admin.register(Tbl_observing_run)
