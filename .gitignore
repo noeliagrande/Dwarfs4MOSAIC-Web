@@ -171,4 +171,4 @@ cython_debug/
 .pypirc
 
 # Other
-src/media/
+src/media/*
