@@ -352,7 +352,8 @@ class Tbl_target(models.Model):
     semester = models.CharField(
         choices=[
             ('first', 'First'),
-            ('second', 'Second')],
+            ('second', 'Second'),
+            ('both', 'Both')],
         max_length=6,  # maximum length in choices
         default='first',
         verbose_name="Visibility semester")

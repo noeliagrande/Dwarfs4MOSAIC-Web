@@ -5,7 +5,16 @@ from .models import *
 
 # 'Home' page.
 def home_view(request):
-    return render(request, 'dwarfs4MOSAIC/home.html')
+    #return render(request, 'dwarfs4MOSAIC/home.html')
+
+    context = {}
+    if request.user.is_authenticated:
+        context['authenticated'] = True
+        context['lst_targets'] = Tbl_target.objects.prefetch_related('observing_blocks__obs_run')
+    else:
+        context['authenticated'] = False
+
+    return render(request, 'dwarfs4MOSAIC/home.html', context)
 
 # 'Database tables' page.
 def database_view(request):
@@ -101,5 +110,5 @@ def observing_blocks_view(request):
 def targets_view(request):
     lst_targets = Tbl_target.objects.all()
 
-    return render(request, 'dwarfs4MOSAIC/target.html', {
+    return render(request, 'dwarfs4MOSAIC/targets.html', {
         'lst_targets': lst_targets})

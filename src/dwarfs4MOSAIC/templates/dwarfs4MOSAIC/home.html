@@ -6,14 +6,76 @@
 {% block breadcrumb %} Home {% endblock %}
 
 {% block content %}
-    <div style="position: relative; width: 100%; height: 100vh;
-            background-image: url('{% static 'dwarfs4MOSAIC/images/ELT_night.jpg' %}');
-            background-size: cover; background-position: center;
-            padding: 50px;">
-        <div style="color: white; font-size: 2rem; text-align: center; padding: 20px;">
-            Welcome to Dwarfs4MOSAIC Home Page!
-            <br><br>
-            A pilot study for MOSAIC at ELT.
+    {% if not authenticated %}
+        <div style="position: relative; width: 100%; height: 100vh;
+                background-image: url('{% static 'dwarfs4MOSAIC/images/ELT_night.jpg' %}');
+                background-size: cover; background-position: center;
+                padding: 50px;">
+            <div style="color: white; font-size: 2rem; text-align: center; padding: 20px;">
+                Welcome to Dwarfs4MOSAIC Home Page!
+                <br><br>
+                A pilot study for MOSAIC at ELT.
+            </div>
         </div>
-    </div>
+    {% else %}
+        <h1>Targets</h1>
+        <section class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>IMAGE</th>
+                        <th>NAME</th>
+                        <th>TYPE</th>
+                        <th>RA</th>
+                        <th>DEC</th>
+                        <th>MAG</th>
+                        <th>Z</th>
+                        <th>SIZE (arcsec)</th>
+                        <th>VISIBILITY SEMESTER</th>
+                        <th>OBSERVING RUN</th>
+                        <th>INSTRUMENT</th>
+                        <th>COMMENTS</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for target in lst_targets %}
+                    <tr>
+                        <td>
+                            {% if target.image %}
+                                <img src="{{ target.image.url }}" alt="{{ target.name }}" style="width: 200px;">
+                            {% else %}
+                                <p>No image available</p>
+                            {% endif %}
+                        </td>
+                        <td>{{ target.name }}</td>
+                        <td>{{ target.type }}</td>
+                        <td>{{ target.right_ascension }}</td>
+                        <td>{{ target.declination }}</td>
+                        <td>{{ target.magnitude }}</td>
+                        <td>{{ target.redshift }}</td>
+                        <td>{{ target.size }}</td>
+                        <td>{{ target.semester }}</td>
+                        <td>
+                            {% for block in target.observing_blocks.all %}
+                                {{ block.obs_run }} <br>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for block in target.observing_blocks.all %}
+                                {{ block.obs_run.instrument }} <br>
+                            {% endfor %}
+                        </td>
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ block.comments }}
+                            </div>
+                        </td>
+
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    {% endif %}
 {% endblock %}
