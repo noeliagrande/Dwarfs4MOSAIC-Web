@@ -32,7 +32,7 @@
                 <tbody>
                     {% for instrument in lst_instruments %}
                     <tr>
-                        <td><a href="{% url 'instrument' instrument_name=instrument.name %}">{{ instrument.name }}</a></td>
+                        <td>{{ instrument.name }}</td>
                         {% if instrument.description %}
                              <td> {{ instrument.description }} </td>
                         {% else %}

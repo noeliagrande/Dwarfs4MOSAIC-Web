@@ -34,11 +34,7 @@
                                 {{ observing_run.name }}
                             </a>
                         </td>
-                        <td>
-                            <a href="{% url 'instrument' instrument_name=observing_run.instrument.name %}">
-                                {{ observing_run.instrument.name }}
-                            </a>
-                        </td>
+                        <td>{{ observing_run.instrument.name }}</td>
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ observing_run.description }}

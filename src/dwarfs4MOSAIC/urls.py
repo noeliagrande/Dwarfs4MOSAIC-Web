@@ -29,9 +29,6 @@ urlpatterns = [
     # 'Instruments table' page.
     path('instruments/', login_required(instruments_view), name='instruments'),
 
-    # Page with information about a specific instrument
-    path('instrument/<str:instrument_name>/', login_required(instrument_view), name='instrument'),
-
     # 'Researchers table' page.
     path('researchers/', login_required(researchers_view), name='researchers'),
 

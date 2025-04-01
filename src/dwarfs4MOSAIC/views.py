@@ -64,14 +64,6 @@ def instruments_view(request):
         'lst_instruments': lst_instruments
     })
 
-# Page with information about a specific instrument
-def instrument_view(request, instrument_name):
-    instrument = get_object_or_404(Tbl_instrument, name=instrument_name) # Get instrument by name
-
-    return render(request, 'dwarfs4MOSAIC/instrument.html', {
-        'instrument': instrument
-    })
-
 # 'Researchers table' page.
 def researchers_view(request):
     lst_researchers = Tbl_researcher.objects.all()
