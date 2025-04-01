@@ -2,7 +2,8 @@ from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.forms.widgets import TextInput
-from .models import Tbl_observatory
+from .models import Tbl_observatory, Tbl_researcher
+from django.contrib.auth.models import User
 
 # Management of longitude and latitude fields
 class ObservatoryAdminForm(forms.ModelForm):
@@ -138,3 +139,33 @@ class ObservatoryAdminForm(forms.ModelForm):
         self.instance.latitude = latitude
 
         return cleaned_data
+
+
+class ResearcherAdminForm(forms.ModelForm):
+    class Meta:
+        model = Tbl_researcher
+        fields = ['user', 'is_phd', 'comments']
+
+    user = forms.ModelChoiceField(
+        queryset=User.objects.exclude(researcher__isnull=False).exclude(username='admin'),
+        empty_label="Select a user",
+        label="User",
+        required=True,
+    )
+
+    def clean_user(self):
+        # Creating a new researcher
+        available_users = User.objects.exclude(researcher__isnull=False).exclude(username='admin')
+
+        # If there are no users available, an error is thrown.
+        if not available_users.exists() and not self.instance.pk:
+            raise ValidationError("No available users to assign as researcher.")
+
+        # When editing, the value is returned unchanged.
+        return self.cleaned_data['user']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['user'].queryset = User.objects.filter(pk=self.instance.user.pk)
+            self.fields['user'].disabled = True

@@ -180,6 +180,15 @@ class Tbl_researcher(models.Model):
         blank=True,
         verbose_name="Institution")
 
+    is_phd = models.BooleanField(
+        default=False,
+        verbose_name="Is PhD")
+
+    comments = models.TextField(
+        blank=True,
+        null=True,
+        verbose_name="Comments")
+
     # observing_runs, observing_blocks:
     # Many-to-many relationship is set in the Tbl_observing_run model.
     # It is not necessary to define it explicitly here, as Django handles it automatically.

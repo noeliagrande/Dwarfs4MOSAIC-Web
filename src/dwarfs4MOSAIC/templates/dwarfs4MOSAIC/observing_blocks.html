@@ -56,7 +56,11 @@
                         <td>{{ block.filters }}</td>
                         <td>{{ block.exposure_time }}</td>
                         <td>{{ block.seeing }}</td>
-                        <td>{{ block.weather_conditions }}</td>
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ block.weather_conditions }}
+                            </div>
+                        </td>
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ block.comments }}

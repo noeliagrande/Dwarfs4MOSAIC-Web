@@ -19,9 +19,11 @@
                     <tr>
                         <th>NAME</th>
                         <th>ROLE</th>
+                        <th>PhD</th>
                         <th>INSTITUTION</th>
                         <th>OBSERVING RUNS</th>
                         <th>EMAIL</th>
+                        <th>COMMENTS</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,6 +31,13 @@
                     <tr>
                         <td>{{ researcher.name }}</td>
                         <td>{{ researcher.role }}</td>
+                        <td>
+                            {% if researcher.is_phd %}
+                                <span style="color: green;">✔</span>
+                            {% else %}
+                                <span style="color: red;">✘</span>
+                            {% endif %}
+                        </td>
                         <td>{{ researcher.institution }}</td>
                         <td>
                             {% for observing_run in researcher.observing_runs.all %}
@@ -43,6 +52,11 @@
                         {% else %}
                             <td></td>
                         {% endif %}
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ researcher.comments }}
+                            </div>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

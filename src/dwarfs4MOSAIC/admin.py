@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .forms import ObservatoryAdminForm
+from .forms import ObservatoryAdminForm, ResearcherAdminForm
 from .models import *
 
 admin.site.site_header = "Dwarfs4MOSAIC Login"
@@ -40,14 +40,12 @@ class InstrumentAdmin(admin.ModelAdmin):
 # 'researcher' table
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
-    fieldsets = [
-        (None, {"fields": ["user", "institution"]})]
+    form = ResearcherAdminForm  # Usamos el formulario personalizado
 
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == "user":
-            # Excludes users already assigned to a Tbl_researcher
-            kwargs["queryset"] = User.objects.exclude(researcher__isnull=False).exclude(username='admin')
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+    fieldsets = [
+        (None, {"fields": ['user', 'is_phd', 'comments']}),
+    ]
+    #list_display = ('user', 'is_phd')  # Para mostrar en la lista de investigadores
 
 
 # 'observing_run' table
