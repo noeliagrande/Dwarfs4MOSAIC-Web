@@ -364,12 +364,7 @@ class Tbl_target(models.Model):
         help_text="arcsec",)
 
     semester = models.CharField(
-        choices=[
-            ('first', 'First'),
-            ('second', 'Second'),
-            ('both', 'Both')],
-        max_length=6,  # maximum length in choices
-        default='first',
+        max_length=10,
         verbose_name="Visibility semester")
 
     comments = models.TextField(

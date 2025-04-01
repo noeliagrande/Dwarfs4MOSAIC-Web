@@ -30,7 +30,7 @@
                         {% if user.groups.all.0.name == 'Collaborator' %}
 
                         {% elif user.groups.all.0.name == 'Core Team' %}
-                            <li><a href="{% url 'admin:index' %}">ADMIN</a></li>
+                            <li><a href="{% url 'database' %}">DATABASE</a></li>
 
                         {% elif user.is_superuser %}
                             <li><a href="{% url 'database' %}">DATABASE</a></li>
@@ -114,7 +114,7 @@
 
             function resetTimer() {
                 clearTimeout(timeout);
-                timeout = setTimeout(logout, 900000); // 900,000 ms = 15 minutes
+                timeout = setTimeout(logout, 900000); // 900000 ms = 15 minutes
             }
 
             function logout() {

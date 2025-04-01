@@ -126,10 +126,17 @@ STATICFILES_DIRS = [BASE_DIR / "dwarfs4MOSAIC" / "static"]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+#SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
 # Idle time in admin
-SESSION_COOKIE_AGE = 900  # Session timeout in seconds
+SESSION_COOKIE_AGE = 900  # Session timeout in seconds (15 minutes)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Session expires when the browser is closed
 SESSION_SAVE_EVERY_REQUEST = True # Save the session on every request
+
+#SESSION_COOKIE_NAME = 'sessionid'
+#SESSION_COOKIE_HTTPONLY = True
+#SESSION_COOKIE_SECURE = False  # Cambiar a True si usas HTTPS
+#SESSION_COOKIE_SAMESITE = 'Lax'
 
 # Media files
 MEDIA_URL = '/media/' # URL to access media files from navigator

@@ -7,13 +7,11 @@
 
 {% block content %}
     <body>
-        <p style="color: red; font-weight: bold;">
-            This page contains all the tables in the database, for the sole purpose of checking that their
-            content is as expected.<br>
-            Note that this option will not be available in the final version of this website.
-        </p>
+        <h1>Database table query interface</h1>
         <br>
-        <h1>Database</h1>
+        <p style="font-size: 20px;">
+            This interface displays the database tables along with all their fields and their corresponding content.
+        </p>
         <table>
             <thead>
                 <tr>
@@ -21,13 +19,13 @@
                 </tr>
             </thead>
             <tbody>
-                <tr><td><a href="{% url 'observatories' %}">observatory</a></td></tr>
-                <tr><td><a href="{% url 'telescopes' %}">telescope</a></td></tr>
                 <tr><td><a href="{% url 'instruments' %}">instrument</a></td></tr>
-                <tr><td><a href="{% url 'researchers' %}">researcher</a></td></tr>
-                <tr><td><a href="{% url 'observing_runs' %}">observing_run</a></td></tr>
+                <tr><td><a href="{% url 'observatories' %}">observatory</a></td></tr>
                 <tr><td><a href="{% url 'observing_blocks' %}">observing_block</a></td></tr>
+                <tr><td><a href="{% url 'observing_runs' %}">observing_run</a></td></tr>
+                <tr><td><a href="{% url 'researchers' %}">researcher</a></td></tr>
                 <tr><td><a href="{% url 'targets' %}">target</a></td></tr>
+                <tr><td><a href="{% url 'telescopes' %}">telescope</a></td></tr>
             </tbody>
         </table>
     </body>
