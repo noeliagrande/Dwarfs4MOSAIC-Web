@@ -13,6 +13,8 @@
 {% block content %}
     <body>
         <h1>Observing Runs table</h1>
+        <br>
+        <p class="view-explanation">Table content in the database</p>
         <section class="table-container">
             <table>
                 <thead>
@@ -20,7 +22,6 @@
                         <th>NAME</th>
                         <th>INSTRUMENT</th>
                         <th>DESCRIPTION</th>
-                        <th>TARGET</th>
                         <th>START DATE</th>
                         <th>END DATE</th>
                         <th>COMMENTS</th>
@@ -40,7 +41,6 @@
                                 {{ observing_run.description }}
                             </div>
                         </td>
-                        <td> TBD </td>
                         <td>{{ observing_run.start_date }}</td>
                         <td>{{ observing_run.end_date|default_if_none:"" }}</td>
                         <td class="resizable-td">

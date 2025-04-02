@@ -16,6 +16,10 @@ main {
     padding: 20px var(--left-padding);
 }
 
+.view-explanation {
+    font-size: 20px;
+}
+
 /* Container with horizontal scrolling */
 .table-container {
     margin-top: 20px;
@@ -97,7 +101,7 @@ body {
 
 .nav-links a {
     text-decoration: none;  /* Remove underlining */
-    color: #000;
+    color: black;
     font-size: 25px;
     #font-weight: bold;
     display: block;
@@ -117,3 +121,7 @@ body {
     /*border: 2px solid red;*/
 }
 
+
+.nav-links a.active {
+    color: var(--link-color);
+}
