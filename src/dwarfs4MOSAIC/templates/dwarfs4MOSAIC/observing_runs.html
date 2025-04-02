@@ -42,7 +42,7 @@
                         </td>
                         <td> TBD </td>
                         <td>{{ observing_run.start_date }}</td>
-                        <td>{{ observing_run.end_date }}</td>
+                        <td>{{ observing_run.end_date|default_if_none:"" }}</td>
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ observing_run.comments }}

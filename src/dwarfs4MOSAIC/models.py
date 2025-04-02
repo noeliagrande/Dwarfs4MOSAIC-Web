@@ -43,12 +43,17 @@ class Tbl_observatory(models.Model):
         verbose_name="Altitude",
         help_text="meters")
 
+    # telescopes:
+    # One-to-many relationship is set in Tbl_telescope model.
+    # It is not necessary to define it explicitly here, as Django handles it automatically.
+
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = "Observatory"
         verbose_name_plural = "Observatories"
+        ordering = ['name']
 
 '''
 Table 'telescope'
@@ -94,12 +99,17 @@ class Tbl_telescope(models.Model):
         verbose_name="Website",
         default="")
 
+    # instrument:
+    # One-to-many relationship is set in Tbl_instrument model.
+    # It is not necessary to define it explicitly here, as Django handles it automatically.
+
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = "Telescope"
         verbose_name_plural = "Telescopes"
+        ordering = ['name']
 
 '''
 Table 'instrument'
@@ -133,6 +143,7 @@ class Tbl_instrument(models.Model):
 
     website = models.URLField(
         verbose_name="Website",
+        blank=True,
         default="")
 
     def __str__(self):
@@ -141,6 +152,7 @@ class Tbl_instrument(models.Model):
     class Meta:
         verbose_name = "Instrument"
         verbose_name_plural = "Instruments"
+        ordering = ['name']
 
 '''
 Table 'researcher'
@@ -189,8 +201,8 @@ class Tbl_researcher(models.Model):
         null=True,
         verbose_name="Comments")
 
-    # observing_runs, observing_blocks:
-    # Many-to-many relationship is set in the Tbl_observing_run model.
+    # observing_runs:
+    # Many-to-many relationship is set in Tbl_observing_run model.
     # It is not necessary to define it explicitly here, as Django handles it automatically.
 
     def __str__(self):
@@ -199,6 +211,7 @@ class Tbl_researcher(models.Model):
     class Meta:
         verbose_name = "Researcher"
         verbose_name_plural = "Researchers"
+        ordering = ['user__username']
 
 '''
 Table 'observing_run'
@@ -232,8 +245,6 @@ class Tbl_observing_run(models.Model):
         related_name='observing_runs'
     )
 
-    #targets = models.ManyToManyField('Target', blank=True)
-
     comments = models.TextField(
         blank=True,
         null=True,
@@ -245,6 +256,7 @@ class Tbl_observing_run(models.Model):
     class Meta:
         verbose_name = "Observing Run"
         verbose_name_plural = "Observing Runs"
+        ordering = ['start_date']
 
 '''
 Table 'observing_block'
@@ -257,11 +269,11 @@ class Tbl_observing_block(models.Model):
     obs_run = models.ForeignKey(  # observing_run where the observing_block is executed
         Tbl_observing_run,
         on_delete=models.PROTECT,
-        null=True,
+        #null=True,
         verbose_name="Observing Run")
 
     description = models.TextField(
-        null=True,
+        #null=True,
         blank=True,
         verbose_name="Description")
               
@@ -269,7 +281,7 @@ class Tbl_observing_block(models.Model):
         verbose_name="Start Time")
         
     end_time = models.TimeField(
-        null=True,
+        #null=True,
         blank=True,
         verbose_name="End Time")
 
@@ -290,29 +302,29 @@ class Tbl_observing_block(models.Model):
     filters = models.CharField(
         max_length=100,
         blank=True,
-        null=True,
+        #null=True,
         verbose_name="Filters")
 
     exposure_time = models.DurationField(
-        null=True, 
+        #null=True,
         blank=True,
         verbose_name="Exposure Time",
         help_text="seconds")
         
     seeing = models.FloatField(
-        null=True, 
+        #null=True,
         blank=True,
         verbose_name="Seeing",
         help_text="arcseconds")
         
     weather_conditions = models.TextField(
         blank=True, 
-        null=True,
+        #null=True,
         verbose_name="Weather Conditions")
     
     comments = models.TextField(
         blank=True,
-        null=True,
+        #null=True,
         verbose_name="Comments")
 
     def __str__(self):
@@ -321,6 +333,7 @@ class Tbl_observing_block(models.Model):
     class Meta:
         verbose_name = "Observing Block"
         verbose_name_plural = "Observing Blocks"
+        ordering = ['start_time']
 
 '''
 Table 'target'
@@ -344,30 +357,30 @@ class Tbl_target(models.Model):
 
     right_ascension = models.CharField(
         max_length=15,
-        null=True,
+        #null=True,
         blank=True,
         verbose_name="Right Ascension",
         help_text="HH:MM:SS")
 
     declination = models.CharField(
         max_length=15,
-        null=True,
+        #null=True,
         blank=True,
         verbose_name="Declination",
         help_text="+/- deg:min:sec")
 
     magnitude = models.FloatField(
-        null=True,
+        #null=True,
         blank=True,
         verbose_name="Magnitude")
 
     redshift = models.FloatField(
-        null=True,
+        #null=True,
         blank=True,
         verbose_name="Redshift (z)")
 
     size = models.FloatField(
-        null=True,
+        #null=True,
         blank=True,
         verbose_name="Size",
         help_text="arcsec",)
@@ -378,12 +391,12 @@ class Tbl_target(models.Model):
 
     comments = models.TextField(
         blank=True,
-        null=True,
+        #null=True,
         verbose_name="Comments")
 
     image = models.ImageField(
         upload_to='images/',  # images are stored in MEDIA_ROOT/images
-        null=True,
+        #null=True,
         blank=True,
         verbose_name="Image"
     )
@@ -394,3 +407,4 @@ class Tbl_target(models.Model):
     class Meta:
         verbose_name = "Target"
         verbose_name_plural = "Targets"
+        ordering = ['name']

@@ -42,9 +42,9 @@
                         <td>{{ target.type }}</td>
                         <td>{{ target.right_ascension }}</td>
                         <td>{{ target.declination }}</td>
-                        <td>{{ target.magnitude }}</td>
-                        <td>{{ target.redshift }}</td>
-                        <td>{{ target.size }}</td>
+                        <td>{{ target.magnitude|default_if_none:"" }}</td>
+                        <td>{{ target.redshift|default_if_none:"" }}</td>
+                        <td>{{ target.size|default_if_none:"" }}</td>
                         <td>{{ target.semester }}</td>
                         <td class="resizable-td">
                             <div class="resizable-div">

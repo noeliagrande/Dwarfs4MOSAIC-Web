@@ -48,18 +48,18 @@
                     <tr>
                         <td style="text-align: center;">
                             {% if target.image %}
-                                <img src="{{ target.image.url }}" alt="{{ target.name }}" style="width: 200px;">
+                                <img src="{{ target.image.url }}" alt="Failed to load image" style="width: 200px;">
                             {% else %}
-                                <p>NO IMAGE AVAILABLE</p>
+                                <p>No image available</p>
                             {% endif %}
                         </td>
                         <td>{{ target.name }}</td>
                         <td>{{ target.type }}</td>
                         <td>{{ target.right_ascension }}</td>
                         <td>{{ target.declination }}</td>
-                        <td>{{ target.magnitude }}</td>
-                        <td>{{ target.redshift }}</td>
-                        <td>{{ target.size }}</td>
+                        <td>{{ target.magnitude|default_if_none:"" }}</td>
+                        <td>{{ target.redshift|default_if_none:""}}</td>
+                        <td>{{ target.size|default_if_none:"" }}</td>
                         <td>{{ target.semester }}</td>
                         <td>
                             {% for block in target.observing_blocks.all %}
@@ -80,7 +80,7 @@
                         </td>
                         <td class="resizable-td">
                             <div class="resizable-div">
-                                {{ block.comments }}
+                                {{ target.comments }}
                             </div>
                         </td>
                     </tr>
