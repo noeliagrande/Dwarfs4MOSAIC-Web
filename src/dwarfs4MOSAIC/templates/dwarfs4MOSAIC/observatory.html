@@ -34,7 +34,11 @@
                 <tbody>
                     {% for telescope in lst_telescopes %}
                     <tr>
-                        <td><a href="{% url 'telescope' telescope_name=telescope.name %}">{{ telescope.name }}</a></td>
+                        <td>
+                            <a href="{% url 'telescope' telescope_name=telescope.name %}?from_page=observatory">
+                                {{ telescope.name }}
+                            </a>
+                        </td>
                         {% if telescope.description %}
                              <td> {{ telescope.description }} </td>
                         {% else %}
@@ -49,7 +53,9 @@
                         <td>{{ telescope.aperture }}</td>
                         {% if telescope.website %}
                             <td style="text-align: center;">
-                                <a href="{{ telescope.website }}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                <a href="{{ telescope.website }}" target="_blank">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
                             </td>
                         {% else %}
                             <td></td>

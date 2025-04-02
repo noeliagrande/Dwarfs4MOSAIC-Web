@@ -38,7 +38,7 @@
                     <tr>
                         <td>{{ block.name }}</td>
                         <td>
-                            <a href="{% url 'observing_run' observing_run_name=block.obs_run.name %}">
+                            <a href="{% url 'observing_run' observing_run_name=block.obs_run.name %}?from_page=observing_blocks">
                                 {{ block.obs_run.name }}
                             </a>
                         </td>

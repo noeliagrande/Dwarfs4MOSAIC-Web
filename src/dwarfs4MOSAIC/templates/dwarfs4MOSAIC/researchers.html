@@ -43,7 +43,7 @@
                         <td>{{ researcher.institution }}</td>
                         <td>
                             {% for observing_run in researcher.observing_runs.all %}
-                                <a href="{% url 'observing_run' observing_run_name=observing_run.name %}">
+                                <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=researchers">
                                     {{ observing_run.name }}
                                 </a>
                                 <br>

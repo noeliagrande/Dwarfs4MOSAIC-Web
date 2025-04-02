@@ -31,7 +31,11 @@
                 <tbody>
                     {% for observatory in lst_observatories %}
                     <tr>
-                        <td><a href="{% url 'observatory' observatory_name=observatory.name %}">{{ observatory.name }}</a></td>
+                        <td>
+                            <a href="{% url 'observatory' observatory_name=observatory.name %}?from_page=observatories">
+                                {{ observatory.name }}
+                            </a>
+                        </td>
 
                         <td>{{ observatory.location }}</td>
                         <td>{{ observatory.longitude|convert_to_dms:"longitude" }}</td>
@@ -39,7 +43,9 @@
                         <td>{{ observatory.altitude|default_if_none:"" }}</td>
                         {% if observatory.website %}
                             <td style="text-align: center;">
-                                <a href="{{ observatory.website }}" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square"></i></a>
+                                <a href="{{ observatory.website }}" target="_blank">
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
                             </td>
                         {% else %}
                             <td></td>

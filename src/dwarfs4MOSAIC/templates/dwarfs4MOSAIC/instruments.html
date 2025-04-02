@@ -36,7 +36,7 @@
                             <td></td>
                         {% endif %}
                         <td>
-                            <a href="{% url 'telescope' telescope_name=instrument.tel_ins.name %}">
+                            <a href="{% url 'telescope' telescope_name=instrument.tel_ins.name %}?from_page=instruments">
                                 {{ instrument.tel_ins.name }}
                             </a>
                         </td>

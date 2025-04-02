@@ -9,6 +9,8 @@
     <a href="{% url 'database' %}">Database</a> &gt
     <a href="{% url 'telescopes' %}">Telescopes</a> &gt
     {{ telescope.name }}
+
+    <p>Procedente de: {{ from_page }}</p>
 {% endblock %}
 
 {% block content %}

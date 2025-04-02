@@ -8,6 +8,8 @@
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
     Observing Runs
+
+    <p>Procedente de: {{ from_page }}</p>
 {% endblock %}
 
 {% block content %}
@@ -31,7 +33,7 @@
                     {% for observing_run in lst_observing_runs %}
                     <tr>
                         <td>
-                            <a href="{% url 'observing_run' observing_run_name=observing_run.name %}">
+                            <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=observing_runs">
                                 {{ observing_run.name }}
                             </a>
                         </td>
