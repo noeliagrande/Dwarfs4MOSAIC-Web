@@ -19,6 +19,7 @@
             <table>
                 <thead>
                     <tr>
+                        <th>IMAGE</th>
                         <th>NAME</th>
                         <th>OBSERVING BLOCK</th>
                         <th>TYPE</th>
@@ -29,12 +30,19 @@
                         <th>SIZE (arcsec)</th>
                         <th>VISIBILITY SEMESTER</th>
                         <th>COMMENTS</th>
-                        <th>IMAGE</th>
+                        <th>DATA FILES</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for target in lst_targets %}
                     <tr>
+                        <td>
+                            {% if target.image %}
+                                <img src="{{ target.image.url }}" alt="{{ target.name }}" style="width: 200px;">
+                            {% else %}
+                                <p>No image available</p>
+                            {% endif %}
+                        </td>
                         <td>{{ target.name }}</td>
                         <td>
                             {% for block in target.observing_blocks.all %}
@@ -53,13 +61,7 @@
                                 {{ target.comments }}
                             </div>
                         </td>
-                        <td>
-                            {% if target.image %}
-                                <img src="{{ target.image.url }}" alt="{{ target.name }}" style="width: 200px;">
-                            {% else %}
-                                <p>No image available</p>
-                            {% endif %}
-                        </td>
+                        <td>{{ target.datafiles }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
