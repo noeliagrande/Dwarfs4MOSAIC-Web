@@ -50,8 +50,8 @@
                             {% endfor %}
                         </td>
                         <td>{{ target.type }}</td>
-                        <td>{{ target.right_ascension }}</td>
-                        <td>{{ target.declination }}</td>
+                        <td>{{ target.right_ascension|default_if_none:"" }}</td>
+                        <td>{{ target.declination|default_if_none:"" }}</td>
                         <td>{{ target.magnitude|default_if_none:"" }}</td>
                         <td>{{ target.redshift|default_if_none:"" }}</td>
                         <td>{{ target.size|default_if_none:"" }}</td>
@@ -61,7 +61,11 @@
                                 {{ target.comments }}
                             </div>
                         </td>
-                        <td>{{ target.datafiles_path }}</td>
+                        <td>
+                            {% if target.datafiles_path %}
+                                {{ target.datafiles_path }}
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

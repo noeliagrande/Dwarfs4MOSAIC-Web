@@ -55,7 +55,7 @@
                             {% endfor %}
                         </td>
                         <td>{{ block.observation_mode }}</td>
-                        <td>{{ block.filters }}</td>
+                        <td>{{ block.filters|default_if_none:"" }}</td>
                         <td>{{ block.exposure_time|default_if_none:"" }}</td>
                         <td>{{ block.seeing|default_if_none:"" }}</td>
                         <td class="resizable-td">

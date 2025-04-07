@@ -50,15 +50,15 @@
                     <tr>
                         <td style="text-align: center;">
                             {% if item.target.image %}
-                                <img src="{{ item.target.image_url }}" alt="Failed to load image" style="width: 200px;">
+                                <img src="{{ item.target.image_url }}" alt="Failed to load image" style="width: 150px;">
                             {% else %}
                                 <p>No image available</p>
                             {% endif %}
                         </td>
                         <td>{{ item.target.name }}</td>
                         <td>{{ item.target.type }}</td>
-                        <td>{{ item.target.right_ascension }}</td>
-                        <td>{{ item.target.declination }}</td>
+                        <td>{{ item.target.right_ascension|default_if_none:"" }}</td>
+                        <td>{{ item.target.declination|default_if_none:"" }}</td>
                         <td>{{ item.target.magnitude|default_if_none:"" }}</td>
                         <td>{{ item.target.redshift|default_if_none:""}}</td>
                         <td>{{ item.target.size|default_if_none:"" }}</td>
@@ -88,8 +88,12 @@
                         <td>
                             {% if item.files %}
                                 {% for file in item.files %}
-                                    {{ file }}<br>
+                                    {{ file }} <br>
                                 {% endfor %}
+                                <br>
+                                <a href="{% url 'download_files_view' item.target.id %}">
+                                    <i class="fa-solid fa-download"></i>
+                                </a>
                             {% endif %}
                         </td>
                     </tr>

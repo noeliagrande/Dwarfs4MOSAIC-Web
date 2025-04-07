@@ -1,0 +1,83 @@
+<!-- Argument: 'target', 'lst_files'  -->
+
+{% extends 'dwarfs4MOSAIC/base.html' %}
+{% load static %}
+
+{% block title %} download_files {% endblock %}
+
+{% block breadcrumb %}
+    <a href="{% url 'home' %}">Home</a> &gt
+    {{ target.name }}
+{% endblock %}
+
+{% block content %}
+    <body>
+        <h1>Target: {{ target.name }}</h1>
+        <br>
+        <p class="view-explanation">Available datafiles for downloading</p>
+
+        <form method="POST">
+            {% csrf_token %}
+            <section class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="select_all"></th>
+                            <th>FILE NAME</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for file in lst_files %}
+                            <tr>
+                                <td>
+                                    <input type="checkbox" name="selected_file" value="{{ file.name }}">
+                                </td>
+                                <td>
+                                    {{ file }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+            <br>
+            <button type="submit" style="cursor:pointer; background-color: var(--header-color);
+                    color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;
+                    font-size: 16px;"> Download selected files
+            </button>
+
+            <br>
+            <br>
+            <p id="mensaje" style="color: green;"></p>
+        </form>
+
+        <!-- Select/unselect all checkboxes -->
+        <script>
+            const select_all_checkbox = document.getElementById('select_all');
+            const file_checkboxes = document.querySelectorAll('input[name="selected_file"]');
+
+            // Check or uncheck all when main checkbox is changed
+            select_all_checkbox.addEventListener('change', function() {
+                const isChecked = select_all_checkbox.checked;
+
+                file_checkboxes.forEach(function(checkbox) {
+                    checkbox.checked = isChecked;
+                });
+            });
+
+            // If any one of them is unchecked, the main checkbox is unchecked
+            file_checkboxes.forEach(function(checkbox) {
+                checkbox.addEventListener('change', function() {
+                    if (!this.checked) {
+                        select_all_checkbox.checked = false;
+                    } else {
+                        // If ALL checkboxes are checked, also check the “select all” checkbox
+                        const allChecked = Array.from(file_checkboxes).every(cb => cb.checked);
+                        select_all_checkbox.checked = allChecked;
+                    }
+                });
+            });
+
+        </script>
+    </body>
+{% endblock %}

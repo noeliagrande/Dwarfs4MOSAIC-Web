@@ -11,6 +11,9 @@ urlpatterns = [
     path('login/', LoginView.as_view(template_name='admin/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
 
+    # Download folder
+    #path('download/<str:filename>/', views.download_file, name='download_file'),
+
     # Database page
     path('database/', login_required(database_view), name='database'),
 
@@ -43,4 +46,7 @@ urlpatterns = [
 
     # 'Target table' page.
     path('target/', login_required(targets_view), name='targets'),
+
+    # Files download page
+    path('download_files/<int:target_id>/', login_required(download_files_view), name='download_files_view'),
 ]

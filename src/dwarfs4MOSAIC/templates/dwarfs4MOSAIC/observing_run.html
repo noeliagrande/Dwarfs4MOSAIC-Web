@@ -90,11 +90,11 @@
                                 </div>
                             </td>
                             <td>{{ block.start_time }}</td>
-                            <td>{{ block.end_time }}</td>
+                            <td>{{ block.end_time|default_if_none:"" }}</td>
                             <td>{{ block.observation_mode }}</td>
-                            <td>{{ block.filters }}</td>
-                            <td>{{ block.exposure_time }}</td>
-                            <td>{{ block.seeing }}</td>
+                            <td>{{ block.filters|default_if_none:"" }}</td>
+                            <td>{{ block.exposure_time|default_if_none:"" }}</td>
+                            <td>{{ block.seeing|default_if_none:"" }}</td>
                             <td>{{ block.weather_conditions }}</td>
                             <td class="resizable-td">
                                 <div class="resizable-div">

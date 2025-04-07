@@ -122,3 +122,13 @@ def targets_view(request):
 
     return render(request, 'dwarfs4MOSAIC/targets.html', {
         'lst_targets': lst_targets})
+
+# View for files downloading
+def download_files_view(request, target_id):
+    target = get_object_or_404(Tbl_target, pk=target_id)
+    files = get_files(target.datafiles_path) if target.datafiles_path else []
+
+    return render(request, 'dwarfs4MOSAIC/download_files.html', {
+        'target': target,
+        'lst_files': files,
+    })

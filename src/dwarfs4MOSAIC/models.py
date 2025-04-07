@@ -102,6 +102,8 @@ class Tbl_telescope(models.Model):
 
     website = models.URLField(
         verbose_name="Website",
+        blank=True,
+        null=True,
         default="")
 
     # instrument:
@@ -320,7 +322,7 @@ class Tbl_observing_block(models.Model):
         null=True,
         blank=True,
         verbose_name="Seeing",
-        help_text="arcseconds")
+        help_text="arcsec")
         
     weather_conditions = models.TextField(
         blank=True, 
