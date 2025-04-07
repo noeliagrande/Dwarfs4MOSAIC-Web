@@ -140,7 +140,7 @@ SESSION_SAVE_EVERY_REQUEST = True # Save the session on every request
 
 # Media files
 MEDIA_URL = '/media/' # URL to access media files from navigator
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/') # Path where media files are stored (where manage.py is)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Path where media files are stored (where manage.py is)
 
 LOGIN_URL = '/admin/login'  # Django ‘login’ URL will be used to redirect unauthenticated users
 LOGIN_REDIRECT_URL = '/home/'

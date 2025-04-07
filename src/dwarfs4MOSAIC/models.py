@@ -425,10 +425,6 @@ class Tbl_target(models.Model):
                 })
 
     @property
-    def absolute_image_path(self):
-        return os.path.join(settings.MEDIA_ROOT, self.image)
-
-    @property
     def image_url(self):
         return settings.MEDIA_URL + self.image
 

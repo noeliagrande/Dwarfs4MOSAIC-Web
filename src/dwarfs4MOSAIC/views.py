@@ -1,16 +1,34 @@
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
+from django.shortcuts import render, get_object_or_404
 
 from .models import *
+from .utils import get_files
 
 # 'Home' page.
 def home_view(request):
-    #return render(request, 'dwarfs4MOSAIC/home.html')
 
     context = {}
     if request.user.is_authenticated:
+        # Get datafiles for each target
+        lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run')
+        lst_targets_with_files = []
+
+        for target in lst_targets:
+            # Get files only if datafiles_path has value
+            if target.datafiles_path:
+                files = get_files(target.datafiles_path)
+
+                lst_targets_with_files.append({
+                    'target': target,
+                    'files': files
+                })
+            else:
+                lst_targets_with_files.append({
+                    'target': target,
+                    'files': []
+                })
+
         context['authenticated'] = True
-        context['lst_targets'] = Tbl_target.objects.prefetch_related('observing_blocks__obs_run')
+        context['lst_targets_with_files'] = lst_targets_with_files
     else:
         context['authenticated'] = False
 

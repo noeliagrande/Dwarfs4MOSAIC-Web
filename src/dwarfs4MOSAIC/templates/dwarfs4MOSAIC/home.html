@@ -1,3 +1,5 @@
+<!-- Argument: 'authenticated', 'lst_targets_with_files'  -->
+
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
 
@@ -44,30 +46,30 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for target in lst_targets %}
+                    {% for item in lst_targets_with_files %}
                     <tr>
                         <td style="text-align: center;">
-                            {% if target.image %}
-                                <img src="{{ target.image_url }}" alt="Failed to load image" style="width: 200px;">
+                            {% if item.target.image %}
+                                <img src="{{ item.target.image_url }}" alt="Failed to load image" style="width: 200px;">
                             {% else %}
                                 <p>No image available</p>
                             {% endif %}
                         </td>
-                        <td>{{ target.name }}</td>
-                        <td>{{ target.type }}</td>
-                        <td>{{ target.right_ascension }}</td>
-                        <td>{{ target.declination }}</td>
-                        <td>{{ target.magnitude|default_if_none:"" }}</td>
-                        <td>{{ target.redshift|default_if_none:""}}</td>
-                        <td>{{ target.size|default_if_none:"" }}</td>
-                        <td>{{ target.semester }}</td>
+                        <td>{{ item.target.name }}</td>
+                        <td>{{ item.target.type }}</td>
+                        <td>{{ item.target.right_ascension }}</td>
+                        <td>{{ item.target.declination }}</td>
+                        <td>{{ item.target.magnitude|default_if_none:"" }}</td>
+                        <td>{{ item.target.redshift|default_if_none:""}}</td>
+                        <td>{{ item.target.size|default_if_none:"" }}</td>
+                        <td>{{ item.target.semester }}</td>
                         <td>
-                            {% for block in target.observing_blocks.all %}
+                            {% for block in item.target.observing_blocks.all %}
                                 {{ block.obs_run }} <br>
                             {% endfor %}
                         </td>
                         <td>
-                            {% for block in target.observing_blocks.all %}
+                            {% for block in item.target.observing_blocks.all %}
                                 {% if block.obs_run.instrument.website %}
                                     <a href="{{ block.obs_run.instrument.website }}" target="_blank">
                                         {{ block.obs_run.instrument }}
@@ -80,10 +82,16 @@
                         </td>
                         <td class="resizable-td">
                             <div class="resizable-div">
-                                {{ target.comments }}
+                                {{ item.target.comments }}
                             </div>
                         </td>
-                        <td>{{ target.datafiles }}</td>
+                        <td>
+                            {% if item.files %}
+                                {% for file in item.files %}
+                                    {{ file }}<br>
+                                {% endfor %}
+                            {% endif %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>
