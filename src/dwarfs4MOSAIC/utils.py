@@ -1,4 +1,5 @@
 import os
+import shutil
 from django.conf import settings
 
 def dictfetchall(cursor):
@@ -20,3 +21,15 @@ def get_files(path):
         return files
     except FileNotFoundError:
         return []
+
+# Add suffix to files to avoid overwriting them
+def get_unique_filename(dest_dir, filename):
+    base, ext = os.path.splitext(filename)
+    counter = 1
+    new_filename = filename
+
+    while os.path.exists(os.path.join(dest_dir, new_filename)):
+        new_filename = f"{base} ({counter}){ext}"
+        counter += 1
+
+    return new_filename

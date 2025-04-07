@@ -1,7 +1,12 @@
 from django.shortcuts import render, get_object_or_404
-
+from django.shortcuts import redirect
 from .models import *
-from .utils import get_files
+from .utils import get_files, get_unique_filename
+
+import os
+import shutil
+from django.conf import settings
+from django.contrib import messages
 
 # 'Home' page.
 def home_view(request):
@@ -127,6 +132,45 @@ def targets_view(request):
 def download_files_view(request, target_id):
     target = get_object_or_404(Tbl_target, pk=target_id)
     files = get_files(target.datafiles_path) if target.datafiles_path else []
+
+    if request.method == "POST":
+        selected_files = request.POST.getlist('checkbox_single[]')
+        source_dir = os.path.join(settings.MEDIA_ROOT, target.datafiles_path)
+        dest_dir = os.path.join(settings.MEDIA_ROOT, 'downloads')
+
+        os.makedirs(dest_dir, exist_ok=True)
+
+        not_found = []
+        copied_files = []
+
+        for filename in selected_files:
+            src_file = os.path.join(source_dir, filename)
+            unique_filename = get_unique_filename(dest_dir, filename)
+            dst_file = os.path.join(dest_dir, unique_filename)
+
+            try:
+                shutil.copy2(src_file, dst_file)
+                copied_files.append(unique_filename)
+            except FileNotFoundError:
+                not_found.append(filename)
+            except Exception as e:
+                messages.error(request, f"Error copying {filename}: {str(e)}")
+
+        if copied_files:
+            copied_list_str = "<br>".join(copied_files)
+            messages.success(
+                request,
+                f"<br><strong>{len(copied_files)} file(s) copied to downloads folder:</strong><br><br>{copied_list_str}"
+            )
+
+        if not_found:
+            not_found_str = "<br>".join(not_found)
+            messages.warning(
+                request,
+                f"<br><strong>{len(not_found)} file(s) not found:</strong><br><br>{not_found_str}"
+            )
+
+        return redirect('download_files_view', target_id=target_id)
 
     return render(request, 'dwarfs4MOSAIC/download_files.html', {
         'target': target,
