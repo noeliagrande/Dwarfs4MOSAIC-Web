@@ -1,6 +1,11 @@
-from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
+import os
+
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator, MaxValueValidator
+
+from django.db import models
 
 '''
 __str__(self): shows how information is displayed when accessing an object from admin
@@ -161,17 +166,21 @@ class Tbl_researcher(models.Model):
     # Relates the researcher to a Django user (auth_user)
     user = models.OneToOneField(
         User,
-        on_delete=models.CASCADE,  # If user is deleted, so is the researcher
+        on_delete=models.SET_NULL,  # If user is deleted, researcher is not!
         related_name='researcher',
-        verbose_name="User",
+        verbose_name="Username",
         null=True,
         blank=True,
     )
 
-    @property
-    def name(self):
-        # Return the full name (first name and last name)
-        return f"{self.user.first_name} {self.user.last_name}"
+    name = models.CharField(
+        max_length=200,
+        null=True,
+        verbose_name="Name")
+
+    email = models.EmailField(
+        blank=True,
+        verbose_name="email")
 
     @property
     def role(self):
@@ -180,10 +189,6 @@ class Tbl_researcher(models.Model):
             return ""
         else:
             return self.user.groups.first().name
-
-    @property
-    def email(self):
-        return self.user.email
 
     institution = models.CharField(
         max_length=200,
@@ -269,11 +274,11 @@ class Tbl_observing_block(models.Model):
     obs_run = models.ForeignKey(  # observing_run where the observing_block is executed
         Tbl_observing_run,
         on_delete=models.PROTECT,
-        #null=True,
+        null=True,
         verbose_name="Observing Run")
 
     description = models.TextField(
-        #null=True,
+        null=True,
         blank=True,
         verbose_name="Description")
               
@@ -281,7 +286,7 @@ class Tbl_observing_block(models.Model):
         verbose_name="Start Time")
         
     end_time = models.TimeField(
-        #null=True,
+        null=True,
         blank=True,
         verbose_name="End Time")
 
@@ -302,29 +307,29 @@ class Tbl_observing_block(models.Model):
     filters = models.CharField(
         max_length=100,
         blank=True,
-        #null=True,
+        null=True,
         verbose_name="Filters")
 
     exposure_time = models.DurationField(
-        #null=True,
+        null=True,
         blank=True,
         verbose_name="Exposure Time",
         help_text="seconds")
         
     seeing = models.FloatField(
-        #null=True,
+        null=True,
         blank=True,
         verbose_name="Seeing",
         help_text="arcseconds")
         
     weather_conditions = models.TextField(
         blank=True, 
-        #null=True,
+        null=True,
         verbose_name="Weather Conditions")
     
     comments = models.TextField(
         blank=True,
-        #null=True,
+        null=True,
         verbose_name="Comments")
 
     def __str__(self):
@@ -357,30 +362,30 @@ class Tbl_target(models.Model):
 
     right_ascension = models.CharField(
         max_length=15,
-        #null=True,
+        null=True,
         blank=True,
         verbose_name="Right Ascension",
         help_text="HH:MM:SS")
 
     declination = models.CharField(
         max_length=15,
-        #null=True,
+        null=True,
         blank=True,
         verbose_name="Declination",
         help_text="+/- deg:min:sec")
 
     magnitude = models.FloatField(
-        #null=True,
+        null=True,
         blank=True,
         verbose_name="Magnitude")
 
     redshift = models.FloatField(
-        #null=True,
+        null=True,
         blank=True,
         verbose_name="Redshift (z)")
 
     size = models.FloatField(
-        #null=True,
+        null=True,
         blank=True,
         verbose_name="Size",
         help_text="arcsec",)
@@ -391,15 +396,41 @@ class Tbl_target(models.Model):
 
     comments = models.TextField(
         blank=True,
-        #null=True,
+        null=True,
         verbose_name="Comments")
 
-    image = models.ImageField(
-        upload_to='images/',  # images are stored in MEDIA_ROOT/images
-        #null=True,
+    image = models.CharField(
+        max_length=255,
         blank=True,
-        verbose_name="Image"
+        null=True,
+        verbose_name="Image",
+        help_text="Path relative to 'Dwarfs4MOSAIC/src/media'"
     )
+
+    datafiles_path = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        verbose_name="Data files path",
+        help_text="Path relative to 'Dwarfs4MOSAIC/src/media'"
+    )
+
+    def clean(self):
+        super().clean()
+        if self.image:
+            full_path = os.path.join(settings.MEDIA_ROOT, self.image)
+            if not os.path.isfile(full_path):
+                raise ValidationError({
+                    'image': f'Image "{self.image}" does not exist.'
+                })
+
+    @property
+    def absolute_image_path(self):
+        return os.path.join(settings.MEDIA_ROOT, self.image)
+
+    @property
+    def image_url(self):
+        return settings.MEDIA_URL + self.image
 
     def __str__(self):
         return self.name

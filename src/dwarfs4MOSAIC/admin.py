@@ -84,4 +84,4 @@ class TargetAdmin(admin.ModelAdmin):
         ("General Information", {"fields": [
             "type", "right_ascension", "declination", "magnitude", "redshift", "size"]}),
         ("Additional Data", {"fields": [
-            "semester", "comments", 'image']}),]
+            "semester", "comments", 'image', 'datafiles_path']}),]

@@ -1,7 +1,9 @@
-from django.db.models.signals import pre_save, post_delete
+
+from django.contrib.auth.models import User, Group
+from django.db.models.signals import pre_save, post_delete, post_save
 from django.dispatch import receiver
-from django.contrib.auth.models import Group
-from .models import Tbl_observatory
+
+from .models import Tbl_observatory, Tbl_researcher
 
 # Create group when creating observatory
 @receiver(pre_save, sender=Tbl_observatory)
@@ -43,3 +45,14 @@ def delete_group_for_observatory(sender, instance, **kwargs):
         group.delete()
     except Group.DoesNotExist:
         pass  # If group no longer exists, nothing happens.
+
+# Update researcher when user is changed
+@receiver(post_save, sender=User)
+def update_researcher(sender, instance, **kwargs):
+    try:
+        researcher = instance.researcher
+        researcher.name = f"{instance.first_name} {instance.last_name}".strip()
+        researcher.email = instance.email
+        researcher.save()
+    except Tbl_researcher.DoesNotExist:
+        pass  # If no researcher is associated, nothing is done.
