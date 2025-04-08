@@ -3,11 +3,22 @@ from django.contrib.auth.models import User, Group
 from django.db.models.signals import pre_save, post_delete, post_save
 from django.dispatch import receiver
 
-from .models import Tbl_target, Tbl_researcher
+from .models import Tbl_target, Tbl_instrument, Tbl_researcher
 
-# Create group when creating target
-@receiver(pre_save, sender=Tbl_target)
-def create_or_update_group_for_target(sender, instance, **kwargs):
+# Update researcher when user is changed
+@receiver(post_save, sender=User)
+def update_researcher(sender, instance, **kwargs):
+    try:
+        researcher = instance.researcher
+        researcher.name = f"{instance.first_name} {instance.last_name}".strip()
+        researcher.email = instance.email
+        researcher.save()
+    except Tbl_researcher.DoesNotExist:
+        pass  # If no researcher is associated, nothing is done.
+
+
+# Create group when an instance is created
+def create_or_update_group(instance, model):
     try:
         # if the object already exists (it is not a new object)
         old_instance = Tbl_target.objects.get(pk=instance.pk)
@@ -37,22 +48,27 @@ def create_or_update_group_for_target(sender, instance, **kwargs):
         # If the target is new, create the group
         Group.objects.get_or_create(name=instance.name)
 
-# Delete group when deleting target
-@receiver(post_delete, sender=Tbl_target)
-def delete_group_for_target(sender, instance, **kwargs):
+
+# Create group when a target or instrument is created
+@receiver(pre_save, sender=Tbl_target)
+@receiver(pre_save, sender=Tbl_instrument)
+def create_or_update_group_for_instance(sender, instance, **kwargs):
+    create_or_update_group(instance, sender)
+
+
+# Delete group when an instance is deleted
+def delete_group_if_exists(instance):
     try:
         group = Group.objects.get(name=instance.name)
         group.delete()
     except Group.DoesNotExist:
-        pass  # If group no longer exists, nothing happens.
+        pass
 
-# Update researcher when user is changed
-@receiver(post_save, sender=User)
-def update_researcher(sender, instance, **kwargs):
-    try:
-        researcher = instance.researcher
-        researcher.name = f"{instance.first_name} {instance.last_name}".strip()
-        researcher.email = instance.email
-        researcher.save()
-    except Tbl_researcher.DoesNotExist:
-        pass  # If no researcher is associated, nothing is done.
+# Delete group when a target or instrument is deleted
+@receiver(post_delete, sender=Tbl_target)
+@receiver(post_delete, sender=Tbl_instrument)
+def delete_group_for_instance(sender, instance, **kwargs):
+    delete_group_if_exists(instance)
+
+
+
