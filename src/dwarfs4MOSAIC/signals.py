@@ -3,43 +3,43 @@ from django.contrib.auth.models import User, Group
 from django.db.models.signals import pre_save, post_delete, post_save
 from django.dispatch import receiver
 
-from .models import Tbl_observatory, Tbl_researcher
+from .models import Tbl_target, Tbl_researcher
 
-# Create group when creating observatory
-@receiver(pre_save, sender=Tbl_observatory)
-def create_or_update_group_for_observatory(sender, instance, **kwargs):
+# Create group when creating target
+@receiver(pre_save, sender=Tbl_target)
+def create_or_update_group_for_target(sender, instance, **kwargs):
     try:
         # if the object already exists (it is not a new object)
-        old_instance = Tbl_observatory.objects.get(pk=instance.pk)
+        old_instance = Tbl_target.objects.get(pk=instance.pk)
 
         if old_instance.name != instance.name:
-            # If the observatory's name has changed, we update the group
+            # If the target's name has changed, we update the group
             try:
                 old_group = Group.objects.get(name=old_instance.name)
 
                 # Create the new group with the new name
                 new_group, created = Group.objects.get_or_create(name=instance.name)
 
-                # Reasignar usuarios al nuevo grupo
+                # Reassign users to new group
                 users_in_old_group = old_group.user_set.all()
                 for user in users_in_old_group:
-                    user.groups.remove(old_group)  # Remove the user from the old group
-                    user.groups.add(new_group)  # Add the user to the new group
+                    user.groups.remove(old_group)
+                    user.groups.add(new_group)
                     user.save()
 
-                old_group.delete() # Remove old group
+                old_group.delete()
 
             except Group.DoesNotExist:
                 # If the group did not exist, we create it with the new name
                 Group.objects.get_or_create(name=instance.name)
 
-    except Tbl_observatory.DoesNotExist:
-        # If the observatory is new, create the group
+    except Tbl_target.DoesNotExist:
+        # If the target is new, create the group
         Group.objects.get_or_create(name=instance.name)
 
-# Delete group when deleting observatory
-@receiver(post_delete, sender=Tbl_observatory)
-def delete_group_for_observatory(sender, instance, **kwargs):
+# Delete group when deleting target
+@receiver(post_delete, sender=Tbl_target)
+def delete_group_for_target(sender, instance, **kwargs):
     try:
         group = Group.objects.get(name=instance.name)
         group.delete()
