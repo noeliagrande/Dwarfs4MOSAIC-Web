@@ -43,7 +43,7 @@ body {
 .header {
     background-color: #ffffff;
     padding: 10px var(--left-padding); /* lateral spacing (high, width) */
-    display: flex; /* element alignment */
+    display: flex; /* element alignment in a row */
     justify-content: space-between;  /* Distribute space between logo and links */
     align-items: center; /* Vertical centering of content */
     width: 100%;
@@ -52,12 +52,12 @@ body {
 /* Logo style */
 .logo {
     flex-shrink: 0;  /* Prevents logo shrinkage if space is limited */
-    /*border: 2px solid red;*/
-    /*max-width: 20%;*/
+    /* border: 2px solid red; */
+    max-width: 10%;
 }
 
 .header .logo img {
-    width: 20%; /* logo size */
+    width: 100%; /* logo size */
     height: auto; /* Maintains logo proportions */
 }
 
@@ -72,7 +72,7 @@ body {
 /* hierarchical navigation */
 .breadcrumb {
     font-size: 16px;
-    color: #555;
+    color: #000001;
     margin: 10px 0;
     padding: 10px var(--left-padding);
     text-decoration: none;
@@ -118,7 +118,7 @@ body {
     align-items: center; /* Center the content vertically */
     padding: 0 20px; /* Optional, adds some padding around the nav */
     justify-content: center;
-    /*border: 2px solid red;*/
+    /* border: 2px solid red; */
 }
 
 
