@@ -15,9 +15,16 @@
                 background-size: cover; background-position: center;
                 padding: 50px;">
             <div style="color: white; font-size: 2rem; text-align: center; padding: 20px;">
-                Welcome to Dwarfs4MOSAIC Home Page!
+                Welcome to
+                <a href="https://guaix.ucm.es/dwarfs4mosaic/" target="_blank"
+                   style="color: white; text-decoration: underline;">Dwarfs4MOSAIC</a>!
                 <br><br>
-                A pilot study for MOSAIC at ELT.
+                A pilot study for
+                <a href="https://elt.eso.org/instrument/MOSAIC/" target="_blank"
+                   style="color: white; text-decoration: underline;">MOSAIC</a>
+                at
+                <a href="https://elt.eso.org/" target="_blank"
+                   style="color: white; text-decoration: underline;">ELT</a>.
             </div>
             <div style="position: absolute; bottom: 10px; left: 10px;
                 color: white; font-size: 0.8rem; background-color: rgba(0, 0, 0, 0.5);
@@ -88,7 +95,7 @@
                                         {{ block.obs_run.instrument }}
                                     </a>
                                 {% else %}
-                                    {{ block.obs_run.instrument }}
+                                    {{ block.obs_run.instrument|default_if_none:""  }}
                                 {% endif %}
                                 <br>
                             {% endfor %}

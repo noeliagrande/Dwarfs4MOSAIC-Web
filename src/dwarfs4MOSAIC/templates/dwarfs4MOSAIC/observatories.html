@@ -27,7 +27,7 @@
                     <th>LOCATION</th>
                     <th>LONGITUDE</th>
                     <th>LATITUDE</th>
-                    <th>ALTITUDE</th>
+                    <th>ALTITUDE (m)</th>
                     <th>WEBSITE</th>
                 </tr>
             </thead>
@@ -45,7 +45,7 @@
                     <td>{{ observatory.altitude|default_if_none:"" }}</td>
                     {% if observatory.website %}
                         <td style="text-align: center; vertical-align: middle;">
-                            <a href="{{ observatory.website }}" target="_blank" title="{{ 'visit Site' }}">
+                            <a href="{{ observatory.website }}" target="_blank" title="{{ 'Visit site' }}">
                                 <img src="{% static 'dwarfs4MOSAIC/icons/arrow-up-right-from-square-solid.svg' %}"
                                      alt="Visit Site" style="width: 15px; height: 15px;">
                             </a>

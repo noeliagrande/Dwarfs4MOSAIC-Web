@@ -53,11 +53,11 @@ body {
 .logo {
     flex-shrink: 0;  /* Prevents logo shrinkage if space is limited */
     /*border: 2px solid red;*/
-    max-width: 20%;
+    /*max-width: 20%;*/
 }
 
 .header .logo img {
-    width: 100%; /* logo size */
+    width: 20%; /* logo size */
     height: auto; /* Maintains logo proportions */
 }
 
