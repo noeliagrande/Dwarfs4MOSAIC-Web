@@ -2,6 +2,7 @@
 <!-- Argument: 'lst_telescopes', 'last_page'  -->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
+{% load static %}
 
 {% block title %} telescopes {% endblock %}
 
@@ -64,7 +65,8 @@
                     {% if telescope.website %}
                         <td style="text-align: center;">
                             <a href="{{ telescope.website }}" target="_blank">
-                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                <img src="{% static 'dwarfs4MOSAIC/icons/arrow-up-right-from-square-solid.svg' %}"
+                                     alt="Visit Site" style="width: 15px; height: 15px;">
                             </a>
                         </td>
                     {% else %}

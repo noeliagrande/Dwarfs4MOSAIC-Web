@@ -96,7 +96,8 @@
                                 {% endfor %}
                                 <br>
                                 <a href="{% url 'download_files_view' item.target.id %}" title="{{ 'Download files' }}">
-                                    <i class="fa-solid fa-download"></i>
+                                    <img src="{% static 'dwarfs4MOSAIC/icons/download-solid.svg' %}"
+                                         alt="Download files" style="width: 16px; height: 16px;">
                                 </a>
                             {% endif %}
                         </td>
