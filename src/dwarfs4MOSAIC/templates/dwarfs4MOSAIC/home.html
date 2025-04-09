@@ -44,7 +44,11 @@
                         <th>TYPE</th>
                         <th>RA</th>
                         <th>DEC</th>
-                        <th>MAG</th>
+                        <th>MAG
+                            <img src="{% static 'dwarfs4MOSAIC/icons/circle-info-solid-white.svg' %}"
+                                 alt="Info" style="width: 12px; height: 12px;"
+                                 title="Referenced to Vega System">
+                        </th>
                         <th>Z</th>
                         <th>SIZE (arcsec)</th>
                         <th>VISIBILITY SEMESTER</th>
@@ -97,7 +101,7 @@
                                 <br>
                                 <a href="{% url 'download_files_view' item.target.id %}" title="{{ 'Download files' }}">
                                     <img src="{% static 'dwarfs4MOSAIC/icons/download-solid.svg' %}"
-                                         alt="Download files" style="width: 16px; height: 16px;">
+                                         alt="Download files" style="width: 15px; height: 15px;">
                                 </a>
                             {% endif %}
                         </td>

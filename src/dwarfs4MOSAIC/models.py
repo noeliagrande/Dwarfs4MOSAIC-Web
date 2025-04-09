@@ -379,7 +379,8 @@ class Tbl_target(models.Model):
     magnitude = models.FloatField(
         null=True,
         blank=True,
-        verbose_name="Magnitude")
+        verbose_name="Magnitude",
+        help_text="Referenced to Vega System")
 
     redshift = models.FloatField(
         null=True,

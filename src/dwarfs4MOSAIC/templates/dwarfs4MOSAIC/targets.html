@@ -2,6 +2,7 @@
 <!-- Argument: 'lst_targets'  -->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
+{% load static %}
 
 {% block title %} targets {% endblock %}
 
@@ -27,7 +28,12 @@
                     <th>TYPE</th>
                     <th>RA</th>
                     <th>DEC</th>
-                    <th>MAG</th>
+                    <th>
+                        MAG
+                        <img src="{% static 'dwarfs4MOSAIC/icons/circle-info-solid-white.svg' %}"
+                             alt="Info" style="width: 12px; height: 12px;"
+                             title="Referenced to Vega System">
+                    </th>
                     <th>Z</th>
                     <th>SIZE (arcsec)</th>
                     <th>VISIBILITY SEMESTER</th>
@@ -54,7 +60,7 @@
                     <td>{{ target.type }}</td>
                     <td>{{ target.right_ascension|default_if_none:"" }}</td>
                     <td>{{ target.declination|default_if_none:"" }}</td>
-                    <td>{{ target.magnitude|default_if_none:"" }}</td>
+                    <td title="Magnitudes referenced to Vega System">{{ target.magnitude|default_if_none:"" }}</td>
                     <td>{{ target.redshift|default_if_none:"" }}</td>
                     <td>{{ target.size|default_if_none:"" }}</td>
                     <td>{{ target.semester }}</td>

@@ -43,9 +43,8 @@ class ResearcherAdmin(admin.ModelAdmin):
     form = ResearcherAdminForm  # Usamos el formulario personalizado
 
     fieldsets = [
-        (None, {"fields": ['user', 'is_phd', 'comments']}),
+        (None, {"fields": ['user', 'is_phd', 'institution', 'comments']}),
     ]
-    #list_display = ('user', 'is_phd')  # Para mostrar en la lista de investigadores
 
 
 # 'observing_run' table

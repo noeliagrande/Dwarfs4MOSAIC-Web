@@ -42,7 +42,7 @@
                             <span style="color: red;">✘</span>
                         {% endif %}
                     </td>
-                    <td>{{ researcher.institution }}</td>
+                    <td>{{ researcher.institution|default_if_none:""  }}</td>
                     <td>
                         {% for observing_run in researcher.observing_runs.all %}
                             <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=researchers">
