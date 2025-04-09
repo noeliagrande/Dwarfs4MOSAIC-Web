@@ -26,15 +26,15 @@
             <nav class="nav-links">
                 <ul>
                     {% if user.is_authenticated %}
-                        <li><a href="{% url 'home' %}">HOME</a></li>
+                        <li><a href="{% url 'home' %}" title="{{ 'Main page' }}">HOME</a></li>
                         {% if user.groups.all.0.name == 'Collaborator' %}
 
                         {% elif user.groups.all.0.name == 'Core Team' %}
-                            <li><a href="{% url 'database' %}">DATABASE</a></li>
+                            <li><a href="{% url 'database' %}" title="{{ 'Database tables page' }}">DATABASE</a></li>
 
                         {% elif user.is_superuser %}
-                            <li><a href="{% url 'database' %}">DATABASE</a></li>
-                            <li><a href="{% url 'admin:index' %}">ADMIN</a></li>
+                            <li><a href="{% url 'database' %}" title="{{ 'Database tables page' }}">DATABASE</a></li>
+                            <li><a href="{% url 'admin:index' %}" title="{{ 'Database administration page' }}">ADMIN</a></li>
 
                         {% endif %}
                     {% endif %}

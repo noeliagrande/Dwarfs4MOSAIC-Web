@@ -46,8 +46,8 @@
                         <th>VISIBILITY SEMESTER</th>
                         <th>OBSERVING RUN</th>
                         <th>INSTRUMENT</th>
-                        <th>COMMENTS</th>
                         <th>DATA FILES</th>
+                        <th>COMMENTS</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -85,21 +85,21 @@
                                 <br>
                             {% endfor %}
                         </td>
-                        <td class="resizable-td">
-                            <div class="resizable-div">
-                                {{ item.target.comments }}
-                            </div>
-                        </td>
                         <td>
                             {% if item.files %}
                                 {% for file in item.files %}
                                     {{ file }} <br>
                                 {% endfor %}
                                 <br>
-                                <a href="{% url 'download_files_view' item.target.id %}">
+                                <a href="{% url 'download_files_view' item.target.id %}" title="{{ 'Download files' }}">
                                     <i class="fa-solid fa-download"></i>
                                 </a>
                             {% endif %}
+                        </td>
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ item.target.comments }}
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}

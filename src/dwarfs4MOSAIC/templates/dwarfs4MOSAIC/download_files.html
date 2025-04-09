@@ -1,4 +1,4 @@
-<!-- Argument: 'target', 'lst_files'  -->
+<!-- Arguments: 'target', 'lst_files', 'select_all_tooltip', 'btn_download_tooltip'  -->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
@@ -24,7 +24,7 @@
                     <table>
                         <thead>
                             <tr>
-                                <th><input type="checkbox" id="checkbox_all"></th>
+                                <th><input type="checkbox" id="checkbox_all" title="{{ select_all_tooltip }}"></th>
                                 <th>FILE NAME</th>
                             </tr>
                         </thead>
@@ -64,7 +64,7 @@
             <br>
             <button type="submit" style="cursor:pointer; background-color: var(--header-color);
                     color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;
-                    font-size: 16px;"> Download selected files
+                    font-size: 16px;" title="{{ btn_download_tooltip }}"> Download
             </button>
         </form>
 

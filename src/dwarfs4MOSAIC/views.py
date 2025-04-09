@@ -175,4 +175,6 @@ def download_files_view(request, target_id):
     return render(request, 'dwarfs4MOSAIC/download_files.html', {
         'target': target,
         'lst_files': files,
+        'select_all_tooltip': 'Click to choose all files at once',
+        'btn_download_tooltip': 'Download selected files',
     })
