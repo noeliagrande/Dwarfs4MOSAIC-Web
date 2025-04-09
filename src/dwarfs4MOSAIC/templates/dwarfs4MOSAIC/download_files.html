@@ -11,90 +11,63 @@
 {% endblock %}
 
 {% block content %}
-    <body>
-        <h1>Target: {{ target.name }}</h1>
-        <br>
-        <p class="view-explanation">Available datafiles for downloading</p>
+    <!-- Header -->
+    <h1>Target: {{ target.name }}</h1>
+    <br>
+    <p class="view-explanation">Available datafiles for downloading.</p>
 
-        <form method="POST">
-            {% csrf_token %}
-            <div style="display: flex; align-items: flex-start; gap: 2rem;">
-                <!-- Table -->
-                <section class="table-container">
-                    <table>
-                        <thead>
+    <form method="POST">
+        {% csrf_token %}
+        <div style="display: flex; align-items: flex-start; gap: 2rem;">
+
+            <!-- Table -->
+            <section class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="checkbox_all" title="{{ select_all_tooltip }}"></th>
+                            <th>FILE NAME</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for file in lst_files %}
                             <tr>
-                                <th><input type="checkbox" id="checkbox_all" title="{{ select_all_tooltip }}"></th>
-                                <th>FILE NAME</th>
+                                <td>
+                                    <input type="checkbox" name="checkbox_single[]" value="{{ file }}">
+                                </td>
+                                <td>
+                                    {{ file }}
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {% for file in lst_files %}
-                                <tr>
-                                    <td>
-                                        <input type="checkbox" name="checkbox_single[]" value="{{ file }}">
-                                    </td>
-                                    <td>
-                                        {{ file }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </section>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
 
-                <!-- Messages -->
-                <section class="message-container">
-                    {% if messages %}
-                        <div>
-                            {% for message in messages %}
-                                <p style="
-                                    padding: 10px;
+            <!-- Messages -->
+            <section class="message-container">
+                {% if messages %}
+                    <div>
+                        {% for message in messages %}
+                            <p style="padding: 10px; background-color: #f5f5f5;
+                                      margin-bottom: 1rem; white-space: pre-line;">
+                                {{ message|safe }}
+                            </p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+        <br>
 
-                                    background-color: #f5f5f5;
-                                    margin-bottom: 1rem;
-                                    white-space: pre-line;">
-                                    {{ message|safe }}
-                                </p>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                </section>
-            </div>
-            <br>
-            <button type="submit" style="cursor:pointer; background-color: var(--header-color);
-                    color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;
-                    font-size: 16px;" title="{{ btn_download_tooltip }}"> Download
-            </button>
-        </form>
+        <!-- Button -->
+        <button type="submit" style="cursor:pointer; background-color: var(--header-color);
+                color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;
+                font-size: 16px;" title="{{ btn_download_tooltip }}"> Download
+        </button>
+    </form>
 
-        <!-- Select/unselect all checkboxes -->
-        <script>
-            const checkbox_all = document.getElementById('checkbox_all');
-            const checkbox_single = document.querySelectorAll('input[name="checkbox_single[]"]');
+    <!-- Scripts -->
+    {% include "dwarfs4MOSAIC/download_files_scripts.html" %}
 
-            // Check or uncheck all when main checkbox is changed
-            checkbox_all.addEventListener('change', function() {
-                const isChecked = checkbox_all.checked;
-
-                checkbox_single.forEach(function(checkbox) {
-                    checkbox.checked = isChecked;
-                });
-            });
-
-            // If any one of them is unchecked, the main checkbox is unchecked
-            checkbox_single.forEach(function(checkbox) {
-                checkbox.addEventListener('change', function() {
-                    if (!this.checked) {
-                        checkbox_all.checked = false;
-                    } else {
-                        // If ALL checkboxes are checked, also check the “select all” checkbox
-                        const allChecked = Array.from(checkbox_single).every(cb => cb.checked);
-                        checkbox_all.checked = allChecked;
-                    }
-                });
-            });
-
-        </script>
-    </body>
 {% endblock %}

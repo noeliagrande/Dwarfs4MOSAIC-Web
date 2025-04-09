@@ -9,6 +9,7 @@
 
 {% block content %}
     {% if not authenticated %}
+        <!-- Wellcome page -->
         <div style="position: relative; width: 100%; height: 100vh;
                 background-image: url('{% static 'dwarfs4MOSAIC/images/e-elt-night-v1-cc-mz-cc.jpg' %}');
                 background-size: cover; background-position: center;
@@ -25,12 +26,15 @@
             </div>
         </div>
     {% else %}
+        <!-- Header -->
         <h1>Research Objects</h1>
         <br>
         <p class="view-explanation">
             List of celestial objects intended for study, along with details and relevant
             properties for each object.
         </p>
+
+        <!-- Table -->
         <section class="table-container">
             <table>
                 <thead>

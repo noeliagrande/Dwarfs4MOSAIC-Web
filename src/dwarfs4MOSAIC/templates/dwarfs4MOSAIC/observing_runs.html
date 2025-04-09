@@ -13,47 +13,48 @@
 {% endblock %}
 
 {% block content %}
-    <body>
-        <h1>Observing Runs table</h1>
-        <br>
-        <p class="view-explanation">Table content in the database</p>
-        <section class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>NAME</th>
-                        <th>INSTRUMENT</th>
-                        <th>DESCRIPTION</th>
-                        <th>START DATE</th>
-                        <th>END DATE</th>
-                        <th>COMMENTS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for observing_run in lst_observing_runs %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=observing_runs">
-                                {{ observing_run.name }}
-                            </a>
-                        </td>
-                        <td>{{ observing_run.instrument.name }}</td>
-                        <td class="resizable-td">
-                            <div class="resizable-div">
-                                {{ observing_run.description }}
-                            </div>
-                        </td>
-                        <td>{{ observing_run.start_date }}</td>
-                        <td>{{ observing_run.end_date|default_if_none:"" }}</td>
-                        <td class="resizable-td">
-                            <div class="resizable-div">
-                                {{ observing_run.comments }}
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-    </body>
+    <!-- Header -->
+    <h1>Observing Runs table</h1>
+    <br>
+    <p class="view-explanation">Table content in the database.</p>
+
+    <!-- Table -->
+    <section class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>INSTRUMENT</th>
+                    <th>DESCRIPTION</th>
+                    <th>START DATE</th>
+                    <th>END DATE</th>
+                    <th>COMMENTS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for observing_run in lst_observing_runs %}
+                <tr>
+                    <td>
+                        <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=observing_runs">
+                            {{ observing_run.name }}
+                        </a>
+                    </td>
+                    <td>{{ observing_run.instrument.name }}</td>
+                    <td class="resizable-td">
+                        <div class="resizable-div">
+                            {{ observing_run.description }}
+                        </div>
+                    </td>
+                    <td>{{ observing_run.start_date }}</td>
+                    <td>{{ observing_run.end_date|default_if_none:"" }}</td>
+                    <td class="resizable-td">
+                        <div class="resizable-div">
+                            {{ observing_run.comments }}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 {% endblock %}

@@ -1,0 +1,40 @@
+
+<!-- Logout when closing tab or browser -->
+<script>
+    window.addEventListener("beforeunload", function (event) {
+        if (!document.referrer.startsWith(window.location.origin)) {
+            fetch("{% url 'logout' %}", {
+                method: "POST",
+                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                keepalive: true
+            });
+        }
+    });
+</script>
+
+<!-- Logout after inactivity -->
+<script>
+    let timeout;
+
+    function resetTimer() {
+        clearTimeout(timeout);
+        timeout = setTimeout(logout, 900000); // 900000 ms = 15 minutes
+    }
+
+    function logout() {
+        fetch("{% url 'logout' %}", {
+            method: "POST",
+            headers: { "X-CSRFToken": "{{ csrf_token }}" },
+            keepalive: true
+        }).then(() => {
+            window.location.href = "{% url 'admin:login' %}?next=/home/"; // redirect to login
+        });
+    }
+
+    document.addEventListener("mousemove", resetTimer);
+    document.addEventListener("keypress", resetTimer);
+    document.addEventListener("click", resetTimer);
+    document.addEventListener("scroll", resetTimer);
+
+    resetTimer(); // Start timer
+</script>

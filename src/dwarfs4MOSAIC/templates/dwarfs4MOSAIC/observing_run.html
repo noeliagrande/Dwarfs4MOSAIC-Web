@@ -12,99 +12,96 @@
 {% endblock %}
 
 {% block content %}
-    <body>
-        <h1>
-            Observing Run: {{ observing_run.name }}
-        </h1>
-        <br><br>
-        <h2>
-            Researchers involved in the observing run
-        </h2>
-        <section class="table-container">
-            <table>
-                <thead>
+    <!-- Header -->
+    <h1>Observing Run: {{ observing_run.name }}</h1>
+    <br><br>
+
+    <!-- Researchers table -->
+    <h2>Researchers involved in the observing run</h2>
+    <section class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>ROLE</th>
+                    <th>PhD</th>
+                    <th>INSTITUTION</th>
+                    <th>EMAIL</th>
+                    <th>COMMENTS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for researcher in lst_researchers %}
                     <tr>
-                        <th>NAME</th>
-                        <th>ROLE</th>
-                        <th>PhD</th>
-                        <th>INSTITUTION</th>
-                        <th>EMAIL</th>
-                        <th>COMMENTS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for researcher in lst_researchers %}
-                        <tr>
-                            <td>{{ researcher.name }}</td>
-                            <td>{{ researcher.role }}</td>
-                            <td>
-                                {% if researcher.is_phd %}
-                                    <span style="color: green;">✔</span>
-                                {% else %}
-                                    <span style="color: red;">✘</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ researcher.institution }}</td>
-                            {% if researcher.email %}
-                                <td style="text-align: center;"> {{ researcher.email }} </td>
+                        <td>{{ researcher.name }}</td>
+                        <td>{{ researcher.role }}</td>
+                        <td>
+                            {% if researcher.is_phd %}
+                                <span style="color: green;">✔</span>
                             {% else %}
-                                <td></td>
+                                <span style="color: red;">✘</span>
                             {% endif %}
-                            <td class="resizable-td">
-                                <div class="resizable-div">
-                                    {{ researcher.comments }}
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-        <br><br>
-        <h2>
-            Observing blocks included in the observing run
-        </h2>
-        <section class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>BLOCK NAME</th>
-                        <th>DESCRIPTION</th>
-                        <th>START TIME</th>
-                        <th>END TIME</th>
-                        <th>OBSERVATION MODE</th>
-                        <th>FILTERS</th>
-                        <th>EXPOSURE TIME</th>
-                        <th>SEEING</th>
-                        <th>WEATHER CONDITIONS</th>
-                        <th>COMMENTS</th>
+                        </td>
+                        <td>{{ researcher.institution }}</td>
+                        {% if researcher.email %}
+                            <td style="text-align: center;"> {{ researcher.email }} </td>
+                        {% else %}
+                            <td></td>
+                        {% endif %}
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ researcher.comments }}
+                            </div>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for block in lst_observing_blocks %}
-                        <tr>
-                            <td>{{ block.name }}</td>
-                            <td class="resizable-td">
-                                <div class="resizable-div">
-                                    {{ block.description }}
-                                </div>
-                            </td>
-                            <td>{{ block.start_time }}</td>
-                            <td>{{ block.end_time|default_if_none:"" }}</td>
-                            <td>{{ block.observation_mode }}</td>
-                            <td>{{ block.filters|default_if_none:"" }}</td>
-                            <td>{{ block.exposure_time|default_if_none:"" }}</td>
-                            <td>{{ block.seeing|default_if_none:"" }}</td>
-                            <td>{{ block.weather_conditions }}</td>
-                            <td class="resizable-td">
-                                <div class="resizable-div">
-                                    {{ block.comments }}
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-    </body>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    <br><br>
+
+    <!-- Observing blocks table -->
+    <h2>Observing blocks included in the observing run</h2>
+    <section class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>BLOCK NAME</th>
+                    <th>DESCRIPTION</th>
+                    <th>START TIME</th>
+                    <th>END TIME</th>
+                    <th>OBSERVATION MODE</th>
+                    <th>FILTERS</th>
+                    <th>EXPOSURE TIME</th>
+                    <th>SEEING</th>
+                    <th>WEATHER CONDITIONS</th>
+                    <th>COMMENTS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for block in lst_observing_blocks %}
+                    <tr>
+                        <td>{{ block.name }}</td>
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ block.description }}
+                            </div>
+                        </td>
+                        <td>{{ block.start_time }}</td>
+                        <td>{{ block.end_time|default_if_none:"" }}</td>
+                        <td>{{ block.observation_mode }}</td>
+                        <td>{{ block.filters|default_if_none:"" }}</td>
+                        <td>{{ block.exposure_time|default_if_none:"" }}</td>
+                        <td>{{ block.seeing|default_if_none:"" }}</td>
+                        <td>{{ block.weather_conditions }}</td>
+                        <td class="resizable-td">
+                            <div class="resizable-div">
+                                {{ block.comments }}
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 {% endblock %}

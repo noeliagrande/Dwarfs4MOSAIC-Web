@@ -1,0 +1,28 @@
+
+<!-- Select/unselect all checkboxes -->
+<script>
+    const checkbox_all = document.getElementById('checkbox_all');
+    const checkbox_single = document.querySelectorAll('input[name="checkbox_single[]"]');
+
+    // Check or uncheck all when main checkbox is changed
+    checkbox_all.addEventListener('change', function() {
+        const isChecked = checkbox_all.checked;
+
+        checkbox_single.forEach(function(checkbox) {
+            checkbox.checked = isChecked;
+        });
+    });
+
+    // If any one of them is unchecked, the main checkbox is unchecked
+    checkbox_single.forEach(function(checkbox) {
+        checkbox.addEventListener('change', function() {
+            if (!this.checked) {
+                checkbox_all.checked = false;
+            } else {
+                // If ALL checkboxes are checked, also check the “select all” checkbox
+                const allChecked = Array.from(checkbox_single).every(cb => cb.checked);
+                checkbox_all.checked = allChecked;
+            }
+        });
+    });
+</script>

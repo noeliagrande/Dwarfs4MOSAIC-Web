@@ -12,58 +12,56 @@
 {% endblock %}
 
 {% block content %}
+    <!-- Header -->
+    <h1>Observatory: {{ observatory_name }}</h1>
+    <br>
+    <p class="view-explanation">Telescopes belonging to the observatory.</p>
 
-    <body>
-        <h1>Observatory: {{ observatory_name }}</h1>
-        <br>
-        <h2>
-            Telescopes belonging to the observatory
-        </h2>
-        <section class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>TELESCOPE</th>
-                        <th>DESCRIPTION</th>
-                        <th>OWNER</th>
-                        <th>STATUS</th>
-                        <th style="text-align: center;">APERTURE (m)</th>
-                        <th>WEBSITE</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for telescope in lst_telescopes %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'telescope' telescope_name=telescope.name %}?from_page=observatory">
-                                {{ telescope.name }}
+    <!-- Table -->
+    <section class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>TELESCOPE</th>
+                    <th>DESCRIPTION</th>
+                    <th>OWNER</th>
+                    <th>STATUS</th>
+                    <th style="text-align: center;">APERTURE (m)</th>
+                    <th>WEBSITE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for telescope in lst_telescopes %}
+                <tr>
+                    <td>
+                        <a href="{% url 'telescope' telescope_name=telescope.name %}?from_page=observatory">
+                            {{ telescope.name }}
+                        </a>
+                    </td>
+                    {% if telescope.description %}
+                         <td> {{ telescope.description }} </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    <td class="resizable-td">
+                        <div class="resizable-div">
+                            {{ telescope.owner }}
+                        </div>
+                    </td>
+                    <td>{{ telescope.status }}</td>
+                    <td>{{ telescope.aperture }}</td>
+                    {% if telescope.website %}
+                        <td style="text-align: center;">
+                            <a href="{{ telescope.website }}" target="_blank">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
                         </td>
-                        {% if telescope.description %}
-                             <td> {{ telescope.description }} </td>
-                        {% else %}
-                            <td></td>
-                        {% endif %}
-                        <td class="resizable-td">
-                            <div class="resizable-div">
-                                {{ telescope.owner }}
-                            </div>
-                        </td>
-                        <td>{{ telescope.status }}</td>
-                        <td>{{ telescope.aperture }}</td>
-                        {% if telescope.website %}
-                            <td style="text-align: center;">
-                                <a href="{{ telescope.website }}" target="_blank">
-                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                </a>
-                            </td>
-                        {% else %}
-                            <td></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-    </body>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 {% endblock %}

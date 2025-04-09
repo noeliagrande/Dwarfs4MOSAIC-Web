@@ -11,65 +11,66 @@
 {% endblock %}
 
 {% block content %}
-    <body>
-        <h1>Targets table</h1>
-        <br>
-        <p class="view-explanation">Table content in the database</p>
-        <section class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>IMAGE</th>
-                        <th>NAME</th>
-                        <th>OBSERVING BLOCK</th>
-                        <th>TYPE</th>
-                        <th>RA</th>
-                        <th>DEC</th>
-                        <th>MAG</th>
-                        <th>Z</th>
-                        <th>SIZE (arcsec)</th>
-                        <th>VISIBILITY SEMESTER</th>
-                        <th>COMMENTS</th>
-                        <th>DATA FILES</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for target in lst_targets %}
-                    <tr>
-                        <td>
-                            {% if target.image %}
-                                <img src="{{ target.image_url }}" alt="{{ target.name }}" style="width: 200px;">
-                            {% else %}
-                                <p>No image available</p>
-                            {% endif %}
-                        </td>
-                        <td>{{ target.name }}</td>
-                        <td>
-                            {% for block in target.observing_blocks.all %}
-                                {{ block.name }} <br>
-                            {% endfor %}
-                        </td>
-                        <td>{{ target.type }}</td>
-                        <td>{{ target.right_ascension|default_if_none:"" }}</td>
-                        <td>{{ target.declination|default_if_none:"" }}</td>
-                        <td>{{ target.magnitude|default_if_none:"" }}</td>
-                        <td>{{ target.redshift|default_if_none:"" }}</td>
-                        <td>{{ target.size|default_if_none:"" }}</td>
-                        <td>{{ target.semester }}</td>
-                        <td class="resizable-td">
-                            <div class="resizable-div">
-                                {{ target.comments }}
-                            </div>
-                        </td>
-                        <td>
-                            {% if target.datafiles_path %}
-                                {{ target.datafiles_path }}
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-    </body>
+    <!-- Header -->
+    <h1>Targets table</h1>
+    <br>
+    <p class="view-explanation">Table content in the database.</p>
+
+    <!-- Table -->
+    <section class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>IMAGE</th>
+                    <th>NAME</th>
+                    <th>OBSERVING BLOCK</th>
+                    <th>TYPE</th>
+                    <th>RA</th>
+                    <th>DEC</th>
+                    <th>MAG</th>
+                    <th>Z</th>
+                    <th>SIZE (arcsec)</th>
+                    <th>VISIBILITY SEMESTER</th>
+                    <th>COMMENTS</th>
+                    <th>DATA FILES</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for target in lst_targets %}
+                <tr>
+                    <td>
+                        {% if target.image %}
+                            <img src="{{ target.image_url }}" alt="{{ target.name }}" style="width: 200px;">
+                        {% else %}
+                            <p>No image available</p>
+                        {% endif %}
+                    </td>
+                    <td>{{ target.name }}</td>
+                    <td>
+                        {% for block in target.observing_blocks.all %}
+                            {{ block.name }} <br>
+                        {% endfor %}
+                    </td>
+                    <td>{{ target.type }}</td>
+                    <td>{{ target.right_ascension|default_if_none:"" }}</td>
+                    <td>{{ target.declination|default_if_none:"" }}</td>
+                    <td>{{ target.magnitude|default_if_none:"" }}</td>
+                    <td>{{ target.redshift|default_if_none:"" }}</td>
+                    <td>{{ target.size|default_if_none:"" }}</td>
+                    <td>{{ target.semester }}</td>
+                    <td class="resizable-td">
+                        <div class="resizable-div">
+                            {{ target.comments }}
+                        </div>
+                    </td>
+                    <td>
+                        {% if target.datafiles_path %}
+                            {{ target.datafiles_path }}
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 {% endblock %}

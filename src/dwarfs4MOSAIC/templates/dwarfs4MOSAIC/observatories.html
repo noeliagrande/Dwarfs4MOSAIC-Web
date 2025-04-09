@@ -12,48 +12,48 @@
 {% endblock %}
 
 {% block content %}
-    <body>
-        <h1>Observatories table</h1>
-        <br>
-        <p class="view-explanation">Table content in the database</p>
-        <section class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>NAME</th>
-                        <th>LOCATION</th>
-                        <th>LONGITUDE</th>
-                        <th>LATITUDE</th>
-                        <th>ALTITUDE</th>
-                        <th>WEBSITE</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for observatory in lst_observatories %}
-                    <tr>
-                        <td>
-                            <a href="{% url 'observatory' observatory_name=observatory.name %}?from_page=observatories">
-                                {{ observatory.name }}
+    <!-- Header -->
+    <h1>Observatories table</h1>
+    <br>
+    <p class="view-explanation">Table content in the database.</p>
+
+    <!-- Table -->
+    <section class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>LOCATION</th>
+                    <th>LONGITUDE</th>
+                    <th>LATITUDE</th>
+                    <th>ALTITUDE</th>
+                    <th>WEBSITE</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for observatory in lst_observatories %}
+                <tr>
+                    <td>
+                        <a href="{% url 'observatory' observatory_name=observatory.name %}?from_page=observatories">
+                            {{ observatory.name }}
+                        </a>
+                    </td>
+                    <td>{{ observatory.location }}</td>
+                    <td>{{ observatory.longitude|convert_to_dms:"longitude" }}</td>
+                    <td>{{ observatory.latitude|convert_to_dms:"latitude" }}</td>
+                    <td>{{ observatory.altitude|default_if_none:"" }}</td>
+                    {% if observatory.website %}
+                        <td style="text-align: center;">
+                            <a href="{{ observatory.website }}" target="_blank">
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
                             </a>
                         </td>
-
-                        <td>{{ observatory.location }}</td>
-                        <td>{{ observatory.longitude|convert_to_dms:"longitude" }}</td>
-                        <td>{{ observatory.latitude|convert_to_dms:"latitude" }}</td>
-                        <td>{{ observatory.altitude|default_if_none:"" }}</td>
-                        {% if observatory.website %}
-                            <td style="text-align: center;">
-                                <a href="{{ observatory.website }}" target="_blank">
-                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                </a>
-                            </td>
-                        {% else %}
-                            <td></td>
-                        {% endif %}
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-    </body>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 {% endblock %}

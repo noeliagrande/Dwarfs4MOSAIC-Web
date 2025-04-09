@@ -6,12 +6,15 @@
 {% block breadcrumb %} Database {% endblock %}
 
 {% block content %}
-    <body>
-        <h1>Database table query interface</h1>
-        <br>
-        <p style="font-size: 20px;">
-            List of database tables along with all their fields and corresponding content.
-        </p>
+    <!-- Header -->
+    <h1>Database table query interface</h1>
+    <br>
+    <p class="view-explanation">
+        List of database tables along with all their fields and corresponding content.
+    </p>
+
+    <!-- Table -->
+    <section class="table-container">
         <table>
             <thead>
                 <tr>
@@ -28,5 +31,5 @@
                 <tr><td><a href="{% url 'telescopes' %}?from_page=database">telescope</a></td></tr>
             </tbody>
         </table>
-    </body>
+    </section>
 {% endblock %}

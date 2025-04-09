@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent # Dwarfs4MOSAIC/src
 
 
 # Quick-start development settings - unsuitable for production
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'dwarfs4MOSAIC_website.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'dwarfs4MOSAIC' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,7 +135,7 @@ SESSION_SAVE_EVERY_REQUEST = True # Save the session on every request
 
 #SESSION_COOKIE_NAME = 'sessionid'
 #SESSION_COOKIE_HTTPONLY = True
-#SESSION_COOKIE_SECURE = False  # Cambiar a True si usas HTTPS
+#SESSION_COOKIE_SECURE = False  # Change to True if using HTTPS
 #SESSION_COOKIE_SAMESITE = 'Lax'
 
 # Media files

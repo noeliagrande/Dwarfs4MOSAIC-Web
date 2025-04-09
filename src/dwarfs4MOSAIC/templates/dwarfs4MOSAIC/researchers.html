@@ -11,58 +11,59 @@
 {% endblock %}
 
 {% block content %}
-    <body>
-        <h1>Researchers table</h1>
-        <br>
-        <p class="view-explanation">Table content in the database</p>
-        <section class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>NAME</th>
-                        <th>ROLE</th>
-                        <th>PhD</th>
-                        <th>INSTITUTION</th>
-                        <th>OBSERVING RUNS</th>
-                        <th>EMAIL</th>
-                        <th>COMMENTS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for researcher in lst_researchers %}
-                    <tr>
-                        <td>{{ researcher.name|default_if_none:"" }}</td>
-                        <td>{{ researcher.role }}</td>
-                        <td>
-                            {% if researcher.is_phd %}
-                                <span style="color: green;">✔</span>
-                            {% else %}
-                                <span style="color: red;">✘</span>
-                            {% endif %}
-                        </td>
-                        <td>{{ researcher.institution }}</td>
-                        <td>
-                            {% for observing_run in researcher.observing_runs.all %}
-                                <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=researchers">
-                                    {{ observing_run.name }}
-                                </a>
-                                <br>
-                            {% endfor %}
-                        </td>
-                        {% if researcher.email %}
-                            <td style="text-align: center;"> {{ researcher.email }} </td>
+    <!-- Header -->
+    <h1>Researchers table</h1>
+    <br>
+    <p class="view-explanation">Table content in the database.</p>
+
+    <!-- Table -->
+    <section class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>ROLE</th>
+                    <th>PhD</th>
+                    <th>INSTITUTION</th>
+                    <th>OBSERVING RUNS</th>
+                    <th>EMAIL</th>
+                    <th>COMMENTS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for researcher in lst_researchers %}
+                <tr>
+                    <td>{{ researcher.name|default_if_none:"" }}</td>
+                    <td>{{ researcher.role }}</td>
+                    <td>
+                        {% if researcher.is_phd %}
+                            <span style="color: green;">✔</span>
                         {% else %}
-                            <td></td>
+                            <span style="color: red;">✘</span>
                         {% endif %}
-                        <td class="resizable-td">
-                            <div class="resizable-div">
-                                {{ researcher.comments }}
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </section>
-    </body>
+                    </td>
+                    <td>{{ researcher.institution }}</td>
+                    <td>
+                        {% for observing_run in researcher.observing_runs.all %}
+                            <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=researchers">
+                                {{ observing_run.name }}
+                            </a>
+                            <br>
+                        {% endfor %}
+                    </td>
+                    {% if researcher.email %}
+                        <td style="text-align: center;"> {{ researcher.email }} </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                    <td class="resizable-td">
+                        <div class="resizable-div">
+                            {{ researcher.comments }}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
 {% endblock %}
