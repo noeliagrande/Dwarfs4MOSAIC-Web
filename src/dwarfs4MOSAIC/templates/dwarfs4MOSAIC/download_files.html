@@ -2,8 +2,9 @@
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
+{% load custom_tags %}
 
-{% block title %} download_files {% endblock %}
+{% block title %}{% html_title "Download Files" %}{% endblock %}
 
 {% block breadcrumb %}
     <a href="{% url 'home' %}">Home</a> &gt

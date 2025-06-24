@@ -3,8 +3,9 @@
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
+{% load custom_tags %}
 
-{% block title %} Telescope: {{ telescope.name }} {% endblock %}
+{% block title %}{% html_telescope_title telescope.name %}{% endblock %}
 
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt

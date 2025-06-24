@@ -1,9 +1,11 @@
 <!-- Argument: 'authenticated', 'lst_targets_with_files'  -->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
-{% load static %}
 
-{% block title %} Home {% endblock %}
+{% load static %}
+{% load custom_tags %}
+
+{% block title %}{% html_title "Home" %}{% endblock %}
 
 {% block breadcrumb %} Home {% endblock %}
 

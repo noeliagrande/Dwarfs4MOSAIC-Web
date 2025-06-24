@@ -3,8 +3,9 @@
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
+{% load custom_tags %}
 
-{% block title %} instruments {% endblock %}
+{% block title %}{% html_title "Instruments" %}{% endblock %}
 
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt

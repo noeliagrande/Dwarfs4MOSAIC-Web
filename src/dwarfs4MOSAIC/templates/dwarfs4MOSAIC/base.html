@@ -3,10 +3,11 @@
 <html lang="en">
 
 {% load static %}
+{% load custom_tags %}
 
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %} {% endblock %}</title>
+        <title>{% block title %}{% html_title "" %}{% endblock %}</title>
         <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/base.css' %}">
         <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">
     </head>

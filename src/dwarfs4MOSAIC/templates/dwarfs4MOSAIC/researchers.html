@@ -2,8 +2,9 @@
 <!-- Argument: 'lst_researchers'  -->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
+{% load custom_tags %}
 
-{% block title %} researchers {% endblock %}
+{% block title %}{% html_title "Researchers" %}{% endblock %}
 
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt

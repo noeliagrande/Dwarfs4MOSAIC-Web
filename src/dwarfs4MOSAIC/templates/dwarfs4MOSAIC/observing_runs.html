@@ -2,8 +2,9 @@
 <!-- Argument: 'lst_observing_runs'  -->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
+{% load custom_tags %}
 
-{% block title %} observing_runs {% endblock %}
+{% block title %}{% html_title "Observing Runs" %}{% endblock %}
 
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
