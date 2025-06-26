@@ -1,5 +1,4 @@
-from django.shortcuts import render, get_object_or_404
-from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from .utils import get_files, get_unique_filename
 
@@ -7,6 +6,12 @@ import os
 import shutil
 from django.conf import settings
 from django.contrib import messages
+
+from django.http import FileResponse, Http404
+from django.contrib.auth.decorators import login_required
+
+import zipfile
+import tempfile
 
 # 'Home' page.
 def home_view(request):
@@ -136,41 +141,33 @@ def download_files_view(request, target_id):
     if request.method == "POST":
         selected_files = request.POST.getlist('checkbox_single[]')
         source_dir = os.path.join(settings.MEDIA_ROOT, target.datafiles_path)
-        dest_dir = os.path.join(settings.MEDIA_ROOT, 'downloads')
 
-        os.makedirs(dest_dir, exist_ok=True)
+        if not selected_files:
+            raise Http404("No file selected.")
 
-        not_found = []
-        copied_files = []
+        # If only one file, send it directly
+        if len(selected_files) == 1:
+            filename = os.path.basename(selected_files[0])
+            filepath = os.path.join(source_dir, filename)
+            if not os.path.exists(filepath):
+                raise Http404("File not found.")
+            return FileResponse(open(filepath, 'rb'), as_attachment=True, filename=filename)
 
-        for filename in selected_files:
-            src_file = os.path.join(source_dir, filename)
-            unique_filename = get_unique_filename(dest_dir, filename)
-            dst_file = os.path.join(dest_dir, unique_filename)
+        # If more than one file, add them to a temporary ZIP
+        tmp_zip = tempfile.NamedTemporaryFile(suffix=".zip", delete=False)
+        with zipfile.ZipFile(tmp_zip.name, 'w') as zipf:
+            for fname in selected_files:
+                safe_name = os.path.basename(fname)
+                full_path = os.path.join(source_dir, safe_name)
+                if os.path.exists(full_path):
+                    zipf.write(full_path, arcname=safe_name)  # arcname = no internal path
+                else:
+                    print(f"File not found: {safe_name}")  # Optional: log or warning
 
-            try:
-                shutil.copy2(src_file, dst_file)
-                copied_files.append(unique_filename)
-            except FileNotFoundError:
-                not_found.append(filename)
-            except Exception as e:
-                messages.error(request, f"Error copying {filename}: {str(e)}")
+        # Custom download filename
+        zip_filename = f"{target.name}_files.zip" if hasattr(target, 'name') else "files.zip"
 
-        if copied_files:
-            copied_list_str = "<br>".join(copied_files)
-            messages.success(
-                request,
-                f"<br><strong>{len(copied_files)} file(s) copied to downloads folder:</strong><br><br>{copied_list_str}"
-            )
-
-        if not_found:
-            not_found_str = "<br>".join(not_found)
-            messages.warning(
-                request,
-                f"<br><strong>{len(not_found)} file(s) not found:</strong><br><br>{not_found_str}"
-            )
-
-        return redirect('download_files_view', target_id=target_id)
+        return FileResponse(open(tmp_zip.name, 'rb'), as_attachment=True, filename=zip_filename)
 
     return render(request, 'dwarfs4MOSAIC/download_files.html', {
         'target': target,
