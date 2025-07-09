@@ -49,4 +49,7 @@ urlpatterns = [
 
     # Files download page
     path('download_files/<int:target_id>/', login_required(download_files_view), name='download_files_view'),
+
+    # Files upload page
+    path('upload_files/<int:target_id>/', login_required(upload_files_view), name='upload_files_view'),
 ]

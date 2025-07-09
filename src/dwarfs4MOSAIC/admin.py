@@ -2,6 +2,9 @@ from django.contrib import admin
 from .forms import ObservatoryAdminForm, ResearcherAdminForm
 from .models import *
 
+from django.utils.html import format_html
+from django.urls import reverse
+
 admin.site.site_header = "Dwarfs4MOSAIC Login"
 
 # 'observatory' table
@@ -78,9 +81,50 @@ class ObservingBlockAdmin(admin.ModelAdmin):
 # 'target' table
 @admin.register(Tbl_target)
 class TargetAdmin(admin.ModelAdmin):
+
+    readonly_fields = ['current_datafiles_path', 'upload_info', 'upload_button']
+
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
             "type", "right_ascension", "declination", "magnitude", "redshift", "size"]}),
         ("Additional Data", {"fields": [
-            "semester", "comments", 'image', 'datafiles_path']}),]
+            "semester", "comments",
+            "image", 'datafiles_path']}),
+        ("Upload Data Files", {"fields": [
+            'upload_info', 'current_datafiles_path', 'upload_button']}),
+    ]
+
+    def current_image(self, obj):
+        return obj.image or "(No image set)"
+
+    current_image.short_description = "Current image"
+
+    def current_datafiles_path(self, obj):
+        return obj.datafiles_path or "(No datafiles path set)"
+
+    current_datafiles_path.short_description = "Current datafiles path"
+
+    def upload_info(self, obj):
+        return format_html(
+            "Files will be uploaded to the path shown in <strong style='color:red;'>‘Current datafiles path’</strong>.<br>"
+            "Please set a valid path and click <strong>‘Save and continue editing’</strong> to apply the changes before uploading."
+        )
+
+    upload_info.short_description = "IMPORTANT"
+
+    def upload_button(self, obj):
+        if obj.pk:
+            url = reverse('upload_files_view', args=[obj.pk])
+            disabled = not bool(obj.datafiles_path and obj.datafiles_path.strip())
+            if disabled:
+                return format_html(
+                    '<button type="button" disabled style="opacity:0.5; cursor:not-allowed;">Upload Files</button>'
+                )
+            else:
+                return format_html(
+                    '<a class="button" href="{}">Upload Files</a>', url
+                )
+        return "Save and reload to upload files"
+
+    upload_button.short_description = "Upload data files"
