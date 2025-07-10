@@ -180,32 +180,3 @@ def download_files_view(request, target_id):
         'btn_download_tooltip': 'Download selected files',
     })
 
-# 'Upload files' page.
-def upload_files_view(request, target_id):
-    target = get_object_or_404(Tbl_target, id=target_id)
-
-    if request.method == 'POST' and request.FILES.getlist('files'):
-        files = request.FILES.getlist('files')
-
-        # Asegúrate de que target.datafiles_path está definido
-        if not target.datafiles_path:
-            messages.error(request, "Target does not have a defined datafiles path.")
-            #return redirect('targets')
-
-        # Construye la ruta completa
-        upload_path = os.path.join(settings.MEDIA_ROOT, target.datafiles_path)
-
-        # Crea el directorio si no existe
-        os.makedirs(upload_path, exist_ok=True)
-
-        # Guarda los archivos
-        for f in files:
-            file_path = os.path.join(upload_path, f.name)
-            with open(file_path, 'wb+') as destination:
-                for chunk in f.chunks():
-                    destination.write(chunk)
-
-        messages.success(request, "Files uploaded successfully.")
-        #return redirect('targets')  # redirige a donde quieras
-
-    return render(request, 'dwarfs4MOSAIC/upload_files.html', {'target': target})
