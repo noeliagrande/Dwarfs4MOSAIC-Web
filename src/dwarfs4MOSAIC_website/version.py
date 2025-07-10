@@ -1,2 +1,2 @@
 
-__version__ = "v1.0.0 (July 2025)"
+__version__ = "v1.1.1 (July 2025)"
