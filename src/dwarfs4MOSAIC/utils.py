@@ -1,6 +1,8 @@
 import os
 import shutil
 from django.conf import settings
+import unicodedata
+import re
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
@@ -33,3 +35,16 @@ def get_unique_filename(dest_dir, filename):
         counter += 1
 
     return new_filename
+
+# This function ensures that filenames are ASCII-only and safe for use in filesystems and URLs.
+def sanitize_filename(name):
+    # Normalize Unicode characters (e.g., é → e, ñ → n)
+    name = unicodedata.normalize('NFKD', name).encode('ascii', 'ignore').decode('ascii')
+
+    # Remove any character that is not alphanumeric, dash, underscore, period, or space
+    name = re.sub(r'[^\w\-. ]', '', name)
+
+    # Replace spaces with underscores
+    name = name.replace(' ', '_')
+
+    return name
