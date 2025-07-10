@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
-from .utils import get_files, get_unique_filename
+from .utils import get_files, get_unique_filename, sanitize_filename
 
 import os
 import shutil
@@ -20,25 +20,25 @@ def home_view(request):
     if request.user.is_authenticated:
         # Get datafiles for each target
         lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run')
-        lst_targets_with_files = []
+        lst_targets_and_files = []
 
         for target in lst_targets:
             # Get files only if datafiles_path has value
             if target.datafiles_path:
                 files = get_files(target.datafiles_path)
 
-                lst_targets_with_files.append({
+                lst_targets_and_files.append({
                     'target': target,
                     'files': files
                 })
             else:
-                lst_targets_with_files.append({
+                lst_targets_and_files.append({
                     'target': target,
                     'files': []
                 })
 
         context['authenticated'] = True
-        context['lst_targets_with_files'] = lst_targets_with_files
+        context['lst_targets_and_files'] = lst_targets_and_files
     else:
         context['authenticated'] = False
 
@@ -148,7 +148,7 @@ def download_files_view(request, target_id):
         # If only one file, send it directly
         if len(selected_files) == 1:
             filename = os.path.basename(selected_files[0])
-            filepath = os.path.join(source_dir, filename)
+            filepath = os.path.join(source_dir, sanitize_filename(filename))
             if not os.path.exists(filepath):
                 raise Http404("File not found.")
             return FileResponse(open(filepath, 'rb'), as_attachment=True, filename=filename)
@@ -165,7 +165,11 @@ def download_files_view(request, target_id):
                     print(f"File not found: {safe_name}")  # Optional: log or warning
 
         # Custom download filename
-        zip_filename = f"{target.name}_files.zip" if hasattr(target, 'name') else "files.zip"
+        if hasattr(target, 'name'):
+            safe_name = sanitize_filename(target.name)
+            zip_filename = f"{safe_name}_files.zip"
+        else:
+            zip_filename = "files.zip"
 
         return FileResponse(open(tmp_zip.name, 'rb'), as_attachment=True, filename=zip_filename)
 

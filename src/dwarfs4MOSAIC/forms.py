@@ -1,8 +1,12 @@
+import os
+
 from django import forms
 from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.forms.widgets import TextInput
-from .models import Tbl_observatory, Tbl_researcher
+from django.utils.safestring import mark_safe
+
+from .models import Tbl_observatory, Tbl_researcher, Tbl_target
 from django.contrib.auth.models import User
 
 # Management of longitude and latitude fields
@@ -169,3 +173,68 @@ class ResearcherAdminForm(forms.ModelForm):
         if self.instance.pk:
             self.fields['user'].queryset = User.objects.filter(pk=self.instance.user.pk)
             self.fields['user'].disabled = True
+
+
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", MultipleFileInput())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = [single_file_clean(data, initial)]
+        return result
+
+class TargetAdminForm(forms.ModelForm):
+    upload_image = forms.FileField(
+        required=False,
+        label="Image",
+    )
+
+    upload_datafiles = MultipleFileField(
+        required=False,
+        label="Data files",
+        #widget=MultipleFileInput(attrs={"class": "button default"}) # muestra el widget azul
+    )
+
+    class Meta:
+        model = Tbl_target
+        exclude = ['image', 'datafiles_path']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Solo mostrar el path si ya hay una instancia y tiene path
+        if self.instance and self.instance.pk:
+            if self.instance.image:
+                self.fields['upload_image'].help_text = mark_safe(
+                    f"<strong>Current image:</strong> {self.instance.image_name}"
+                )
+
+            if self.instance.datafiles_path:
+                files = []
+                try:
+                    if os.path.exists(self.instance.datafiles_path):
+                        files = os.listdir(self.instance.datafiles_path)
+                except Exception as e:
+                    files = [f"(Error al acceder: {e})"]
+
+                if files:
+                    file_list = "<ul>" + "".join(f"<li>{f}</li>" for f in files) + "</ul>"
+                else:
+                    file_list = "No files found"
+
+                self.fields['upload_datafiles'].help_text = mark_safe(
+                    f"<strong>Current data files:</strong><br>{file_list}"
+                )
+
+
+
+

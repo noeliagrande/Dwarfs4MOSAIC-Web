@@ -46,7 +46,7 @@
                 {% for target in lst_targets %}
                 <tr>
                     <td>
-                        {% if target.image %}
+                        {% if target.image_name %}
                             <img src="{{ target.image_url }}" alt="{{ target.name }}" style="width: 200px;">
                         {% else %}
                             <p>No image available</p>

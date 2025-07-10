@@ -1,4 +1,4 @@
-<!-- Argument: 'authenticated', 'lst_targets_with_files'  -->
+<!-- Argument: 'authenticated', 'lst_targets_and_files'  -->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 
@@ -68,10 +68,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in lst_targets_with_files %}
+                    {% for item in lst_targets_and_files %}
                     <tr>
                         <td style="text-align: center;">
-                            {% if item.target.image %}
+                            {% if item.target.image_name %}
                                 <img src="{{ item.target.image_url }}" alt="Failed to load image" style="width: 150px;">
                             {% else %}
                                 <p>No image available</p>

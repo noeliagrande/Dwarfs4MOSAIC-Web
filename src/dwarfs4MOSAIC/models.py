@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -6,6 +7,8 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from django.db import models
+
+from dwarfs4MOSAIC.utils import sanitize_filename
 
 '''
 __str__(self): shows how information is displayed when accessing an object from admin
@@ -348,6 +351,7 @@ Table 'target'
 class Tbl_target(models.Model):
     name = models.CharField(
         max_length=200,
+        unique=True,
         verbose_name="Name")
 
     type = models.CharField(
@@ -407,7 +411,8 @@ class Tbl_target(models.Model):
         blank=True,
         null=True,
         verbose_name="Image",
-        help_text="Path relative to 'Dwarfs4MOSAIC/src/media'"
+        editable=False,
+        #help_text="Path relative to 'Dwarfs4MOSAIC/src/media'"
     )
 
     datafiles_path = models.CharField(
@@ -415,17 +420,48 @@ class Tbl_target(models.Model):
         blank=True,
         null=True,
         verbose_name="Data files path",
-        help_text="Path relative to 'Dwarfs4MOSAIC/src/media'"
+        editable=False,
+        #help_text="Path relative to 'Dwarfs4MOSAIC/src/media'"
     )
 
-    def clean(self):
-        super().clean()
-        if self.image:
-            full_path = os.path.join(settings.MEDIA_ROOT, self.image)
-            if not os.path.isfile(full_path):
-                raise ValidationError({
-                    'image': f'Image "{self.image}" does not exist.'
-                })
+    @property
+    def image_name(self):
+        if self.image and os.path.splitext(self.image)[1]:  # hay extensión de archivo
+            return os.path.basename(self.image)
+        return ""
+
+
+    @property
+    def relative_path(self):
+        """
+        Devuelve la ruta relativa desde MEDIA_ROOT a MEDIA_ROOT/safe_name.
+        """
+        safe_name = sanitize_filename(self.name)
+        return safe_name
+
+    @property
+    def absolute_path(self):
+        """
+        Devuelve la ruta absoluta MEDIA_ROOT/safe_name.
+        """
+        return os.path.join(settings.MEDIA_ROOT, self.relative_path)
+
+
+    def delete(self, *args, **kwargs):
+        # Asegurar que usamos el nombre sanitizado igual que al crear
+        safe_name = sanitize_filename(self.name)
+
+        # Carpeta completa bajo MEDIA_ROOT
+        folder_path = os.path.join(settings.MEDIA_ROOT, safe_name)
+
+        # Seguridad: eliminar solo si está bajo MEDIA_ROOT
+        folder_path = os.path.abspath(folder_path)
+        media_root = os.path.abspath(settings.MEDIA_ROOT)
+
+        if folder_path.startswith(media_root) and os.path.exists(folder_path):
+            shutil.rmtree(folder_path, ignore_errors=True)
+
+        super().delete(*args, **kwargs)
 
     @property
     def image_url(self):
