@@ -23,9 +23,9 @@ import zipfile
 import tempfile
 
 # Home page showing all targets and associated files (if authenticated)
-def home_view(request):
-
+'''def home_view(request):
     context = {}
+    
     if request.user.is_authenticated:
         # Get datafiles for each target
         lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run')
@@ -51,7 +51,55 @@ def home_view(request):
     else:
         context['authenticated'] = False
 
+    return render(request, 'dwarfs4MOSAIC/home.html', context)'''
+
+def home_view(request):
+    context = {}
+    if request.user.is_authenticated:
+        # Prefetch related data to reduce database queries
+        lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run__instrument')
+        lst_targets_and_files = []
+
+        for target in lst_targets:
+            # Get associated files if 'datafiles_path' is defined
+            files = get_files(target.datafiles_path) if target.datafiles_path else []
+
+            # Deduplicate observing runs
+            seen_runs = set() # Set to track already added obs_run
+            unique_runs = []  # Final list of unique obs_run objects
+
+            for block in target.observing_blocks.all():
+                run = block.obs_run
+                key = str(run)
+                if key not in seen_runs:
+                    seen_runs.add(key)
+                    unique_runs.append(run)
+
+            # Deduplicate instruments
+            seen_instruments = set()  # Set to track already added instruments
+            unique_instruments = []   # Final list of unique instrument objects
+            for run in unique_runs:
+                instr = run.instrument
+                key = str(instr)
+                if key not in seen_instruments:
+                    seen_instruments.add(key)
+                    unique_instruments.append(instr)
+
+            # Add everything to the rendering context
+            lst_targets_and_files.append({
+                'target': target,
+                'files': files,
+                'unique_obs_runs': unique_runs,
+                'unique_instruments': unique_instruments,
+            })
+
+        context['authenticated'] = True
+        context['lst_targets_and_files'] = lst_targets_and_files
+    else:
+        context['authenticated'] = False
+
     return render(request, 'dwarfs4MOSAIC/home.html', context)
+
 
 # Static database overview page
 def database_view(request):

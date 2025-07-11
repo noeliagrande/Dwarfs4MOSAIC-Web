@@ -5,7 +5,11 @@
 
     Arguments:
     - 'authenticated': Boolean indicating if the user is logged in.
-    - 'lst_targets_and_files': List of objects containing target data and associated files.
+    - lst_targets_and_files: List of dictionaries. Each item includes:
+        - target: a Tbl_target instance (astronomical object)
+        - files: list of filenames found in the target's datafiles_path
+        - unique_obs_runs: list of unique observing runs associated with the target
+        - unique_instruments: list of unique instruments used in the target's observing runs
 
     Behavior:
     - If the user is not authenticated, show a welcome landing page with background image and credits.
@@ -24,7 +28,7 @@
 
 {% block content %}
     {% if not authenticated %}
-        <!-- Welcome landing page with background image and project info for guests -->
+        <!-- Guest view: Welcome landing page with background image -->
         <div style="position: relative; width: 100%; height: 100vh;
                 background-image: url('{% static 'dwarfs4MOSAIC/images/e-elt-night-v1-cc-mz-cc.jpg' %}');
                 background-size: cover; background-position: center;
@@ -48,7 +52,7 @@
             </div>
         </div>
     {% else %}
-        <!-- Authenticated user view: table listing research targets and their properties -->
+        <!-- Authenticated user view: List of research targets -->
         <h1>Research Objects</h1>
         <br>
         <p class="view-explanation">
@@ -98,29 +102,34 @@
                         <td>{{ item.target.redshift|default_if_none:""}}</td>
                         <td>{{ item.target.size|default_if_none:"" }}</td>
                         <td>{{ item.target.semester }}</td>
+
+                        <!-- Observing runs (may be multiple) -->
                         <td>
-                            {% for block in item.target.observing_blocks.all %}
-                                {{ block.obs_run }} <br>
+                            {% for run in item.unique_obs_runs %}
+                                {{ run }}<br>
                             {% endfor %}
                         </td>
+
+                        <!-- Instruments (may be multiple, with optional link) -->
                         <td>
-                            {% for block in item.target.observing_blocks.all %}
-                                {% if block.obs_run.instrument.website %}
-                                    <a href="{{ block.obs_run.instrument.website }}" target="_blank">
-                                        {{ block.obs_run.instrument }}
-                                    </a>
+                            {% for instr in item.unique_instruments %}
+                                {% if instr.website %}
+                                    <a href="{{ instr.website }}" target="_blank">{{ instr }}</a>
                                 {% else %}
-                                    {{ block.obs_run.instrument|default_if_none:""  }}
+                                    {{ instr|default_if_none:"" }}
                                 {% endif %}
                                 <br>
                             {% endfor %}
                         </td>
+
+                        <!-- Data files associated with the target -->
                         <td>
                             {% if item.files %}
                                 {% for file in item.files %}
                                     {{ file }} <br>
                                 {% endfor %}
                                 <br>
+                                <!-- Download all files as zip -->
                                 <a href="{% url 'download_files_view' item.target.id %}" title="{{ 'Download files' }}">
                                     <img src="{% static 'dwarfs4MOSAIC/icons/download-solid.svg' %}"
                                          alt="Download files" style="width: 15px; height: 15px;">
