@@ -404,7 +404,7 @@ class Tbl_target(models.Model):
         null=True,
         verbose_name="Comments")
 
-    image = models.CharField( # Image full path
+    image = models.CharField( # Image relative path to MEDIA_ROOT
         max_length=255,
         blank=True,
         null=True,
@@ -412,7 +412,7 @@ class Tbl_target(models.Model):
         editable=False,
     )
 
-    datafiles_path = models.CharField( # Data files full path
+    datafiles_path = models.CharField( # Data files relative path to MEDIA_ROOT
         max_length=255,
         blank=True,
         null=True,
@@ -445,7 +445,7 @@ class Tbl_target(models.Model):
     @property
     def image_url(self):
         if self.image:
-            return settings.MEDIA_URL + self.image
+            return os.path.join(settings.MEDIA_URL, self.image)
         return ""
 
     def __str__(self):

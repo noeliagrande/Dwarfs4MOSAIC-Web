@@ -31,7 +31,7 @@
         <header class="header">
 
             <div class="logo">
-                <a href="https://guaix.ucm.es/dwarfs4mosaic/" target="_blank">
+                <a href="{% url 'home' %}">
                     <img src="{% static 'dwarfs4MOSAIC/images/logo_dwarfs4mosaic.png' %}"
                          alt="dwarfs4MOSAIC logo">
                 </a>
@@ -84,21 +84,31 @@
         <!-- Horizontal divider line -->
         <div class='custom-divider'></div>
 
-        <!-- Breadcrumb navigation and user greeting -->
+        <!-- Breadcrumb section shown only to authenticated users -->
         {% if user.is_authenticated %}
-            <div class="breadcrumb">
-                <p>
-                    Welcome
-                    {% if user.is_superuser %}
-                        ADMIN
-                    {% else %}
-                        {{ user.first_name|upper }}
-                    {% endif %}
-                </p>
-                <p>
-                    You are here:
-                    {% block breadcrumb %} {% endblock %}
-                </p>
+            <!-- Left section: welcome message and breadcrumb path -->
+            <div class="breadcrumb" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <p>
+                        Welcome
+                        {% if user.is_superuser %}
+                            ADMIN
+                        {% else %}
+                            {{ user.first_name|upper }}
+                        {% endif %}
+                    </p>
+                    <p>
+                        You are here:
+                        {% block breadcrumb %} {% endblock %}
+                    </p>
+                </div>
+
+                <!-- Right section: static project description with external links -->
+                <div style="text-align: right">
+                    <a href="https://guaix.ucm.es/dwarfs4mosaic/" target="_blank" >Dwarfs4MOSAIC</a><br>
+                    A pilot study for <a href="https://elt.eso.org/instrument/MOSAIC/" target="_blank">MOSAIC</a>
+                    at <a href="https://elt.eso.org/" target="_blank">ELT</a>
+                </div>
             </div>
         {% endif %}
 

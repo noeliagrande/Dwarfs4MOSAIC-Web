@@ -137,24 +137,24 @@ class TargetAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
         safe_name = sanitize_filename(obj.name)
-        base_path = os.path.join(settings.MEDIA_ROOT, safe_name) # .../media/target_name
-        datafiles_path = os.path.join(base_path, "datafiles")    # .../media/target_name/datafiles
-        image_path = os.path.join(base_path, "image")            # .../media/target_name/image
+        base_path = os.path.join(settings.MEDIA_ROOT, safe_name) # MEDIA_ROOT/target_name
+        datafiles_path = os.path.join(base_path, "datafiles")    # MEDIA_ROOT/target_name/datafiles
+        image_path = os.path.join(base_path, "image")            # MEDIA_ROOT/target_name/image
 
         # Ensure directories exist
         os.makedirs(datafiles_path, exist_ok=True)
         os.makedirs(image_path, exist_ok=True)
 
         if is_new:
-            # Save paths on first creation
-            obj.datafiles_path = datafiles_path
-            obj.image = image_path
+            # Save relative paths on first creation
+            obj.datafiles_path = os.path.relpath(datafiles_path, settings.MEDIA_ROOT)
+            obj.image = os.path.relpath(image_path, settings.MEDIA_ROOT)
             obj.save()
             return
 
         # Handle image deletion
         if form.cleaned_data.get('delete_image') and obj.image_name:
-            image_file_path = obj.image
+            image_file_path = os.path.join(settings.MEDIA_ROOT, obj.image)
             if os.path.exists(image_file_path):
                 os.remove(image_file_path)
 
@@ -162,11 +162,11 @@ class TargetAdmin(admin.ModelAdmin):
             if os.path.exists(image_file_path):
                 self.message_user(
                     request,
-                    f'⚠️ Warning: the image "{obj.image_name}" could not be deleted.',
+                    f'Warning: the image "{obj.image_name}" could not be deleted.',
                     level=messages.WARNING
                 )
             else:
-                obj.image = image_path # Reset to default image path
+                obj.image = os.path.relpath(image_path, settings.MEDIA_ROOT) # Reset to default image relative path
 
         else:
             # Handle image upload
@@ -174,7 +174,7 @@ class TargetAdmin(admin.ModelAdmin):
             if upload_image:
 
                 previous_image_name = obj.image_name
-                previous_image_path = obj.image
+                previous_image_path = os.path.join(settings.MEDIA_ROOT, obj.image)
 
                 # Save new image
                 file_path = os.path.join(image_path, upload_image.name)
@@ -183,20 +183,19 @@ class TargetAdmin(admin.ModelAdmin):
                         destination.write(chunk)
 
                 # Check if the file was actually saved
-                if obj.image_name and not os.path.isfile(obj.image):
+                if not os.path.isfile(file_path):
                     self.message_user(
                         request,
-                        f'⚠️ Warning: the image file "{obj.image}" does not exist on disk.',
+                        f'Warning: the image "{upload_image.name}" could not be uploaded.',
                         level=messages.WARNING
                     )
 
                 else:
-                    obj.image = os.path.join(image_path, upload_image.name)  # new image
+                    obj.image = os.path.relpath(file_path, settings.MEDIA_ROOT) # new image
 
                     # Delete previous image
-                    if previous_image_name:
-                        if os.path.exists(previous_image_path):
-                            os.remove(previous_image_path)
+                    if previous_image_name and os.path.exists(previous_image_path):
+                        os.remove(previous_image_path)
 
         # Handle multiple file uploads
         datafiles = form.cleaned_data.get("upload_datafiles", [])

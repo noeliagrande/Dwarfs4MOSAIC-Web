@@ -19,6 +19,9 @@ from django.utils.safestring import mark_safe
 from .models import Tbl_observatory, Tbl_researcher, Tbl_target
 from django.contrib.auth.models import User
 
+from django.conf import settings
+
+
 # Form for observatory admin with detailed longitude and latitude input fields.
 # Longitude and latitude are split into direction (E/W, N/S), degrees, minutes, and seconds.
 # Includes conversion between decimal degrees and DMS, and validation of input completeness and range.
@@ -243,8 +246,9 @@ class TargetAdminForm(forms.ModelForm):
             if self.instance.datafiles_path:
                 files = []
                 try:
-                    if os.path.exists(self.instance.datafiles_path):
-                        files = os.listdir(self.instance.datafiles_path)
+                    full_path = os.path.join(settings.MEDIA_ROOT, self.instance.datafiles_path)
+                    if os.path.exists(full_path):
+                        files = os.listdir(full_path)
                 except Exception as e:
                     files = [f"(Error al acceder: {e})"]
 

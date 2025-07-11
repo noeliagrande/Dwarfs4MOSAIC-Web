@@ -4,7 +4,7 @@ register = template.Library()
 
 @register.simple_tag
 def html_title(title):
-    return f"{title} | Dwarfs4MOSAIC"
+    return f"{title} | Dwarfs4MOSAIC data"
 
 @register.simple_tag
 def html_observatory_title(observatoy_name):

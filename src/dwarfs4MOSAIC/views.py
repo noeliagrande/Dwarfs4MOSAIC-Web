@@ -23,36 +23,6 @@ import zipfile
 import tempfile
 
 # Home page showing all targets and associated files (if authenticated)
-'''def home_view(request):
-    context = {}
-    
-    if request.user.is_authenticated:
-        # Get datafiles for each target
-        lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run')
-        lst_targets_and_files = []
-
-        for target in lst_targets:
-            # Get files only if datafiles_path has value
-            if target.datafiles_path:
-                files = get_files(target.datafiles_path)
-
-                lst_targets_and_files.append({
-                    'target': target,
-                    'files': files
-                })
-            else:
-                lst_targets_and_files.append({
-                    'target': target,
-                    'files': []
-                })
-
-        context['authenticated'] = True
-        context['lst_targets_and_files'] = lst_targets_and_files
-    else:
-        context['authenticated'] = False
-
-    return render(request, 'dwarfs4MOSAIC/home.html', context)'''
-
 def home_view(request):
     context = {}
     if request.user.is_authenticated:
