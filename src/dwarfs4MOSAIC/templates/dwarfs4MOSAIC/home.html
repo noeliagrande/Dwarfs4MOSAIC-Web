@@ -1,4 +1,17 @@
-<!-- Argument: 'authenticated', 'lst_targets_and_files'  -->
+<!--
+    Home page template for Dwarfs4MOSAIC project.
+    Shows a welcome landing page for unauthenticated users,
+    and a detailed list of research targets with associated data for authenticated users.
+
+    Arguments:
+    - 'authenticated': Boolean indicating if the user is logged in.
+    - 'lst_targets_and_files': List of objects containing target data and associated files.
+
+    Behavior:
+    - If the user is not authenticated, show a welcome landing page with background image and credits.
+    - If authenticated, display a detailed table of celestial research targets with images, properties, instruments,
+      data files available for download, and comments.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 
@@ -11,7 +24,7 @@
 
 {% block content %}
     {% if not authenticated %}
-        <!-- Wellcome page -->
+        <!-- Welcome landing page with background image and project info for guests -->
         <div style="position: relative; width: 100%; height: 100vh;
                 background-image: url('{% static 'dwarfs4MOSAIC/images/e-elt-night-v1-cc-mz-cc.jpg' %}');
                 background-size: cover; background-position: center;
@@ -35,7 +48,7 @@
             </div>
         </div>
     {% else %}
-        <!-- Header -->
+        <!-- Authenticated user view: table listing research targets and their properties -->
         <h1>Research Objects</h1>
         <br>
         <p class="view-explanation">
@@ -43,7 +56,7 @@
             properties for each object.
         </p>
 
-        <!-- Table -->
+        <!-- Table displaying targets and associated metadata -->
         <section class="table-container">
             <table>
                 <thead>

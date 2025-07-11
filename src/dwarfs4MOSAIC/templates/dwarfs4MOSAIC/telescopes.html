@@ -1,5 +1,10 @@
+<!--
+    Template to display a table of telescopes stored in the database.
 
-<!-- Argument: 'lst_telescopes', 'last_page'  -->
+    Arguments:
+    - lst_telescopes: List of telescope objects.
+    - last_page: (Optional) Name of the page from which the user came; used to maintain navigation flow.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
@@ -13,12 +18,12 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>Telescopes table</h1>
     <br>
     <p class="view-explanation">Table content in the database.</p>
 
-    <!-- Table -->
+    <!-- Telescopes table -->
     <section class="table-container">
         <table>
             <thead>
@@ -35,26 +40,33 @@
             <tbody>
                 {% for telescope in lst_telescopes %}
                 <tr>
+                    <!-- Name with link to detail view -->
                     <td>
                         <a href="{% url 'telescope' telescope_name=telescope.name %}?from_page=telescopes">
                             {{ telescope.name }}
                         </a>
                     </td>
+
                     {% if telescope.description %}
                          <td> {{ telescope.description }} </td>
                     {% else %}
                         <td></td>
                     {% endif %}
+
+                    <!-- Observatory with link -->
                     <td>
                         <a href="{% url 'observatory' observatory_name=telescope.obs_tel.name %}?from_page=telescopes">
                             {{ telescope.obs_tel.name }}
                         </a>
                     </td>
+
                     <td class="resizable-td">
                         <div class="resizable-div">
                             {{ telescope.owner }}
                         </div>
                     </td>
+
+                    <!-- Operational status with color codes -->
                     <td style="color:
                             {% if telescope.status == 'inoperative' %} red
                             {% elif telescope.status == 'maintenance'%} #ff6200
@@ -62,7 +74,10 @@
                             {% endif %};">
                         {{ telescope.status }}
                     </td>
+
                     <td>{{ telescope.aperture }}</td>
+
+                    <!-- Website link if available -->
                     {% if telescope.website %}
                         <td style="text-align: center;">
                             <a href="{{ telescope.website }}" target="_blank" title="{{ 'Visit site' }}">

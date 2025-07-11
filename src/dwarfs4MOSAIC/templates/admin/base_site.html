@@ -1,9 +1,9 @@
-<!-- Esto añade tu favicon sin quitar lo que ya tiene Django en el <head> del admin. -->
+<!-- Add a favicon without removing what Django already has in the admin <head>. -->
 
 {% extends "admin/base_site.html" %}
 {% load static %}
 
 {% block extrahead %}
-    <link rel="icon" type="image/png" href="{% static 'dwarfs4MOSAIC/icons/favicon.ico' %}">
     {{ block.super }}
+    <link rel="icon" type="image/x-icon" href="{% static 'dwarfs4MOSAIC/icons/favicon.ico' %}">
 {% endblock %}

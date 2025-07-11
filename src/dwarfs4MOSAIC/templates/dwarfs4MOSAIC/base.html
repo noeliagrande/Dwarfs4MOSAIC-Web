@@ -1,3 +1,16 @@
+<!--
+  Base template for dwarfs4MOSAIC project pages.
+
+  Features:
+  - Loads static files and custom template tags.
+  - Sets up the HTML <head> with dynamic title, CSS, and favicon.
+  - Displays a header with logo and navigation menus that adapt based on user authentication and groups.
+  - Provides login/logout buttons.
+  - Shows a breadcrumb area with a welcome message for authenticated users.
+  - Defines main content block to be overridden by child templates.
+  - Includes JavaScript scripts from a separate file.
+  - Footer shows application version.
+-->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,16 +20,15 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}{% html_title "" %}{% endblock %}</title>
-        <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/base.css' %}">
-        <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">
-        <link rel="icon" type="image/png" href="{% static 'dwarfs4MOSAIC/icons/favicon.ico' %}">
+        <title>{% block title %}{% html_title "" %}{% endblock %}</title>  <!-- Page title, can be overridden -->
+        <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/base.css' %}">  <!-- Base CSS -->
+        <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">  <!-- Table CSS -->
+        <link rel="icon" type="image/png" href="{% static 'dwarfs4MOSAIC/icons/favicon.ico' %}">  <!-- Favicon -->
     </head>
 
     <body>
-        <!-- Header -->
+        <!-- Header section containing logo and navigation menus -->
         <header class="header">
-            <!-- Logo -->
 
             <div class="logo">
                 <a href="https://guaix.ucm.es/dwarfs4mosaic/" target="_blank">
@@ -25,13 +37,13 @@
                 </a>
             </div>
 
-
-            <!-- Options -->
+            <!-- Navigation links depending on user authentication and group -->
             <nav class="nav-links">
                 <ul>
                     {% if user.is_authenticated %}
                         <li><a href="{% url 'home' %}" title="{{ 'Main page' }}">HOME</a></li>
                         {% if user.groups.all.0.name == 'Collaborator' %}
+                            <!-- Collaborator-specific links could go here -->
 
                         {% elif user.groups.all.0.name == 'Core Team' %}
                             <li><a href="{% url 'database' %}" title="{{ 'Database tables page' }}">DATABASE</a></li>
@@ -45,11 +57,11 @@
                 </ul>
             </nav>
 
-            <!-- Login / logout -->
+            <!-- Login/logout navigation -->
             <nav class="nav-links">
                 <ul>
                     {% if user.is_authenticated %}
-                        <!-- Logout button -->
+                        <!-- Logout form -->
                         <form method="post" action="{% url 'logout' %}" >
                             {% csrf_token %}
                             <button type="submit" style="cursor:pointer; background-color: var(--header-color);
@@ -69,10 +81,10 @@
             </nav>
         </header>
 
-        <!-- Divider Line -->
+        <!-- Horizontal divider line -->
         <div class='custom-divider'></div>
 
-        <!-- Breadcrumb -->
+        <!-- Breadcrumb navigation and user greeting -->
         {% if user.is_authenticated %}
             <div class="breadcrumb">
                 <p>
@@ -90,20 +102,20 @@
             </div>
         {% endif %}
 
-        <!-- Divider Line -->
+        <!-- Horizontal divider line -->
         <div class='custom-divider'></div>
 
-        <!-- Main content area -->
+        <!-- Main content area to be filled by each view -->
         <main>
             {% block content %}
-            <!-- Each view's content will go here -->
+            <!-- Content inserted here -->
             {% endblock %}
         </main>
 
-        <!-- Scripts -->
+        <!-- Include JavaScript files -->
         {% include "dwarfs4MOSAIC/base_scripts.html" %}
 
-        <!-- Footer -->
+        <!-- Footer showing app version -->
         <footer style="text-align: center; padding: 1em; color: #777;">
             {{ APP_VERSION }}
         </footer>

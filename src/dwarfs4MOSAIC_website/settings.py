@@ -15,23 +15,27 @@ import os
 
 from .version import __version__ as APP_VERSION
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent # Dwarfs4MOSAIC/src
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+
+# Base directory of the project (e.g., Dwarfs4MOSAIC/src)
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# === Security ===
+
+# SECURITY WARNING: Never expose this secret key in production!
 SECRET_KEY = 'django-insecure-!y*cdqk2#drd&j)0dc9%5$&(6306#+q26d&rcv-l7_mypph_pk'
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# SECURITY WARNING: Turn off debug in production!
 DEBUG = True
 
+# Allowed domains to serve the app (empty during development)
 ALLOWED_HOSTS = []
 
 
-# Application definition
+# === Installed Applications ===
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -43,6 +47,8 @@ INSTALLED_APPS = [
     'dwarfs4MOSAIC.apps.Dwarfs4MOSAICConfig',
 ]
 
+# === Middleware Stack ===
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -53,7 +59,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# === URL Configuration ===
+
 ROOT_URLCONF = 'dwarfs4MOSAIC_website.urls'
+
+# === Templates ===
 
 TEMPLATES = [
     {
@@ -73,10 +83,12 @@ TEMPLATES = [
     },
 ]
 
+# === WSGI ===
+
 WSGI_APPLICATION = 'dwarfs4MOSAIC_website.wsgi.application'
 
+# === Database ===
 
-# Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
@@ -87,7 +99,8 @@ DATABASES = {
 }
 
 
-# Password validation
+# === Password Validation ===
+
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -106,45 +119,51 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
+# === Internationalization ===
+
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# === Static Files (CSS, JS, Images) ===
+
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "dwarfs4MOSAIC" / "static"]
 
-# Default primary key field type
+# === Default Primary Key Field Type ===
+
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# === Session Settings ===
+
 #SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
 
-# Idle time in admin
+# Idle time before session expires
 SESSION_COOKIE_AGE = 900  # Session timeout in seconds (15 minutes)
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True # Session expires when the browser is closed
 SESSION_SAVE_EVERY_REQUEST = True # Save the session on every request
 
+# Optional security settings:
 #SESSION_COOKIE_NAME = 'sessionid'
 #SESSION_COOKIE_HTTPONLY = True
 #SESSION_COOKIE_SECURE = False  # Change to True if using HTTPS
 #SESSION_COOKIE_SAMESITE = 'Lax'
 
-# Media files
-MEDIA_URL = '/media/' # URL to access media files from navigator
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Path where media files are stored (where manage.py is)
+# === Media Files ===
 
-LOGIN_URL = '/admin/login'  # Django ‘login’ URL will be used to redirect unauthenticated users
+MEDIA_URL = '/media/' # URL to serve media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Filesystem path where uploaded media files are stored
+
+# === Authentication Redirects ===
+
+LOGIN_URL = '/admin/login'
 LOGIN_REDIRECT_URL = '/home/'
 LOGOUT_REDIRECT_URL = '/home/'

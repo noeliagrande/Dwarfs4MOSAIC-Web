@@ -1,24 +1,30 @@
+<!--
+    Session Management Scripts:
+    - Automatically logs out the user when closing the tab or browser (if navigating away from the site).
+    - Automatically logs out the user after some minutes of inactivity to enhance security.
+-->
 
-<!-- Logout when closing tab or browser -->
+<!-- Logout when closing the tab or browser -->
 <script>
     window.addEventListener("beforeunload", function (event) {
+        // Only log out if the previous page is not from the same origin
         if (!document.referrer.startsWith(window.location.origin)) {
             fetch("{% url 'logout' %}", {
                 method: "POST",
                 headers: { "X-CSRFToken": "{{ csrf_token }}" },
-                keepalive: true
+                keepalive: true // Allows the request to be sent even when the page is unloading
             });
         }
     });
 </script>
 
-<!-- Logout after inactivity -->
+<!-- Auto logout after inactivity -->
 <script>
     let timeout;
 
     function resetTimer() {
         clearTimeout(timeout);
-        timeout = setTimeout(logout, 900000); // 900000 ms = 15 minutes
+        timeout = setTimeout(logout, 900000); // Restart the logout timer for 900000 ms (15 minutes)
     }
 
     function logout() {
@@ -27,14 +33,15 @@
             headers: { "X-CSRFToken": "{{ csrf_token }}" },
             keepalive: true
         }).then(() => {
-            window.location.href = "{% url 'admin:login' %}?next=/home/"; // redirect to login
+            window.location.href = "{% url 'admin:login' %}?next=/home/"; // Redirect to login page after logging out
         });
     }
 
+    // Reset the timer on any user interaction
     document.addEventListener("mousemove", resetTimer);
     document.addEventListener("keypress", resetTimer);
     document.addEventListener("click", resetTimer);
     document.addEventListener("scroll", resetTimer);
 
-    resetTimer(); // Start timer
+    resetTimer(); // Start the timer when the page loads
 </script>

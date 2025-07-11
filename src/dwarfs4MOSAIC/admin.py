@@ -1,25 +1,30 @@
+"""
+Django Admin configuration for the Dwarfs4MOSAIC project.
+
+This file defines how each model is displayed and managed in the Django Admin interface.
+It includes custom forms, custom file handling logic (images and data files for targets),
+and overrides default admin behavior where necessary.
+"""
+
 from django.contrib import admin
 from .forms import ObservatoryAdminForm, ResearcherAdminForm, TargetAdminForm
 from .models import *
-
 from .utils import sanitize_filename
 
 import os
 from django.conf import settings
 from django.contrib import messages
-
-from django.contrib import admin
 from django.contrib.admin.actions import delete_selected as original_delete_selected
 
 
-
+# Custom title for the Django Admin interface
 admin.site.site_header = "Dwarfs4MOSAIC Login"
 
-# 'observatory' table
+# --- 'observatory' table ---
 @admin.register(Tbl_observatory)
 class ObservatoryAdmin(admin.ModelAdmin):
     form = ObservatoryAdminForm
-    empty_value_display = ""  # Shows empty field instead of 'None'
+    empty_value_display = ""  # Display empty string instead of 'None'
 
     fieldsets = [
         (None, {"fields": ["name"]}),
@@ -30,7 +35,7 @@ class ObservatoryAdmin(admin.ModelAdmin):
             ("latitude_deg", "latitude_min", "latitude_sec", "latitude_ns"),
             "altitude"]}),]
 
-# 'telescope' table
+# --- 'telescope' table ---
 @admin.register(Tbl_telescope)
 class TelescopeAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -40,7 +45,7 @@ class TelescopeAdmin(admin.ModelAdmin):
         ("Characteristics", {"fields": [
             "aperture"]}),]
 
-# 'instrument' table
+# --- 'instrument' table ---
 @admin.register(Tbl_instrument)
 class InstrumentAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -48,7 +53,7 @@ class InstrumentAdmin(admin.ModelAdmin):
         ("General Information", {"fields": [
             "description", "tel_ins", "website", "status"]}),]
 
-# 'researcher' table
+# --- 'researcher' table ---
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
     form = ResearcherAdminForm  # Usamos el formulario personalizado
@@ -57,8 +62,7 @@ class ResearcherAdmin(admin.ModelAdmin):
         (None, {"fields": ['user', 'is_phd', 'institution', 'comments']}),
     ]
 
-
-# 'observing_run' table
+# --- 'observing_run' table ---
 @admin.register(Tbl_observing_run)
 class ObservingRunAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -70,9 +74,10 @@ class ObservingRunAdmin(admin.ModelAdmin):
         ("Additional Data", {"fields": [
             "comments"]}),]
 
+    # Enable horizontal multi-selection widget
     filter_horizontal = ['researchers']
 
-# 'observing_block' table
+# --- 'observing_block' table ---
 @admin.register(Tbl_observing_block)
 class ObservingBlockAdmin(admin.ModelAdmin):
     fieldsets = [
@@ -84,9 +89,10 @@ class ObservingBlockAdmin(admin.ModelAdmin):
         ("Additional Data", {"fields": [
             "comments"]}),]
 
+    # Enable horizontal multi-selection widget
     filter_horizontal = ['target']
 
-# 'target' table
+# --- 'target' table ---
 @admin.register(Tbl_target)
 class TargetAdmin(admin.ModelAdmin):
 
@@ -94,7 +100,9 @@ class TargetAdmin(admin.ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         base_readonly = []
-        if obj:  # el objeto ya existe
+
+        # If editing an existing object, make 'name' read-only
+        if obj:
             return ['name'] + base_readonly
         return base_readonly
 
@@ -108,12 +116,13 @@ class TargetAdmin(admin.ModelAdmin):
                 ]}),
         ]
 
-        # Solo añadir la sección de subida si el objeto ya existe (edición)
+        # Add file upload section only when editing an existing object
         if obj and obj.pk:
             base_fieldsets.append((
                 "Upload Files",
                 {
                     "fields": [
+                        # Show delete checkbox only if there is already an image
                         ("upload_image", "delete_image") if obj.image_name else "upload_image",
                         "upload_datafiles",
                     ]
@@ -123,7 +132,7 @@ class TargetAdmin(admin.ModelAdmin):
         return base_fieldsets
 
     def save_model(self, request, obj, form, change):
-        is_new = obj.pk is None  # True si se está creando por primera vez
+        is_new = obj.pk is None  # True if the object is being created
 
         super().save_model(request, obj, form, change)
 
@@ -132,25 +141,24 @@ class TargetAdmin(admin.ModelAdmin):
         datafiles_path = os.path.join(base_path, "datafiles")    # .../media/target_name/datafiles
         image_path = os.path.join(base_path, "image")            # .../media/target_name/image
 
-        # Asegúrate de que las carpetas existen
+        # Ensure directories exist
         os.makedirs(datafiles_path, exist_ok=True)
         os.makedirs(image_path, exist_ok=True)
 
         if is_new:
+            # Save paths on first creation
             obj.datafiles_path = datafiles_path
             obj.image = image_path
-            obj.save() # Guardar paths
+            obj.save()
             return
 
-        # if not is_new:
-
-        # Borrar imagen (si existe) si se ha marcado el checkbox
+        # Handle image deletion
         if form.cleaned_data.get('delete_image') and obj.image_name:
             image_file_path = obj.image
             if os.path.exists(image_file_path):
                 os.remove(image_file_path)
 
-            # Comprobar si el archivo realmente se borró
+            # Check if image was really deleted
             if os.path.exists(image_file_path):
                 self.message_user(
                     request,
@@ -158,24 +166,23 @@ class TargetAdmin(admin.ModelAdmin):
                     level=messages.WARNING
                 )
             else:
-                obj.image = image_path # .../media/target_name/image
-                #obj.save()
+                obj.image = image_path # Reset to default image path
 
         else:
-            # Actualizar imagen
+            # Handle image upload
             upload_image = form.cleaned_data.get('upload_image')
             if upload_image:
 
                 previous_image_name = obj.image_name
                 previous_image_path = obj.image
 
-                # Add new image
+                # Save new image
                 file_path = os.path.join(image_path, upload_image.name)
                 with open(file_path, 'wb+') as destination:
                     for chunk in upload_image.chunks():
                         destination.write(chunk)
 
-                # Al final: comprobar si el archivo realmente se guardó
+                # Check if the file was actually saved
                 if obj.image_name and not os.path.isfile(obj.image):
                     self.message_user(
                         request,
@@ -191,8 +198,7 @@ class TargetAdmin(admin.ModelAdmin):
                         if os.path.exists(previous_image_path):
                             os.remove(previous_image_path)
 
-                #obj.save()
-
+        # Handle multiple file uploads
         datafiles = form.cleaned_data.get("upload_datafiles", [])
         for uploaded_file in datafiles:
             dest_path = os.path.join(datafiles_path, uploaded_file.name)
@@ -200,10 +206,11 @@ class TargetAdmin(admin.ModelAdmin):
                 for chunk in uploaded_file.chunks():
                     destination.write(chunk)
 
-        # Save changes
+        # Save all changes
         obj.save()
 
     def get_actions(self, request):
+        # Replace default bulk delete action with a custom one
         actions = super().get_actions(request)
         if "delete_selected" in actions:
             actions["delete_selected"] = (
@@ -213,6 +220,7 @@ class TargetAdmin(admin.ModelAdmin):
         return actions
 
     def custom_delete_selected(self, modeladmin, request, queryset):
+        # Delete selected objects and show a summary message
         deleted_count = 0
         for obj in queryset:
             obj.delete()

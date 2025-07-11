@@ -1,11 +1,11 @@
 /* Basic table style */
 table {
-    width: 100%; /* Percentage of available space */
-    max-width: 25%; /* Table shall not exceed % of view width */
-    /* width: auto;   Table resizes columns according to content */
-    table-layout: auto; /* Allows for dynamic column widths */
-    margin: 20px 0; /* left alignment  */
-    border-collapse: collapse;
+    width: 100%;                /* Use full available width */
+    /*width: auto;              /* Table resizes columns based on content */
+    max-width: 25%;             /* Limit table width to 25% of viewport */
+    table-layout: auto;         /* Allows dynamic column widths */
+    margin: 20px 0;             /* Vertical margin (top and bottom) */
+    border-collapse: collapse;  /* Collapse borders into single lines */
     text-align: left;
     font-family: Arial, sans-serif;
 }
@@ -13,19 +13,19 @@ table {
 /* Cell styling */
 th, td {
     border: 1px solid #ddd;
-    padding: 10px 10px;
-    white-space: nowrap; /* Prevents text from splitting into multiple lines */
+    padding: 10px 10px;     /* Padding inside cells */
+    white-space: nowrap;    /* Prevents text from splitting into multiple lines */
 }
 
-/*Esto no está funcionando muy bien. Hay que completarlo con JavaScript.*/
+/* IMPORTANT: This does not work well yet and needs to be supplemented with JavaScript */
 .resizable-td {
     padding: 5px;
     width: auto;
 }
 
 .resizable-div {
-    white-space: normal;
-    word-wrap: break-word;
+    white-space: normal;    /* Allow text to wrap */
+    word-wrap: break-word;  /* Break long words */
     width: 300px;
     min-width: 100px;
     max-width: 1000px;
@@ -35,25 +35,19 @@ th, td {
 }
 
 
-/* Table heading */
+/* Table header style */
 th {
     background-color: var(--header-color);
     color: white;
 }
 
-
-/* Alternate colours in rows
-tr:nth-child(even) {
-    background-color: #f2f2f2;
-}*/
-
 /* Hover effect */
-/* Changes background colour when user hovers mouse over row*/
+/* Change background color when hovering over a table row */
 tr:hover {
     background-color: #ddd;
 }
 
-/* Mouse-over colour change */
+/* Link hover color change inside table */
 table a:hover {
     color: var(--header-color);
 }

@@ -1,4 +1,11 @@
-<!-- Arguments: 'target', 'lst_files', 'select_all_tooltip', 'btn_download_tooltip'  -->
+<!--
+    Template for downloading data files associated with a specific target.
+    Arguments:
+    - target: Target object whose files are being listed.
+    - lst_files: List of available filenames for download.
+    - select_all_tooltip: Tooltip text for the "select all" checkbox.
+    - btn_download_tooltip: Tooltip text for the download button.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
@@ -12,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>Target: {{ target.name }}</h1>
     <br>
     <p class="view-explanation">Available datafiles for downloading.</p>
@@ -21,7 +28,7 @@
         {% csrf_token %}
         <div style="display: flex; align-items: flex-start; gap: 2rem;">
 
-            <!-- Table -->
+            <!-- Files table with selection checkboxes -->
             <section class="table-container">
                 <table>
                     <thead>
@@ -45,7 +52,7 @@
                 </table>
             </section>
 
-            <!-- Messages -->
+            <!-- Messages section for feedback -->
             <section class="message-container">
                 {% if messages %}
                     <div>
@@ -61,14 +68,14 @@
         </div>
         <br>
 
-        <!-- Button -->
+        <!-- Download button -->
         <button type="submit" style="cursor:pointer; background-color: var(--header-color);
                 color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;
                 font-size: 16px;" title="{{ btn_download_tooltip }}"> Download
         </button>
     </form>
 
-    <!-- Scripts -->
+    <!-- JavaScript for checkbox behavior and other interactions -->
     {% include "dwarfs4MOSAIC/download_files_scripts.html" %}
 
 {% endblock %}

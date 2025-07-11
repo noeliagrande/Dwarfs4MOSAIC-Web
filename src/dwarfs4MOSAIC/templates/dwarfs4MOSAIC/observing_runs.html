@@ -1,5 +1,9 @@
+<!--
+    Template to display the table of all observing runs stored in the database.
 
-<!-- Argument: 'lst_observing_runs'  -->
+    Argument:
+    - lst_observing_runs: List of observing run objects to display.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load custom_tags %}
@@ -12,12 +16,12 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>Observing Runs table</h1>
     <br>
     <p class="view-explanation">Table content in the database.</p>
 
-    <!-- Table -->
+    <!-- Observing runs table -->
     <section class="table-container">
         <table>
             <thead>
@@ -34,6 +38,7 @@
                 {% for observing_run in lst_observing_runs %}
                 <tr>
                     <td>
+                        <!-- Link to individual observing run detail view -->
                         <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=observing_runs">
                             {{ observing_run.name }}
                         </a>

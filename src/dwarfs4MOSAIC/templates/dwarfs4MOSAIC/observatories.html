@@ -1,5 +1,9 @@
+<!--
+    Template to display the list of observatories stored in the database.
 
-<!-- Argument: 'lst_observatories'  -->
+    Argument:
+    - lst_observatories: List of observatory objects to display.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
@@ -14,12 +18,12 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>Observatories table</h1>
     <br>
     <p class="view-explanation">Table content in the database.</p>
 
-    <!-- Table -->
+    <!-- Observatories table -->
     <section class="table-container">
         <table>
             <thead>

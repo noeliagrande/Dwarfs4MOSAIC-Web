@@ -1,5 +1,10 @@
+<!--
+    Template to display the instruments associated with a given telescope.
 
-<!-- Arguments: 'telescope', 'lst_instruments'  -->
+    Arguments:
+    - telescope: Telescope object whose details are being displayed.
+    - lst_instruments: List of instrument objects linked to the telescope.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
@@ -14,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>
         Telescope: {{ telescope.name }}
         {% if telescope.description %}
@@ -24,7 +29,7 @@
     <br>
     <p class="view-explanation">Instruments belonging to the telescope.</p>
 
-    <!-- Table -->
+    <!-- Instruments table -->
     <section class="table-container">
         <table>
             <thead>
@@ -47,6 +52,8 @@
                     <td style="color: {% if instrument.status == 'inoperative' %}red{% else %}black{% endif %};">
                         {{ instrument.status }}
                     </td>
+
+                    <!-- Website link (if available) -->
                     {% if instrument.website %}
                         <td style="text-align: center;">
                             <a href="{{ instrument.website }}" target="_blank" title="{{ 'Visit site' }}">

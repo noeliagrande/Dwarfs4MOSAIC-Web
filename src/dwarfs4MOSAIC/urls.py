@@ -1,53 +1,59 @@
+"""
+URL configuration for the application.
+
+This module defines all the paths used in the web interface, linking URLs
+to their corresponding views. It includes pages for login/logout, home,
+database tables (observatories, telescopes, instruments, etc.), and data download.
+
+All pages except login/logout require authentication.
+"""
+
 from django.urls import path
 from django.contrib.auth.views import LoginView, LogoutView
-from django.contrib.auth.decorators import login_required
 from .views import *
 
 urlpatterns = [
-    # Home page
+    # Home page (requires login)
     path('home/', home_view, name='home'),
 
-    # Login/logout
+    # Login / Logout (use built-in Django views)
     path('login/', LoginView.as_view(template_name='admin/login.html'), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
 
-    # Download folder
-    #path('download/<str:filename>/', views.download_file, name='download_file'),
-
-    # Database page
+    # Database summary page
     path('database/', login_required(database_view), name='database'),
 
-    # 'Observatories table' page.
+    # Observatories list
     path('observatories/', login_required(observatories_view), name='observatories'),
 
-    # Page with information about a specific observatory
+    # Single observatory detail page
     path('observatory/<str:observatory_name>/', login_required(observatory_view), name='observatory'),
 
-    # 'Telescopes table' page.
+    # Telescopes list
     path('telescopes/', login_required(telescopes_view), name='telescopes'),
 
-    # Page with information about a specific telescope
+    # Single telescope detail page
     path('telescope/<str:telescope_name>/', login_required(telescope_view), name='telescope'),
 
-    # 'Instruments table' page.
+    # Instruments list
     path('instruments/', login_required(instruments_view), name='instruments'),
 
-    # 'Researchers table' page.
+    # Researchers list
     path('researchers/', login_required(researchers_view), name='researchers'),
 
-    # 'Observing_run table' page.
+    # Observing runs list
     path('observing_runs/', login_required(observing_runs_view), name='observing_runs'),
 
-    # Page with information about a specific observing_run
+    # Single observing run detail page
     path('observing_run/<str:observing_run_name>/', login_required(observing_run_view), name='observing_run'),
 
-    # 'Observing_block table' page.
+    # Observing blocks list
     path('observing_blocks/', login_required(observing_blocks_view), name='observing_blocks'),
 
-    # 'Target table' page.
+    # Targets list
     path('target/', login_required(targets_view), name='targets'),
 
-    # Files download page
+    # File download view for a specific target
     path('download_files/<int:target_id>/', login_required(download_files_view), name='download_files_view'),
 
 ]

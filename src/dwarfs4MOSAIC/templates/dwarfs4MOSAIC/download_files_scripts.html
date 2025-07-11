@@ -1,10 +1,14 @@
+<!--
+    Script to handle "Select All" functionality for checkboxes:
+    - Toggles all individual checkboxes when the main "select all" checkbox is clicked.
+    - Updates the "select all" checkbox state based on individual checkbox changes.
+-->
 
-<!-- Select/unselect all checkboxes -->
 <script>
     const checkbox_all = document.getElementById('checkbox_all');
     const checkbox_single = document.querySelectorAll('input[name="checkbox_single[]"]');
 
-    // Check or uncheck all when main checkbox is changed
+    // When main checkbox changes, check or uncheck all individual checkboxes
     checkbox_all.addEventListener('change', function() {
         const isChecked = checkbox_all.checked;
 
@@ -13,13 +17,14 @@
         });
     });
 
-    // If any one of them is unchecked, the main checkbox is unchecked
+    // When any individual checkbox changes, update main checkbox accordingly
     checkbox_single.forEach(function(checkbox) {
         checkbox.addEventListener('change', function() {
             if (!this.checked) {
+                // If any single checkbox is unchecked, uncheck the main checkbox
                 checkbox_all.checked = false;
             } else {
-                // If ALL checkboxes are checked, also check the “select all” checkbox
+                // If all individual checkboxes are checked, check the main checkbox
                 const allChecked = Array.from(checkbox_single).every(cb => cb.checked);
                 checkbox_all.checked = allChecked;
             }

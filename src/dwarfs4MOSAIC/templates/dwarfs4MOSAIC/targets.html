@@ -1,5 +1,9 @@
+<!--
+    Template to display the list of targets stored in the database.
 
-<!-- Argument: 'lst_targets'  -->
+    Argument:
+    - lst_targets: List of target objects to be displayed in the table.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
@@ -13,12 +17,12 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>Targets table</h1>
     <br>
     <p class="view-explanation">Table content in the database.</p>
 
-    <!-- Table -->
+    <!-- Targets table -->
     <section class="table-container">
         <table>
             <thead>
@@ -53,14 +57,20 @@
                         {% endif %}
                     </td>
                     <td>{{ target.name }}</td>
+
+                    <!-- Associated observing blocks -->
                     <td>
                         {% for block in target.observing_blocks.all %}
                             {{ block.name }} <br>
                         {% endfor %}
                     </td>
+
                     <td>{{ target.type }}</td>
+
+                    <!-- Equatorial coordinates -->
                     <td>{{ target.right_ascension|default_if_none:"" }}</td>
                     <td>{{ target.declination|default_if_none:"" }}</td>
+
                     <td title="Magnitudes referenced to Vega System">{{ target.magnitude|default_if_none:"" }}</td>
                     <td>{{ target.redshift|default_if_none:"" }}</td>
                     <td>{{ target.size|default_if_none:"" }}</td>
@@ -70,6 +80,8 @@
                             {{ target.comments }}
                         </div>
                     </td>
+
+                    <!-- Path to associated data files -->
                     <td>
                         {% if target.datafiles_path %}
                             {{ target.datafiles_path }}

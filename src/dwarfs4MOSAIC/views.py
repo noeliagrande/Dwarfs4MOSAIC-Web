@@ -1,3 +1,12 @@
+"""
+Views for the dwarfs4MOSAIC web interface.
+
+This module provides page rendering and logic for:
+- Viewing all tables (targets, observatories, telescopes, etc.)
+- Navigating between related entities
+- Downloading data files (individually or as ZIP)
+"""
+
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import *
 from .utils import get_files, get_unique_filename, sanitize_filename
@@ -13,7 +22,7 @@ from django.contrib.auth.decorators import login_required
 import zipfile
 import tempfile
 
-# 'Home' page.
+# Home page showing all targets and associated files (if authenticated)
 def home_view(request):
 
     context = {}
@@ -44,11 +53,11 @@ def home_view(request):
 
     return render(request, 'dwarfs4MOSAIC/home.html', context)
 
-# 'Database tables' page.
+# Static database overview page
 def database_view(request):
     return render(request, 'dwarfs4MOSAIC/database.html')
 
-# 'Observatories table' page.
+# Page listing all observatories
 def observatories_view(request):
     lst_observatories = Tbl_observatory.objects.all().order_by("name")
 
@@ -56,7 +65,7 @@ def observatories_view(request):
         'lst_observatories': lst_observatories
     })
 
-# Page with telescopes for a specific observatory
+# Page listing all telescopes of a specific observatory
 def observatory_view(request, observatory_name):
     observatory = get_object_or_404(Tbl_observatory, name = observatory_name) # Get observatory by name
     telescopes = Tbl_telescope.objects.filter(obs_tel = observatory) # Get telescopes belonging to the observatory
@@ -66,7 +75,7 @@ def observatory_view(request, observatory_name):
         'lst_telescopes': telescopes
     })
 
-# 'Telescopes table' page.
+# Page listing all telescopes
 def telescopes_view(request):
     lst_telescopes = Tbl_telescope.objects.all().select_related("obs_tel").order_by("name")
 
@@ -74,7 +83,7 @@ def telescopes_view(request):
         'lst_telescopes': lst_telescopes
     })
 
-# Page with information about a specific telescope
+# Page listing all instruments of a specific telescope
 def telescope_view(request, telescope_name):
     telescope = get_object_or_404(Tbl_telescope, name = telescope_name) # Get telescope by name
     instruments = Tbl_instrument.objects.filter(tel_ins = telescope) # Get instruments belonging to the telescope
@@ -84,7 +93,7 @@ def telescope_view(request, telescope_name):
         'lst_instruments': instruments
     })
 
-# 'Instruments table' page.
+# Page listing all instruments
 def instruments_view(request):
     lst_instruments = Tbl_instrument.objects.all().select_related("tel_ins").order_by("name")
 
@@ -92,7 +101,7 @@ def instruments_view(request):
         'lst_instruments': lst_instruments
     })
 
-# 'Researchers table' page.
+# Page listing all researchers
 def researchers_view(request):
     lst_researchers = Tbl_researcher.objects.all()
 
@@ -100,7 +109,7 @@ def researchers_view(request):
         'lst_researchers': lst_researchers
     })
 
-# 'Observing runs table' page.
+# Page listing all observing runs
 def observing_runs_view(request):
     lst_observing_runs = Tbl_observing_run.objects.all().select_related('instrument')
 
@@ -108,7 +117,7 @@ def observing_runs_view(request):
         'lst_observing_runs': lst_observing_runs
     })
 
-# Page with information about a specific observing_run
+# Page showing a specific observing run with its blocks and researchers
 def observing_run_view(request, observing_run_name):
     observing_run = get_object_or_404(Tbl_observing_run, name = observing_run_name) # Get observing_run by name
     observing_blocks = Tbl_observing_block.objects.filter(obs_run = observing_run.id) # Get observing_blocks belonging to the observing_run
@@ -119,21 +128,25 @@ def observing_run_view(request, observing_run_name):
         'lst_observing_blocks': observing_blocks,
         'lst_researchers': researchers})
 
-# 'Observing blocks table' page.
+# Page listing all observing blocks
 def observing_blocks_view(request):
     lst_observing_blocks = Tbl_observing_block.objects.all().select_related('obs_run').prefetch_related('target')
 
     return render(request, 'dwarfs4MOSAIC/observing_blocks.html', {
         'lst_observing_blocks': lst_observing_blocks})
 
-# 'Target table' page.
+# Page listing all targets
 def targets_view(request):
     lst_targets = Tbl_target.objects.all()
 
     return render(request, 'dwarfs4MOSAIC/targets.html', {
         'lst_targets': lst_targets})
 
-# View for files downloading
+# Allow the user to download one or multiple data files associated with a target.
+# - If one file is selected, it is served directly.
+# - If multiple files are selected, they are compressed into a ZIP archive.
+# Raises:
+#     Http404: If no files are selected or a file is missing.
 def download_files_view(request, target_id):
     target = get_object_or_404(Tbl_target, pk=target_id)
     files = get_files(target.datafiles_path) if target.datafiles_path else []
@@ -145,7 +158,7 @@ def download_files_view(request, target_id):
         if not selected_files:
             raise Http404("No file selected.")
 
-        # If only one file, send it directly
+        # Send a single file
         if len(selected_files) == 1:
             filename = os.path.basename(selected_files[0])
             filepath = os.path.join(source_dir, sanitize_filename(filename))
@@ -153,7 +166,7 @@ def download_files_view(request, target_id):
                 raise Http404("File not found.")
             return FileResponse(open(filepath, 'rb'), as_attachment=True, filename=filename)
 
-        # If more than one file, add them to a temporary ZIP
+        # If more than one file, create a ZIP archive of multiple files
         tmp_zip = tempfile.NamedTemporaryFile(suffix=".zip", delete=False)
         with zipfile.ZipFile(tmp_zip.name, 'w') as zipf:
             for fname in selected_files:

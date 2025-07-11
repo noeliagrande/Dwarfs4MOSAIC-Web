@@ -1,3 +1,15 @@
+"""
+This file contains the Django model definitions for the main database tables
+used in the project. Each model corresponds to a specific entity, such as
+Observatory, Telescope, Instrument, Researcher, Observing Run, Observing Block,
+and Target. These models define the database schema, relationships, and basic
+behaviors for managing astronomical observation data.
+
+Each form related to these models has its own detailed explanation and usage
+notes, so please refer to the respective form documentation for specific field
+descriptions and validation rules.
+"""
+
 import os
 import shutil
 
@@ -15,9 +27,7 @@ __str__(self): shows how information is displayed when accessing an object from 
 '''
 
 
-'''
-Table 'observatory'
-'''
+# --- 'observatory' table ---
 class Tbl_observatory(models.Model):
 
     # fields
@@ -53,7 +63,7 @@ class Tbl_observatory(models.Model):
 
     # telescopes:
     # One-to-many relationship is set in Tbl_telescope model.
-    # It is not necessary to define it explicitly here, as Django handles it automatically.
+    # Django automatically creates reverse accessors.
 
     def __str__(self):
         return self.name
@@ -63,9 +73,7 @@ class Tbl_observatory(models.Model):
         verbose_name_plural = "Observatories"
         ordering = ['name']
 
-'''
-Table 'telescope'
-'''
+# --- 'telescope' table ---
 class Tbl_telescope(models.Model):
     name = models.CharField(
         max_length=200,
@@ -77,7 +85,7 @@ class Tbl_telescope(models.Model):
         blank=True,
         verbose_name="Description")
 
-    obs_tel = models.ForeignKey( #observatory where the telescope is located
+    obs_tel = models.ForeignKey( # observatory where the telescope is located
         Tbl_observatory,
         on_delete=models.PROTECT,
         null=True,
@@ -99,7 +107,7 @@ class Tbl_telescope(models.Model):
             ('operational', 'Operational'),
             ('inoperative', 'Inoperative'),
             ('maintenance', 'Under Maintenance')],
-        max_length=11, #maximum length in choices
+        max_length=11, # maximum length in choices
         default='unknown',
         verbose_name="Status")
 
@@ -109,9 +117,9 @@ class Tbl_telescope(models.Model):
         null=True,
         default="")
 
-    # instrument:
+    # instruments:
     # One-to-many relationship is set in Tbl_instrument model.
-    # It is not necessary to define it explicitly here, as Django handles it automatically.
+    # Django automatically creates reverse accessors.
 
     def __str__(self):
         return self.name
@@ -121,9 +129,7 @@ class Tbl_telescope(models.Model):
         verbose_name_plural = "Telescopes"
         ordering = ['name']
 
-'''
-Table 'instrument'
-'''
+# --- 'instrument' table ---
 class Tbl_instrument(models.Model):
     name = models.CharField(
         max_length=200,
@@ -135,7 +141,7 @@ class Tbl_instrument(models.Model):
         blank=True,
         verbose_name="Description")
 
-    tel_ins = models.ForeignKey( # telescope where the instrument stands
+    tel_ins = models.ForeignKey( # telescope where the instrument is installed
         Tbl_telescope,
         on_delete=models.PROTECT,
         null=True,
@@ -164,14 +170,12 @@ class Tbl_instrument(models.Model):
         verbose_name_plural = "Instruments"
         ordering = ['name']
 
-'''
-Table 'researcher'
-'''
+# --- 'researcher' table ---
 class Tbl_researcher(models.Model):
     # Relates the researcher to a Django user (auth_user)
     user = models.OneToOneField(
         User,
-        on_delete=models.SET_NULL,  # If user is deleted, researcher is not!
+        on_delete=models.SET_NULL,  # If User is deleted, researcher remains
         related_name='researcher',
         verbose_name="Username",
         null=True,
@@ -189,11 +193,9 @@ class Tbl_researcher(models.Model):
 
     @property
     def role(self):
-        # Return group
-        if not self.user.groups.exists():
-            return ""
-        else:
+        if self.user and self.user.groups.exists():
             return self.user.groups.first().name
+        return ""
 
     institution = models.CharField(
         max_length=200,
@@ -213,19 +215,19 @@ class Tbl_researcher(models.Model):
 
     # observing_runs:
     # Many-to-many relationship is set in Tbl_observing_run model.
-    # It is not necessary to define it explicitly here, as Django handles it automatically.
+    # Django automatically creates reverse accessors.
 
     def __str__(self):
-        return self.user.username
+        # Defensive: if user is None, return empty string instead of error
+        return self.user.username if self.user else "(No user)"
 
     class Meta:
         verbose_name = "Researcher"
         verbose_name_plural = "Researchers"
         ordering = ['user__username']
 
-'''
-Table 'observing_run'
-'''
+
+# --- 'observing_run' table ---
 class Tbl_observing_run(models.Model):
     name = models.CharField(
         max_length=200,
@@ -268,15 +270,13 @@ class Tbl_observing_run(models.Model):
         verbose_name_plural = "Observing Runs"
         ordering = ['start_date']
 
-'''
-Table 'observing_block'
-'''
+# --- 'observing_block' table ---
 class Tbl_observing_block(models.Model):
     name = models.CharField(
         max_length=200,
         verbose_name="Name")
 
-    obs_run = models.ForeignKey(  # observing_run where the observing_block is executed
+    obs_run = models.ForeignKey(  # observing run where block is executed
         Tbl_observing_run,
         on_delete=models.PROTECT,
         null=True,
@@ -345,9 +345,7 @@ class Tbl_observing_block(models.Model):
         verbose_name_plural = "Observing Blocks"
         ordering = ['start_time']
 
-'''
-Table 'target'
-'''
+# --- 'target' table ---
 class Tbl_target(models.Model):
     name = models.CharField(
         max_length=200,
@@ -406,8 +404,7 @@ class Tbl_target(models.Model):
         null=True,
         verbose_name="Comments")
 
-    # Image full path
-    image = models.CharField(
+    image = models.CharField( # Image full path
         max_length=255,
         blank=True,
         null=True,
@@ -415,8 +412,7 @@ class Tbl_target(models.Model):
         editable=False,
     )
 
-    # Data files full path
-    datafiles_path = models.CharField(
+    datafiles_path = models.CharField( # Data files full path
         max_length=255,
         blank=True,
         null=True,
@@ -426,18 +422,18 @@ class Tbl_target(models.Model):
 
     @property
     def image_name(self):
-        if self.image and os.path.splitext(self.image)[1]:  # hay extensión de archivo
+        if self.image and os.path.splitext(self.image)[1]:  # if file extension exists
             return os.path.basename(self.image)
         return ""
 
     def delete(self, *args, **kwargs):
-        # Asegurar que usamos el nombre sanitizado igual que al crear
+        # Sanitize folder name, same as when created
         safe_name = sanitize_filename(self.name)
 
-        # Carpeta completa bajo MEDIA_ROOT
+        # Full folder path under MEDIA_ROOT
         folder_path = os.path.join(settings.MEDIA_ROOT, safe_name)
 
-        # Seguridad: eliminar solo si está bajo MEDIA_ROOT
+        # Security: ensure folder_path is inside MEDIA_ROOT
         folder_path = os.path.abspath(folder_path)
         media_root = os.path.abspath(settings.MEDIA_ROOT)
 
@@ -448,7 +444,9 @@ class Tbl_target(models.Model):
 
     @property
     def image_url(self):
-        return settings.MEDIA_URL + self.image
+        if self.image:
+            return settings.MEDIA_URL + self.image
+        return ""
 
     def __str__(self):
         return self.name

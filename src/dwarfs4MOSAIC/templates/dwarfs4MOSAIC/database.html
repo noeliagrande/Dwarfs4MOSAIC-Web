@@ -1,3 +1,11 @@
+<!--
+    Database Overview Page Template
+
+    Displays a list of database tables with links to their detailed content views.
+    Allows users to navigate quickly between different database tables.
+
+    Extends the main base template and uses breadcrumb navigation for context.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load custom_tags %}
@@ -7,14 +15,14 @@
 {% block breadcrumb %} Database {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>Database table query interface</h1>
     <br>
     <p class="view-explanation">
         List of database tables along with all their fields and corresponding content.
     </p>
 
-    <!-- Table -->
+    <!-- Database tables list -->
     <section class="table-container">
         <table>
             <thead>

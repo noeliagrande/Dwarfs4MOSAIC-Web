@@ -1,5 +1,11 @@
+<!--
+    Template to display the details of a specific observing run.
 
-<!-- Arguments: 'observing_run', 'lst_observing_blocks' -->
+    Arguments:
+    - observing_run: Observing run object whose details are shown.
+    - lst_observing_blocks: List of observing block objects included in the run.
+    - lst_researchers: List of researchers associated with the observing run.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load custom_tags %}
@@ -13,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>Observing Run: {{ observing_run.name }}</h1>
     <br><br>
 

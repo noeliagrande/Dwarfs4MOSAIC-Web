@@ -1,5 +1,9 @@
+<!--
+    Template to display the list of researchers stored in the database.
 
-<!-- Argument: 'lst_researchers'  -->
+    Argument:
+    - lst_researchers: List of researcher objects to display.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load custom_tags %}
@@ -12,12 +16,12 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>Researchers table</h1>
     <br>
     <p class="view-explanation">Table content in the database.</p>
 
-    <!-- Table -->
+    <!-- Researchers table -->
     <section class="table-container">
         <table>
             <thead>
@@ -36,6 +40,7 @@
                 <tr>
                     <td>{{ researcher.name|default_if_none:"" }}</td>
                     <td>{{ researcher.role }}</td>
+                    <!-- PhD status with icon -->
                     <td>
                         {% if researcher.is_phd %}
                             <span style="color: green;">✔</span>
@@ -44,6 +49,7 @@
                         {% endif %}
                     </td>
                     <td>{{ researcher.institution|default_if_none:""  }}</td>
+                    <!-- Related observing runs -->
                     <td>
                         {% for observing_run in researcher.observing_runs.all %}
                             <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=researchers">

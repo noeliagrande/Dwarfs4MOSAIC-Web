@@ -1,5 +1,9 @@
+<!--
+    Template to display the list of observing blocks stored in the database.
 
-<!-- Argument: 'lst_observing_blocks'  -->
+    Argument:
+    - lst_observing_blocks: List of observing block objects to display.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load custom_tags %}
@@ -12,12 +16,12 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>Observing Blocks table</h1>
     <br>
     <p class="view-explanation">Table content in the database.</p>
 
-    <!-- Table -->
+    <!-- Observing blocks table -->
     <section class="table-container">
         <table>
             <thead>

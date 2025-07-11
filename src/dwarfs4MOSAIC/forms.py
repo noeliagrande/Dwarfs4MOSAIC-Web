@@ -1,3 +1,13 @@
+"""
+Django admin forms for managing custom validation, display, and data processing
+for the observatory, researcher, and target models.
+
+Includes:
+- Custom handling of geographic coordinates (longitude and latitude) for observatories.
+- Validation to ensure unique assignment of users to researchers.
+- Support for uploading multiple files and images associated with targets.
+"""
+
 import os
 
 from django import forms
@@ -9,9 +19,11 @@ from django.utils.safestring import mark_safe
 from .models import Tbl_observatory, Tbl_researcher, Tbl_target
 from django.contrib.auth.models import User
 
-# Management of longitude and latitude fields
+# Form for observatory admin with detailed longitude and latitude input fields.
+# Longitude and latitude are split into direction (E/W, N/S), degrees, minutes, and seconds.
+# Includes conversion between decimal degrees and DMS, and validation of input completeness and range.
 class ObservatoryAdminForm(forms.ModelForm):
-    # Longitude: must be between -180 and 180 degrees
+    # Longitude components
     longitude_ew = forms.ChoiceField(
         choices=[('', ''), ('E', 'E'), ('W', 'W')],
         required=False,
@@ -40,7 +52,7 @@ class ObservatoryAdminForm(forms.ModelForm):
         help_text="seconds"
     )
 
-    # Latitude: must be between -90 and 90 degrees
+    # Latitude components
     latitude_ns = forms.ChoiceField(
         choices=[('', ''), ('N', 'N'), ('S', 'S')],
         required=False,
@@ -73,11 +85,10 @@ class ObservatoryAdminForm(forms.ModelForm):
         model = Tbl_observatory
         fields = '__all__'
 
-    # Show init values
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Get longitude and latitude
+        # Initialize longitude and latitude fields from decimal values on instance
         if self.instance.longitude is not None:
             # Convert longitude to deg, min, sec
             longitude_deg, remainder = divmod(abs(self.instance.longitude), 1)
@@ -111,7 +122,7 @@ class ObservatoryAdminForm(forms.ModelForm):
         latitude_min = cleaned_data.get('latitude_min')
         latitude_sec = cleaned_data.get('latitude_sec')
 
-        # It is allowed not to define longitude (all its fields empty).
+        # Allow all coordinate fields to be empty (no coordinates provided)
         if all(data in [None, ''] for data in [longitude_ew, longitude_deg, longitude_min, longitude_sec,
                                          latitude_ns, latitude_deg, latitude_min, latitude_sec]):
             cleaned_data['longitude'] = None
@@ -120,14 +131,15 @@ class ObservatoryAdminForm(forms.ModelForm):
             self.instance.latitude = None
             return cleaned_data
 
-        # If a field is defined, all fields must be defined.
+        # If any longitude field is provided, all must be provided
         if any(data in [None, ''] for data in [longitude_ew, longitude_deg, longitude_min, longitude_sec]):
             raise ValidationError("Three longitude fields must be provided.")
 
+        # If any latitude field is provided, all must be provided
         if any(data in [None, ''] for data in [latitude_ns, latitude_deg, latitude_min, latitude_sec]):
             raise ValidationError("Three latitude fields must be provided.")
 
-        # Convert longitude and latitude to decimal and validate range
+        # Convert longitude to decimal degrees and validate range
         longitude = longitude_deg + longitude_min / 60 + longitude_sec / 3600
         if longitude > 180:
             raise ValidationError("Longitude must be in the range [0, 180].")
@@ -135,6 +147,7 @@ class ObservatoryAdminForm(forms.ModelForm):
         cleaned_data['longitude'] = longitude
         self.instance.longitude = longitude
 
+        # Convert latitude to decimal degrees and validate range
         latitude = latitude_deg + latitude_min / 60 + latitude_sec / 3600
         if latitude > 90:
             raise ValidationError("Latitude must be in the range [0, 90].")
@@ -145,6 +158,10 @@ class ObservatoryAdminForm(forms.ModelForm):
         return cleaned_data
 
 
+# Form for managing researchers.
+# Ensures that each user can only be assigned to one researcher profile,
+# and excludes the admin user from selection.
+# When editing, the user field is disabled to avoid changing assignment.
 class ResearcherAdminForm(forms.ModelForm):
     class Meta:
         model = Tbl_researcher
@@ -175,10 +192,11 @@ class ResearcherAdminForm(forms.ModelForm):
             self.fields['user'].disabled = True
 
 
+# Custom widget allowing multiple file selection
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
-
+# FileField subclass to handle multiple file uploads and validation
 class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("widget", MultipleFileInput())
@@ -192,6 +210,8 @@ class MultipleFileField(forms.FileField):
             result = [single_file_clean(data, initial)]
         return result
 
+# Form for target admin to support uploading an image and multiple data files,
+# with options to delete current image and display current files.
 class TargetAdminForm(forms.ModelForm):
     upload_image = forms.FileField(
         required=False,
@@ -201,7 +221,6 @@ class TargetAdminForm(forms.ModelForm):
     upload_datafiles = MultipleFileField(
         required=False,
         label="Data files",
-        #widget=MultipleFileInput(attrs={"class": "button default"}) # muestra el widget azul
     )
 
     delete_image = forms.BooleanField(required=False, label="No image")
@@ -213,13 +232,14 @@ class TargetAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Solo mostrar el path si ya hay una instancia y tiene path
+        # Show current image name if editing an existing target with an image
         if self.instance and self.instance.pk:
             #if self.instance.image:
             self.fields['upload_image'].help_text = mark_safe(
                 f"<strong>Current image:</strong> {self.instance.image_name}"
             )
 
+            # List current data files if path exists
             if self.instance.datafiles_path:
                 files = []
                 try:

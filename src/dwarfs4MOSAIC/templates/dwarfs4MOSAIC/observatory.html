@@ -1,5 +1,10 @@
+<!--
+    Template to display the list of telescopes belonging to a specific observatory.
 
-<!-- Arguments: 'observatory_name', 'lst_telescopes'  -->
+    Arguments:
+    - observatory_name: Name of the current observatory.
+    - lst_telescopes: List of telescope objects associated with the observatory.
+-->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
 {% load static %}
@@ -14,12 +19,12 @@
 {% endblock %}
 
 {% block content %}
-    <!-- Header -->
+    <!-- Page header -->
     <h1>Observatory: {{ observatory_name }}</h1>
     <br>
     <p class="view-explanation">Telescopes belonging to the observatory.</p>
 
-    <!-- Table -->
+    <!-- Telescopes table -->
     <section class="table-container">
         <table>
             <thead>
