@@ -2,14 +2,16 @@ from django.contrib import admin
 from .forms import ObservatoryAdminForm, ResearcherAdminForm, TargetAdminForm
 from .models import *
 
-from django.utils.html import format_html
-from django.urls import reverse
-
 from .utils import sanitize_filename
 
 import os
 from django.conf import settings
 from django.contrib import messages
+
+from django.contrib import admin
+from django.contrib.admin.actions import delete_selected as original_delete_selected
+
+
 
 admin.site.site_header = "Dwarfs4MOSAIC Login"
 
@@ -108,11 +110,15 @@ class TargetAdmin(admin.ModelAdmin):
 
         # Solo añadir la sección de subida si el objeto ya existe (edición)
         if obj and obj.pk:
-            base_fieldsets.append(
-                ("Upload Files", {"fields": [
-                    'upload_image', 'upload_datafiles'
-                ]})
-            )
+            base_fieldsets.append((
+                "Upload Files",
+                {
+                    "fields": [
+                        ("upload_image", "delete_image") if obj.image_name else "upload_image",
+                        "upload_datafiles",
+                    ]
+                }
+            ))
 
         return base_fieldsets
 
@@ -121,55 +127,98 @@ class TargetAdmin(admin.ModelAdmin):
 
         super().save_model(request, obj, form, change)
 
-        #safe_name = sanitize_filename(obj.name)
-        #base_path = os.path.join(settings.MEDIA_ROOT, safe_name)
-        base_path = obj.absolute_path
-        datafiles_path = os.path.join(base_path, "datafiles")
-        image_path = os.path.join(base_path, "image")
+        safe_name = sanitize_filename(obj.name)
+        base_path = os.path.join(settings.MEDIA_ROOT, safe_name) # .../media/target_name
+        datafiles_path = os.path.join(base_path, "datafiles")    # .../media/target_name/datafiles
+        image_path = os.path.join(base_path, "image")            # .../media/target_name/image
 
         # Asegúrate de que las carpetas existen
         os.makedirs(datafiles_path, exist_ok=True)
         os.makedirs(image_path, exist_ok=True)
 
         if is_new:
-            ''' ESTO NO SERÁ NECESARIO? '''
-            # Obtener ruta relativa respecto al directorio base del proyecto
-            relative_datafiles_path = os.path.relpath(datafiles_path, start=settings.BASE_DIR)
-            #obj.datafiles_path = relative_datafiles_path
             obj.datafiles_path = datafiles_path
-
-            #obj.image = ""
             obj.image = image_path
-            ''' ESTO NO SERÁ NECESARIO '''
+            obj.save() # Guardar paths
+            return
 
-            # Guardar paths
-            obj.save()
+        # if not is_new:
 
-        if not is_new:
+        # Borrar imagen (si existe) si se ha marcado el checkbox
+        if form.cleaned_data.get('delete_image') and obj.image_name:
+            image_file_path = obj.image
+            if os.path.exists(image_file_path):
+                os.remove(image_file_path)
+
+            # Comprobar si el archivo realmente se borró
+            if os.path.exists(image_file_path):
+                self.message_user(
+                    request,
+                    f'⚠️ Warning: the image "{obj.image_name}" could not be deleted.',
+                    level=messages.WARNING
+                )
+            else:
+                obj.image = image_path # .../media/target_name/image
+                #obj.save()
+
+        else:
+            # Actualizar imagen
             upload_image = form.cleaned_data.get('upload_image')
             if upload_image:
+
+                previous_image_name = obj.image_name
+                previous_image_path = obj.image
+
+                # Add new image
                 file_path = os.path.join(image_path, upload_image.name)
                 with open(file_path, 'wb+') as destination:
                     for chunk in upload_image.chunks():
                         destination.write(chunk)
 
-                relative_image_path = os.path.relpath(image_path, start=settings.BASE_DIR)
-                #obj.image = os.path.join(relative_image_path, upload_image.name)
-                obj.image = os.path.join(image_path, upload_image.name)
-                obj.save()
+                # Al final: comprobar si el archivo realmente se guardó
+                if obj.image_name and not os.path.isfile(obj.image):
+                    self.message_user(
+                        request,
+                        f'⚠️ Warning: the image file "{obj.image}" does not exist on disk.',
+                        level=messages.WARNING
+                    )
 
-            # Al final: comprobar si el archivo realmente se guardó
-            if obj.image and not os.path.isfile(os.path.join(settings.BASE_DIR, obj.image)):
-                self.message_user(
-                    request,
-                    f'⚠️ Warning: the image file "{obj.image}" does not exist on disk.',
-                    level=messages.WARNING
-                )
+                else:
+                    obj.image = os.path.join(image_path, upload_image.name)  # new image
 
-            datafiles = form.cleaned_data.get("upload_datafiles", [])
-            for uploaded_file in datafiles:
-                dest_path = os.path.join(datafiles_path, uploaded_file.name)
-                with open(dest_path, "wb+") as destination:
-                    for chunk in uploaded_file.chunks():
-                        destination.write(chunk)
+                    # Delete previous image
+                    if previous_image_name:
+                        if os.path.exists(previous_image_path):
+                            os.remove(previous_image_path)
 
+                #obj.save()
+
+        datafiles = form.cleaned_data.get("upload_datafiles", [])
+        for uploaded_file in datafiles:
+            dest_path = os.path.join(datafiles_path, uploaded_file.name)
+            with open(dest_path, "wb+") as destination:
+                for chunk in uploaded_file.chunks():
+                    destination.write(chunk)
+
+        # Save changes
+        obj.save()
+
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if "delete_selected" in actions:
+            actions["delete_selected"] = (
+                self.custom_delete_selected,
+                *actions["delete_selected"][1:]
+            )
+        return actions
+
+    def custom_delete_selected(self, modeladmin, request, queryset):
+        deleted_count = 0
+        for obj in queryset:
+            obj.delete()
+            deleted_count += 1
+        self.message_user(
+            request,
+            f" {deleted_count} target(s) and their associated folders were deleted.",
+            level=messages.SUCCESS,
+        )

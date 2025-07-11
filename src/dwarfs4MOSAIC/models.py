@@ -406,22 +406,22 @@ class Tbl_target(models.Model):
         null=True,
         verbose_name="Comments")
 
+    # Image full path
     image = models.CharField(
         max_length=255,
         blank=True,
         null=True,
         verbose_name="Image",
         editable=False,
-        #help_text="Path relative to 'Dwarfs4MOSAIC/src/media'"
     )
 
+    # Data files full path
     datafiles_path = models.CharField(
         max_length=255,
         blank=True,
         null=True,
         verbose_name="Data files path",
         editable=False,
-        #help_text="Path relative to 'Dwarfs4MOSAIC/src/media'"
     )
 
     @property
@@ -429,23 +429,6 @@ class Tbl_target(models.Model):
         if self.image and os.path.splitext(self.image)[1]:  # hay extensión de archivo
             return os.path.basename(self.image)
         return ""
-
-
-    @property
-    def relative_path(self):
-        """
-        Devuelve la ruta relativa desde MEDIA_ROOT a MEDIA_ROOT/safe_name.
-        """
-        safe_name = sanitize_filename(self.name)
-        return safe_name
-
-    @property
-    def absolute_path(self):
-        """
-        Devuelve la ruta absoluta MEDIA_ROOT/safe_name.
-        """
-        return os.path.join(settings.MEDIA_ROOT, self.relative_path)
-
 
     def delete(self, *args, **kwargs):
         # Asegurar que usamos el nombre sanitizado igual que al crear

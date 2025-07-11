@@ -204,6 +204,8 @@ class TargetAdminForm(forms.ModelForm):
         #widget=MultipleFileInput(attrs={"class": "button default"}) # muestra el widget azul
     )
 
+    delete_image = forms.BooleanField(required=False, label="No image")
+
     class Meta:
         model = Tbl_target
         exclude = ['image', 'datafiles_path']
@@ -213,10 +215,10 @@ class TargetAdminForm(forms.ModelForm):
 
         # Solo mostrar el path si ya hay una instancia y tiene path
         if self.instance and self.instance.pk:
-            if self.instance.image:
-                self.fields['upload_image'].help_text = mark_safe(
-                    f"<strong>Current image:</strong> {self.instance.image_name}"
-                )
+            #if self.instance.image:
+            self.fields['upload_image'].help_text = mark_safe(
+                f"<strong>Current image:</strong> {self.instance.image_name}"
+            )
 
             if self.instance.datafiles_path:
                 files = []
