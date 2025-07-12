@@ -14,7 +14,6 @@ from .utils import sanitize_filename
 import os
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.admin.actions import delete_selected as original_delete_selected
 
 
 # Custom title for the Django Admin interface
@@ -56,11 +55,15 @@ class InstrumentAdmin(admin.ModelAdmin):
 # --- 'researcher' table ---
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
-    form = ResearcherAdminForm  # Usamos el formulario personalizado
-
     fieldsets = [
-        (None, {"fields": ['user', 'is_phd', 'institution', 'comments']}),
-    ]
+        (None, {"fields": ["user"]}),
+        ("General Information", {"fields": [
+            'is_phd', 'institution', 'comments']}),
+        ("Authorization", {"fields": [
+            "allowed_blocks", "allowed_targets"]}), ]
+
+    # Enable horizontal multi-selection widget
+    filter_horizontal = ['allowed_blocks', 'allowed_targets']
 
 # --- 'observing_run' table ---
 @admin.register(Tbl_observing_run)

@@ -213,11 +213,19 @@ class Tbl_researcher(models.Model):
         null=True,
         verbose_name="Comments")
 
-    allowed_blocks = models.ManyToManyField('Tbl_observing_block', blank=True)
-
     # observing_runs:
     # Many-to-many relationship is set in Tbl_observing_run model.
     # Django automatically creates reverse accessors.
+
+    allowed_blocks = models.ManyToManyField(
+        'Tbl_observing_block',
+        related_name='allowed_researchers'
+    )
+
+    allowed_targets = models.ManyToManyField(
+        'Tbl_target',
+        related_name='allowed_researchers'
+    )
 
     def __str__(self):
         # Defensive: if user is None, return empty string instead of error
