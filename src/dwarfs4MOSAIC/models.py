@@ -213,6 +213,8 @@ class Tbl_researcher(models.Model):
         null=True,
         verbose_name="Comments")
 
+    allowed_blocks = models.ManyToManyField('Tbl_observing_block', blank=True)
+
     # observing_runs:
     # Many-to-many relationship is set in Tbl_observing_run model.
     # Django automatically creates reverse accessors.
@@ -354,13 +356,13 @@ class Tbl_target(models.Model):
 
     type = models.CharField(
         choices=[
-            ('star', 'Star'),
-            ('galaxy', 'Galaxy'),
-            ('nebula', 'Nebula'),
-            ('cluster', 'Star Cluster'),
-            ('exoplanet', 'Exoplanet'),
-            ('other', 'Other'),],
-        max_length=9,  # maximum length in choices
+            ('galaxy_image', 'Galaxy image'),
+            ('galaxy_spectrum', 'Galaxy spectrum'),
+            ('standard_image', 'Standard image'),
+            ('standard_spectrum', 'Standard spectrum'),
+            ('calibration', 'Calibration'),
+            ('other', 'Other'), ],
+        max_length=20,  # maximum length in choices
         default='galaxy',
         verbose_name="Type")
 
