@@ -219,11 +219,13 @@ class Tbl_researcher(models.Model):
 
     allowed_blocks = models.ManyToManyField(
         'Tbl_observing_block',
+        blank=True,
         related_name='allowed_researchers'
     )
 
     allowed_targets = models.ManyToManyField(
         'Tbl_target',
+        blank=True,
         related_name='allowed_researchers'
     )
 

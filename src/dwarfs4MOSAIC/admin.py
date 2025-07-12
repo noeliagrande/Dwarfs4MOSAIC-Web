@@ -65,6 +65,17 @@ class ResearcherAdmin(admin.ModelAdmin):
     # Enable horizontal multi-selection widget
     filter_horizontal = ['allowed_blocks', 'allowed_targets']
 
+    def get_fieldsets(self, request, obj=None):
+        if obj is None:
+            # Show 'user' field when creating a new researcher
+            return self.fieldsets
+        else:
+            # Hide 'user' field when editing
+            return [
+                ("General Information", {"fields": ['is_phd', 'institution', 'comments']}),
+                ("Authorization", {"fields": ["allowed_blocks", "allowed_targets"]}),
+            ]
+
 # --- 'observing_run' table ---
 @admin.register(Tbl_observing_run)
 class ObservingRunAdmin(admin.ModelAdmin):
