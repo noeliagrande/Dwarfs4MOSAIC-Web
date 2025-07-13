@@ -102,15 +102,11 @@
                         <td>{{ item.target.redshift|default_if_none:""}}</td>
                         <td>{{ item.target.size|default_if_none:"" }}</td>
                         <td>{{ item.target.semester }}</td>
-
-                        <!-- Observing runs (may be multiple) -->
                         <td>
                             {% for run in item.unique_obs_runs %}
                                 {{ run }}<br>
                             {% endfor %}
                         </td>
-
-                        <!-- Instruments (may be multiple, with optional link) -->
                         <td>
                             {% for instr in item.unique_instruments %}
                                 {% if instr.website %}
@@ -129,7 +125,7 @@
                                     {{ file }} <br>
                                 {% endfor %}
                                 <br>
-                                <!-- Download all files as zip -->
+                                <!-- Download files icon -->
                                 <a href="{% url 'download_files_view' item.target.id %}" title="{{ 'Download files' }}">
                                     <img src="{% static 'dwarfs4MOSAIC/icons/download-solid.svg' %}"
                                          alt="Download files" style="width: 15px; height: 15px;">

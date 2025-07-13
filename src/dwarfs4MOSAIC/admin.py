@@ -7,7 +7,7 @@ and overrides default admin behavior where necessary.
 """
 
 from django.contrib import admin
-from .forms import ObservatoryAdminForm, ResearcherAdminForm, TargetAdminForm
+from .forms import ObservatoryAdminForm, TargetAdminForm
 from .models import *
 from .utils import sanitize_filename
 
@@ -66,15 +66,29 @@ class ResearcherAdmin(admin.ModelAdmin):
     filter_horizontal = ['allowed_blocks', 'allowed_targets']
 
     def get_fieldsets(self, request, obj=None):
-        if obj is None:
-            # Show 'user' field when creating a new researcher
-            return self.fieldsets
-        else:
-            # Hide 'user' field when editing
-            return [
-                ("General Information", {"fields": ['is_phd', 'institution', 'comments']}),
-                ("Authorization", {"fields": ["allowed_blocks", "allowed_targets"]}),
-            ]
+        # Always show 'user', just make it readonly when editing
+        return self.fieldsets
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # editing
+            return ['user']
+
+        # If the researcher has no linked user, make all fields read-only.
+        if obj is not None and obj.user is None:
+            return [f.name for f in self.model._meta.fields] + ['allowed_blocks', 'allowed_targets']
+        return super().get_readonly_fields(request, obj)
+
+    def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
+        # Add extra context to hide save buttons when user is missing
+        extra_context = extra_context or {}
+        if object_id:
+            researcher = Tbl_researcher.objects.get(pk=object_id)
+            # If researcher has no user, we disable all save buttons
+            if researcher.user is None:
+                extra_context['show_save'] = False
+                extra_context['show_save_and_add_another'] = False
+                extra_context['show_save_and_continue'] = False
+        return super().changeform_view(request, object_id, form_url, extra_context=extra_context)
 
 # --- 'observing_run' table ---
 @admin.register(Tbl_observing_run)
@@ -112,23 +126,19 @@ class TargetAdmin(admin.ModelAdmin):
 
     form = TargetAdminForm
 
-    def get_readonly_fields(self, request, obj=None):
-        base_readonly = []
-
-        # If editing an existing object, make 'name' read-only
-        if obj:
-            return ['name'] + base_readonly
-        return base_readonly
-
     def get_fieldsets(self, request, obj=None):
         base_fieldsets = [
-            (None, {"fields": ["name"]}),
             ("General Information", {"fields": [
                 "type", "right_ascension", "declination", "magnitude", "redshift", "size"]}),
             ("Additional Data", {"fields": [
                 "semester", "comments",
                 ]}),
         ]
+
+        # Show 'name' field when creating a new object
+        if obj is None:
+            base_fieldsets.insert(0, (None, {"fields": ["name"]}))
+            return base_fieldsets
 
         # Add file upload section only when editing an existing object
         if obj and obj.pk:

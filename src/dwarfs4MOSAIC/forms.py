@@ -161,40 +161,6 @@ class ObservatoryAdminForm(forms.ModelForm):
         return cleaned_data
 
 
-# Form for managing researchers.
-# Ensures that each user can only be assigned to one researcher profile,
-# and excludes the admin user from selection.
-# When editing, the user field is disabled to avoid changing assignment.
-class ResearcherAdminForm(forms.ModelForm):
-    class Meta:
-        model = Tbl_researcher
-        fields = ['user', 'is_phd', 'comments']
-
-    user = forms.ModelChoiceField(
-        queryset=User.objects.exclude(researcher__isnull=False).exclude(username='admin'),
-        empty_label="Select a user",
-        label="User",
-        required=True,
-    )
-
-    def clean_user(self):
-        # Creating a new researcher
-        available_users = User.objects.exclude(researcher__isnull=False).exclude(username='admin')
-
-        # If there are no users available, an error is thrown.
-        if not available_users.exists() and not self.instance.pk:
-            raise ValidationError("No available users to assign as researcher.")
-
-        # When editing, the value is returned unchanged.
-        return self.cleaned_data['user']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if self.instance.pk:
-            self.fields['user'].queryset = User.objects.filter(pk=self.instance.user.pk)
-            self.fields['user'].disabled = True
-
-
 # Custom widget allowing multiple file selection
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True

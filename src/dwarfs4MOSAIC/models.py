@@ -231,7 +231,11 @@ class Tbl_researcher(models.Model):
 
     def __str__(self):
         # Defensive: if user is None, return empty string instead of error
-        return self.user.username if self.user else "(No user)"
+        if self.name:
+            return self.name
+        elif self.user:
+            return self.user.username
+        return "(Unnamed Researcher)"
 
     class Meta:
         verbose_name = "Researcher"
@@ -266,6 +270,7 @@ class Tbl_observing_run(models.Model):
 
     researchers = models.ManyToManyField(
         'Tbl_researcher',
+        blank=True,
         related_name='observing_runs'
     )
 
@@ -309,6 +314,7 @@ class Tbl_observing_block(models.Model):
 
     target = models.ManyToManyField(
         'Tbl_target',
+        blank=True,
         related_name='observing_blocks'
     )
 
