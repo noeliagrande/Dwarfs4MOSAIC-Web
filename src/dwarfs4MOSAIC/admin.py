@@ -14,7 +14,9 @@ from .utils import sanitize_filename
 import os
 from django.conf import settings
 from django.contrib import messages
-
+from django.shortcuts import redirect
+from django.urls import reverse
+from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 
 # Custom title for the Django Admin interface
 admin.site.site_header = "Dwarfs4MOSAIC Login"
@@ -52,6 +54,29 @@ class InstrumentAdmin(admin.ModelAdmin):
         ("General Information", {"fields": [
             "description", "tel_ins", "website", "status"]}),]
 
+# --- 'user' admin
+class CustomUserAdmin(DefaultUserAdmin):
+    def change_view(self, request, object_id, form_url='', extra_context=None):
+        user = User.objects.filter(pk=object_id).first()
+        extra_context = extra_context or {}
+
+        # If the user has a linked researcher, pass its admin change URL
+        try:
+            researcher = user.researcher
+            researcher_url = reverse(
+                'admin:dwarfs4MOSAIC_tbl_researcher_change',
+                args=[researcher.pk]
+            )
+            extra_context['researcher_link'] = researcher_url
+        except Tbl_researcher.DoesNotExist:
+            extra_context['researcher_link'] = None
+
+        return super().change_view(request, object_id, form_url, extra_context=extra_context)
+
+# Replace default admin
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
+
 # --- 'researcher' table ---
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
@@ -64,6 +89,11 @@ class ResearcherAdmin(admin.ModelAdmin):
 
     # Enable horizontal multi-selection widget
     filter_horizontal = ['allowed_blocks', 'allowed_targets']
+
+    # Redirect attempts to add a Researcher to the User admin page.
+    def add_view(self, request, form_url='', extra_context=None):
+        user_admin_url = reverse('admin:auth_user_add')
+        return redirect(user_admin_url)
 
     def get_fieldsets(self, request, obj=None):
         # Always show 'user', just make it readonly when editing
