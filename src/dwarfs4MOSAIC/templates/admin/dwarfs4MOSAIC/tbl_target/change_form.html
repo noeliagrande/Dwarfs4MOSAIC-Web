@@ -1,0 +1,47 @@
+{% extends "admin/change_form.html" %}
+
+{% block extrahead %}
+  {{ block.super }}
+  <script>
+    window.addEventListener('load', function () {
+      const form = document.getElementById('{{ opts.model_name }}_form');
+
+      if (!form) return;
+
+      // Before submitting, decide what to do based on clicked button
+      form.addEventListener('submit', function (event) {
+        const submitter = event.submitter;
+
+        if (!window.location.pathname.includes('/change/')) {
+          if (submitter && submitter.name === '_addanother') {
+            // Save and add another: do nothing
+            localStorage.removeItem('justCreated');
+          } else {
+            // Save or Save and continue editing: mark as just created
+            // and inject _continue=1 if not already there
+            let existing = form.querySelector('input[name="_continue"]');
+            if (!existing) {
+              const input = document.createElement('input');
+              input.type = 'hidden';
+              input.name = '_continue';
+              input.value = '1';
+              form.appendChild(input);
+            }
+            localStorage.setItem('justCreated', 'true');
+          }
+        }
+      });
+
+      // If editing (URL includes /change/) and just created: scroll down
+      if (window.location.pathname.includes('/change/')) {
+        const justCreated = localStorage.getItem('justCreated');
+
+        if (justCreated === 'true') {
+          form.scrollIntoView(false);  // Scroll to bottom of form
+          localStorage.removeItem('justCreated');  // Only once
+        }
+      }
+    });
+  </script>
+{% endblock %}
+

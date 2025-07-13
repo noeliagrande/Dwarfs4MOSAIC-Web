@@ -17,6 +17,7 @@ from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
+from django.http import HttpResponseRedirect
 
 # Custom title for the Django Admin interface
 admin.site.site_header = "Dwarfs4MOSAIC Login"
@@ -283,3 +284,21 @@ class TargetAdmin(admin.ModelAdmin):
             f" {deleted_count} target(s) and their associated folders were deleted.",
             level=messages.SUCCESS,
         )
+
+    # Override response after adding object to always redirect to change page,
+    # except when pressing "Save and add another" (then go to add new).
+    def response_add(self, request, obj, post_url_continue=None):
+        if "_addanother" in request.POST:
+            # Default behaviour for 'Save and add another' (go to add new)
+            return super().response_add(request, obj, post_url_continue)
+        elif "_continue" in request.POST or "_save" in request.POST:
+            # For both 'Save and continue editing' and 'Save',
+            # redirect to the change page of the newly created object
+            url = self.get_change_url(obj)
+            return HttpResponseRedirect(url)
+        else:
+            return super().response_add(request, obj, post_url_continue)
+
+    def get_change_url(self, obj):
+        opts = self.model._meta
+        return f"/admin/{opts.app_label}/{opts.model_name}/{obj.pk}/change/"
