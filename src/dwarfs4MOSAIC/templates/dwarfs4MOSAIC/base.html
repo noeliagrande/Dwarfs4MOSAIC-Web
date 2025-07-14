@@ -57,20 +57,10 @@
                 </ul>
             </nav>
 
-            <!-- Login/logout navigation -->
+            <!-- Login -->
             <nav class="nav-links">
                 <ul>
-                    {% if user.is_authenticated %}
-                        <!-- Logout form -->
-                        <form method="post" action="{% url 'logout' %}" >
-                            {% csrf_token %}
-                            <button type="submit" style="cursor:pointer; background-color: var(--header-color);
-                                    color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;
-                                    font-size: 16px;">
-                                Logout
-                            </button>
-                        </form>
-                    {% else %}
+                    {% if not user.is_authenticated %}
                         <li><a href="{% url 'admin:login' %}?next=/home/" style="cursor:pointer;
                                background-color: var(--header-color); color: white;
                                padding: 10px 20px; border-radius: 5px; text-decoration: none;">
@@ -81,39 +71,37 @@
             </nav>
         </header>
 
-        <!-- Horizontal divider line -->
-        <div class='custom-divider'></div>
-
-        <!-- Breadcrumb section shown only to authenticated users -->
         {% if user.is_authenticated %}
-            <!-- Left section: welcome message and breadcrumb path -->
-            <div class="breadcrumb" style="display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <p>
-                        Welcome
-                        {% if user.is_superuser %}
-                            ADMIN
-                        {% else %}
-                            {{ user.first_name|upper }}
-                        {% endif %}
-                    </p>
-                    <p>
-                        You are here:
-                        {% block breadcrumb %} {% endblock %}
-                    </p>
-                </div>
+            <div class="admin-style-toolbar">
+                <!-- Project description with external links -->
+                <span class="toolbar-links">
+                    <a href="https://guaix.ucm.es/dwarfs4mosaic/" target="_blank" >Dwarfs4MOSAIC</a>.
+                        A pilot study for <a href="https://elt.eso.org/instrument/MOSAIC/" target="_blank">MOSAIC</a>
+                        at <a href="https://elt.eso.org/" target="_blank">ELT</a>.
+                </span>
+                <span class="toolbar-links">
+                    <span>Welcome, {{ user.get_short_name|default:user.username|upper }}. /</span>
+                    <!-- Change password (solo si tienes habilitada la vista) -->
+                    <a href="{% url 'password_change' %}">Change password</a> /
+                    <!-- Logout con botón si lo prefieres, o solo enlace -->
+                    <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="toolbar-logout-button">Log out</button>
+                    </form>
+                </span>
+            </div>
 
-                <!-- Right section: static project description with external links -->
-                <div style="text-align: right">
-                    <a href="https://guaix.ucm.es/dwarfs4mosaic/" target="_blank" >Dwarfs4MOSAIC</a><br>
-                    A pilot study for <a href="https://elt.eso.org/instrument/MOSAIC/" target="_blank">MOSAIC</a>
-                    at <a href="https://elt.eso.org/" target="_blank">ELT</a>
-                </div>
+            <!-- Breadcrumb section shown only to authenticated users -->
+            <div class="breadcrumb" style="display: flex; justify-content: space-between; align-items: center;">
+                <p>
+                    You are here:
+                    {% block breadcrumb %} {% endblock %}
+                </p>
             </div>
         {% endif %}
 
         <!-- Horizontal divider line -->
-        <div class='custom-divider'></div>
+        <!-- <div class='custom-divider'></div> -->
 
         <!-- Main content area to be filled by each view -->
         <main>

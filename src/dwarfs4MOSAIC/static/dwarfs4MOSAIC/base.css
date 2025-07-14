@@ -15,7 +15,8 @@
 :root {
     --left-padding: 50px;
     --link-color: #1b6e9a;
-    --header-color: #245e6e;
+    --header-color: #417690;
+    --breadcrumbs-color: #264b5d;
 }
 
 main {
@@ -77,18 +78,47 @@ body {
 /* hierarchical navigation */
 .breadcrumb {
     font-size: 16px;
-    color: #000001;
-    margin: 10px 0;
+    background-color: var(--breadcrumbs-color);
+    color: white;
+    margin: 0;
     padding: 10px var(--left-padding);
     text-decoration: none;
 }
 
 .breadcrumb a {
-    color: inherit;
+    color: white;
+    text-decoration-line: underline;
+}
+
+/* Toolbar */
+.admin-style-toolbar {
+    background-color: var(--header-color);
+    color: white;
+    padding: 8px var(--left-padding);
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+}
+
+.admin-style-toolbar .toolbar-links a {
+    color: white;
+    text-decoration: underline;
+}
+
+.toolbar-logout-button {
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    color: white;
+    text-decoration: underline;
+    cursor: pointer;
+    font: inherit;
 }
 
 /* Navigation links */
-
 .nav-links {
     display: flex;
     align-items: center;        /* Center the content vertically */
@@ -126,3 +156,4 @@ body {
 .nav-links a.active {
     color: var(--link-color);
 }
+
