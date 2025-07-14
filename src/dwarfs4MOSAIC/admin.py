@@ -20,7 +20,9 @@ from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.http import HttpResponseRedirect
 
 # Custom title for the Django Admin interface
-admin.site.site_header = "Dwarfs4MOSAIC Login"
+admin.site.site_header = "Dwarfs4MOSAIC Administration" # default: Django administration
+admin.site.site_title = "Dwarfs4MOSAIC Admin Portal"
+# admin.site.index_title = "Site administration" (default)
 
 # --- 'observatory' table ---
 @admin.register(Tbl_observatory)

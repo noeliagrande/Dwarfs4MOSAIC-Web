@@ -1,7 +1,8 @@
-<!-- Add a favicon without removing what Django already has in the admin <head>. -->
 
 {% extends "admin/base_site.html" %}
 {% load static %}
+
+{% block title %}Dwarfs4MOSAIC | Admin{% endblock %}
 
 {% block extrahead %}
     {{ block.super }}
