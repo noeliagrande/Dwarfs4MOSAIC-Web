@@ -1,3 +1,21 @@
+<!--
+    Custom Django Admin Change Form Template
+
+    This template customizes the appearance and functionality of the change form
+    used in the Django admin interface for editing model instances. It extends
+    the default "admin/base_site.html" and adds:
+
+    - A custom breadcrumb navigation path.
+    - Inclusion of static admin CSS and JavaScript.
+    - Rendering of form fields, errors, and inline formsets.
+    - A custom "Open Researcher" button if a `researcher_link` is provided.
+    - Optional support for file uploads and popup windows.
+    - Dynamic JS inclusion for prepopulated fields and form behaviors.
+
+    Place this template in your app’s "templates/admin/[app_label]/[model_name]/change_form.html"
+    to override the default admin change form for a specific model.
+-->
+
 {% extends "admin/base_site.html" %}
 {% load i18n admin_urls static admin_modify %}
 
@@ -61,7 +79,7 @@
 
 {% block after_related_objects %}{% endblock %}
 
-<!-- Add button to open dwuarfs4MOSAIC researcher view -->
+<!-- Add button to open dwarfs4MOSAIC researcher view -->
 {% comment %} % block submit_buttons_bottom %}{% submit_row %}{% endblock %} {% endcomment %}
 {% block submit_buttons_bottom %}
   {% submit_row %}
