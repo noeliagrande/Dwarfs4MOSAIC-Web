@@ -1,0 +1,19 @@
+<!--
+  Template override for the Django admin login page.
+
+  This file extends the default 'admin/login.html' template and adds
+  a centered link below the login form that allows users to reset their password.
+
+  It uses the {% url 'password_reset' %} tag to dynamically generate the URL
+  for the password reset view, and {% trans %} for internationalization.
+-->
+
+{% extends "admin/login.html" %}
+{% load i18n %}
+
+{% block content %}
+  {{ block.super }}
+  <p style="text-align: center; margin-top: 1em;">
+    <a href="{% url 'password_reset' %}">{% trans "Forgot your password?" %}</a>
+  </p>
+{% endblock %}

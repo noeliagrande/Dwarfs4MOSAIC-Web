@@ -118,6 +118,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Configures Django to print emails to the console instead of sending them. Useful for development and testing.
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Sets the default sender email address shown in outgoing emails.
+DEFAULT_FROM_EMAIL = 'Dwarfs4MOSAIC <no-reply@d4mosaic-data.ucm.es>'
 
 # === Internationalization ===
 
