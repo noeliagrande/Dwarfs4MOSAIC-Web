@@ -57,13 +57,28 @@
                 </ul>
             </nav>
 
-            <!-- Login -->
+            <!-- Login/logout navigation -->
             <nav class="nav-links">
                 <ul>
+                    {% comment %}
+                    {% if user.is_authenticated %}
+                        <!-- Logout form with button -->
+                        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" style="cursor:pointer; background-color: var(--header-color);
+                                    color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;
+                                    border: none; font-size: 16px;">
+                                Logout
+                            </button>
+                        </form>
+                    {% else %}
+                    {% endcomment %}
                     {% if not user.is_authenticated %}
+                        <!-- Login link styled as button -->
                         <li><a href="{% url 'admin:login' %}?next=/home/" style="cursor:pointer;
                                background-color: var(--header-color); color: white;
-                               padding: 10px 20px; border-radius: 5px; text-decoration: none;">
+                               padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;
+                               display:inline-block;">
                             Login
                         </a></li>
                     {% endif %}
@@ -81,9 +96,12 @@
                 </span>
                 <span class="toolbar-links">
                     <span>Welcome, {{ user.get_short_name|default:user.username|upper }}. /</span>
-                    <!-- Change password (solo si tienes habilitada la vista) -->
-                    <a href="{% url 'password_change' %}">Change password</a> /
-                    <!-- Logout con botón si lo prefieres, o solo enlace -->
+                    <!-- Change password -->
+                    <!-- It was working correctly in July 2025, but the feature was disabled.
+                    The code is retained in case it is decided to enable it in the future./-->
+                    {% comment %}
+                    <a href="{% url 'password_change' %}">Change password</a>
+                    {% endcomment %}
                     <form method="post" action="{% url 'logout' %}" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="toolbar-logout-button">Log out</button>

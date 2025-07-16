@@ -1,14 +1,25 @@
+{% extends "admin/login.html" %}
+
+<!--
+    IMPORTANT
+
+    This file implements the 'change password' functionality.
+    It was working correctly in July 2025, but the feature was disabled.
+    The code is retained in case it is decided to enable it in the future.
+    To do so, delete {% comment %} and {% endcomment %}
+-->
+
 <!--
   Template override for the Django admin login page.
 
   This file extends the default 'admin/login.html' template and adds
   a centered link below the login form that allows users to reset their password.
 
-  It uses the {% url 'password_reset' %} tag to dynamically generate the URL
-  for the password reset view, and {% trans %} for internationalization.
+  It uses the { url 'password_reset' } tag to dynamically generate the URL
+  for the password reset view, and { trans } for internationalization.
 -->
 
-{% extends "admin/login.html" %}
+{% comment %}
 {% load i18n %}
 
 {% block content %}
@@ -17,3 +28,5 @@
     <a href="{% url 'password_reset' %}">{% trans "Forgot your password?" %}</a>
   </p>
 {% endblock %}
+
+{% endcomment %}

@@ -94,7 +94,7 @@ body {
 .admin-style-toolbar {
     background-color: var(--header-color);
     color: white;
-    padding: 8px var(--left-padding);
+    padding: 15px var(--left-padding);
     font-size: 16px;
     display: flex;
     justify-content: space-between;

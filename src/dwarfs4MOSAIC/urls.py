@@ -9,7 +9,7 @@ All pages except login/logout require authentication.
 """
 
 from django.urls import path
-from django.contrib.auth import views as auth_views
+# from django.contrib.auth import views as auth_views # to reset password
 from django.contrib.auth.views import LoginView, LogoutView
 from .views import *
 
@@ -22,10 +22,12 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
 
     # Reset password
-    path('reset-password/', auth_views.PasswordResetView.as_view(), name='password_reset'),
-    path('reset-password/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
-    path('reset-password/confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('reset-password/complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
+    # It was working correctly in July 2025, but the feature was disabled.
+    # The code is retained in case it is decided to enable it in the future.
+    # path('reset-password/', auth_views.PasswordResetView.as_view(), name='password_reset'),
+    # path('reset-password/done/', auth_views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    # path('reset-password/confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    # path('reset-password/complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     # Database summary page
     path('database/', login_required(database_view), name='database'),
