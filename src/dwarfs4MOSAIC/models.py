@@ -184,7 +184,6 @@ class Tbl_researcher(models.Model):
 
     name = models.CharField(
         max_length=200,
-        null=True,
         verbose_name="Name")
 
     email = models.EmailField(
@@ -229,8 +228,11 @@ class Tbl_researcher(models.Model):
         related_name='allowed_researchers'
     )
 
+    @property
+    def display_name(self):
+        return self.name or "(Name not assigned)"
+
     def __str__(self):
-        # Defensive: if user is None, return empty string instead of error
         if self.name:
             return self.name
         elif self.user:

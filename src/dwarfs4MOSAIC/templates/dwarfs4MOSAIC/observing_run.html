@@ -40,7 +40,7 @@
             <tbody>
                 {% for researcher in lst_researchers %}
                     <tr>
-                        <td>{{ researcher.name }}</td>
+                        <td>{{ researcher.display_name }}</td>
                         <td>{{ researcher.role }}</td>
                         <td>
                             {% if researcher.is_phd %}

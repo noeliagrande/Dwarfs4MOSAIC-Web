@@ -40,7 +40,7 @@
             <tbody>
                 {% for researcher in lst_researchers %}
                 <tr>
-                    <td>{{ researcher.name|default_if_none:"" }}</td>
+                    <td>{{ researcher.display_name }}</td>
                     <td>{{ researcher.role }}</td>
                     <!-- PhD status with icon -->
                     <td>

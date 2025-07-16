@@ -103,12 +103,12 @@ class ResearcherAdmin(admin.ModelAdmin):
         return self.fieldsets
 
     def get_readonly_fields(self, request, obj=None):
-        if obj:  # editing
-            return ['user']
-
-        # If the researcher has no linked user, make all fields read-only.
         if obj is not None and obj.user is None:
+            # Researcher without linked user → make all fields read-only
             return [f.name for f in self.model._meta.fields] + ['allowed_blocks', 'allowed_targets']
+        if obj:
+            # Editing a researcher with linked user → make only 'user' field read-only
+            return ['user']
         return super().get_readonly_fields(request, obj)
 
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
@@ -116,7 +116,7 @@ class ResearcherAdmin(admin.ModelAdmin):
         extra_context = extra_context or {}
         if object_id:
             researcher = Tbl_researcher.objects.get(pk=object_id)
-            # If researcher has no user, we disable all save buttons
+            # If researcher has no user, disable all save buttons
             if researcher.user is None:
                 extra_context['show_save'] = False
                 extra_context['show_save_and_add_another'] = False
