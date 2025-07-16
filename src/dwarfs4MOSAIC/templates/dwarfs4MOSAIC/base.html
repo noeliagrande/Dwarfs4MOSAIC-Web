@@ -50,12 +50,13 @@
 
                 <!-- Project description with external links -->
                 <span class="toolbar-links"
-                      style="font-size: 13px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
-                    <span>Welcome, {{ user.get_short_name|default:user.username|upper }}. /</span>
+                      style="font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
+                    <span>WELCOME, {{ user.get_short_name|default:user.username|upper }}&nbsp;/</span>
 
                     <!-- Options for ADMIN -->
                     {% if user.is_superuser %}
-                        <span><a href="{% url 'database' %}" title="{{ 'Database tables page' }}">DATABASE</a> /</span>
+                        <span><a href="{% url 'home' %}" title="{{ 'Home page' }}">HOME</a>&nbsp;/</span>
+                        <span><a href="{% url 'database' %}" title="{{ 'Database tables page' }}">DATABASE</a>&nbsp;/</span>
                         <span><a href="{% url 'admin:index' %}" title="{{ 'Database administration page' }}">ADMIN</a> /</span>
                     {% endif %}
 
