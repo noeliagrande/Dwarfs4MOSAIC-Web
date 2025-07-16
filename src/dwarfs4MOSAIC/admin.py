@@ -178,6 +178,7 @@ class TargetAdmin(admin.ModelAdmin):
             base_fieldsets.append((
                 "Upload Files",
                 {
+                    "description": "⚠️ Files with the same name will overwrite existing ones.",
                     "fields": [
                         # Show delete checkbox only if there is already an image
                         ("upload_image", "delete_image") if obj.image_name else "upload_image",
