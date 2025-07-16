@@ -27,36 +27,6 @@
     </head>
 
     <body>
-        <!-- Header section containing logo and navigation menus -->
-        {% comment %}
-        <header class="header">
-
-            <div class="logo">
-                <a href="{% url 'home' %}">
-                    <img src="{% static 'dwarfs4MOSAIC/images/logo_dwarfs4mosaic.png' %}"
-                         alt="dwarfs4MOSAIC logo">
-                </a>
-            </div>
-
-            <!-- Login/logout navigation -->
-            <nav class="nav-links">
-                <ul>
-                    {% if not user.is_authenticated %}
-                        <!-- Login link styled as button -->
-                        <li><a href="{% url 'admin:login' %}?next=/home/" style="cursor:pointer;
-                               background-color: var(--header-color); color: white;
-                               padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;
-                               display:inline-block;">
-                            Login
-                        </a></li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </header>
-
-
-        {% if user.is_authenticated %}
-        {% endcomment %}
         <div class="admin-style-toolbar">
 
             <!-- Logo -->
@@ -112,9 +82,6 @@
                 </p>
             {% endif %}
         </div>
-
-        <!-- Horizontal divider line -->
-        <!-- <div class='custom-divider'></div> -->
 
         <!-- Main content area to be filled by each view -->
         <main>
