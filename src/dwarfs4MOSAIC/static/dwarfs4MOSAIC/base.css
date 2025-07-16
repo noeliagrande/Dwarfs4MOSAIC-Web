@@ -46,25 +46,15 @@ body {
     color: black;
 }
 
-/* Header style */
-.header {
-    background-color: #ffffff;
-    padding: 10px var(--left-padding);  /* vertical and horizontal padding */
-    display: flex;                      /* element alignment in a row */
-    justify-content: space-between;     /* Distribute space between logo and links */
-    align-items: center;                /* Vertical centering of content */
-    width: 100%;
-}
-
 /* Logo style */
-.logo {
-    flex-shrink: 0;  /* Prevents logo shrinkage if space is limited */
+.admin-style-toolbar .logo {
+    flex-shrink: 0;
     max-width: 10%;
 }
 
-.header .logo img {
-    width: 100%;    /* logo size */
-    height: auto;   /* Maintains logo proportions */
+.admin-style-toolbar .logo img {
+    width: 100%;
+    height: auto;
 }
 
 /* Style for dividing line */
@@ -94,12 +84,12 @@ body {
 .admin-style-toolbar {
     background-color: var(--header-color);
     color: white;
-    padding: 15px var(--left-padding);
-    font-size: 16px;
+    padding: 10px var(--left-padding);
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 0;
+    width: 100%;
 }
 
 .admin-style-toolbar .toolbar-links a {

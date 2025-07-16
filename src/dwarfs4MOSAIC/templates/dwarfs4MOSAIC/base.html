@@ -28,6 +28,7 @@
 
     <body>
         <!-- Header section containing logo and navigation menus -->
+        {% comment %}
         <header class="header">
 
             <div class="logo">
@@ -37,42 +38,9 @@
                 </a>
             </div>
 
-            <!-- Navigation links depending on user authentication and group -->
-            <nav class="nav-links">
-                <ul>
-                    {% if user.is_authenticated %}
-                        <li><a href="{% url 'home' %}" title="{{ 'Main page' }}">HOME</a></li>
-                        {% if user.groups.all.0.name == 'Collaborator' %}
-                            <!-- Collaborator-specific links could go here -->
-
-                        {% elif user.groups.all.0.name == 'Core Team' %}
-                            <li><a href="{% url 'database' %}" title="{{ 'Database tables page' }}">DATABASE</a></li>
-
-                        {% elif user.is_superuser %}
-                            <li><a href="{% url 'database' %}" title="{{ 'Database tables page' }}">DATABASE</a></li>
-                            <li><a href="{% url 'admin:index' %}" title="{{ 'Database administration page' }}">ADMIN</a></li>
-
-                        {% endif %}
-                    {% endif %}
-                </ul>
-            </nav>
-
             <!-- Login/logout navigation -->
             <nav class="nav-links">
                 <ul>
-                    {% comment %}
-                    {% if user.is_authenticated %}
-                        <!-- Logout form with button -->
-                        <form method="post" action="{% url 'logout' %}" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" style="cursor:pointer; background-color: var(--header-color);
-                                    color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;
-                                    border: none; font-size: 16px;">
-                                Logout
-                            </button>
-                        </form>
-                    {% else %}
-                    {% endcomment %}
                     {% if not user.is_authenticated %}
                         <!-- Login link styled as button -->
                         <li><a href="{% url 'admin:login' %}?next=/home/" style="cursor:pointer;
@@ -86,25 +54,52 @@
             </nav>
         </header>
 
+
         {% if user.is_authenticated %}
-            <div class="admin-style-toolbar">
+        {% endcomment %}
+        <div class="admin-style-toolbar">
+
+            <!-- Logo -->
+            <span class="logo">
+                <a href="{% url 'home' %}">
+                    <img src="{% static 'dwarfs4MOSAIC/images/logo_dwarfs4mosaic.png' %}"
+                         alt="dwarfs4MOSAIC logo">
+                </a>
+            </span>
+
+            {% if not user.is_authenticated %}
+                <!-- Login link styled as button -->
+                <span><a href="{% url 'admin:login' %}?next=/home/" style="cursor:pointer;
+                       background-color: var(--header-color); color: white;
+                       padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;
+                       display:inline-block;">
+                    Login
+                </a></span>
+
+            {% else %}
+
                 <!-- Project description with external links -->
-                <span class="toolbar-links">
-                    <a href="https://guaix.ucm.es/dwarfs4mosaic/" target="_blank" >Dwarfs4MOSAIC</a>.
-                        A pilot study for <a href="https://elt.eso.org/instrument/MOSAIC/" target="_blank">MOSAIC</a>
-                        at <a href="https://elt.eso.org/" target="_blank">ELT</a>.
-                </span>
-                <span class="toolbar-links">
+                <span class="toolbar-links"
+                      style="font-size: 13px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
                     <span>Welcome, {{ user.get_short_name|default:user.username|upper }}. /</span>
+
+                    <!-- Options for ADMIN -->
+                    {% if user.is_superuser %}
+                        <span><a href="{% url 'database' %}" title="{{ 'Database tables page' }}">DATABASE</a> /</span>
+                        <span><a href="{% url 'admin:index' %}" title="{{ 'Database administration page' }}">ADMIN</a> /</span>
+                    {% endif %}
+
                     <!-- Change password -->
                     <!-- It was working correctly in July 2025, but the feature was disabled.
                     The code is retained in case it is decided to enable it in the future./-->
                     {% comment %}
                     <a href="{% url 'password_change' %}">Change password</a>
                     {% endcomment %}
+
+                    <!-- Logout -->
                     <form method="post" action="{% url 'logout' %}" style="display: inline;">
                         {% csrf_token %}
-                        <button type="submit" class="toolbar-logout-button">Log out</button>
+                        <button type="submit" class="toolbar-logout-button">LOG OUT</button>
                     </form>
                 </span>
             </div>
@@ -115,8 +110,8 @@
                     You are here:
                     {% block breadcrumb %} {% endblock %}
                 </p>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
 
         <!-- Horizontal divider line -->
         <!-- <div class='custom-divider'></div> -->
