@@ -242,7 +242,6 @@ class Tbl_researcher(models.Model):
         verbose_name_plural = "Researchers"
         ordering = ['user__username']
 
-
 # --- 'observing_run' table ---
 class Tbl_observing_run(models.Model):
     name = models.CharField(
@@ -372,10 +371,7 @@ class Tbl_target(models.Model):
 
     type = models.CharField(
         choices=[
-            ('galaxy_image', 'Galaxy image'),
-            ('galaxy_spectrum', 'Galaxy spectrum'),
-            ('standard_image', 'Standard image'),
-            ('standard_spectrum', 'Standard spectrum'),
+            ('galaxy', 'Galaxy'),
             ('calibration', 'Calibration'),
             ('other', 'Other'), ],
         max_length=20,  # maximum length in choices
@@ -443,6 +439,14 @@ class Tbl_target(models.Model):
         if self.image and os.path.splitext(self.image)[1]:  # if file extension exists
             return os.path.basename(self.image)
         return ""
+
+    def __init__(self, *args, **kwargs):
+        # If a target has an old type that is no longer in the list of choices,
+        # it is displayed as 'other', although the original value remains in the database.
+        super().__init__(*args, **kwargs)
+        valid_choices = [c[0] for c in self._meta.get_field('type').choices]
+        if self.type not in valid_choices:
+            self.type = 'other'
 
     def delete(self, *args, **kwargs):
         # Sanitize folder name, same as when created
