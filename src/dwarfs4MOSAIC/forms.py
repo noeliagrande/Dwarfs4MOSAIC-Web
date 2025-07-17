@@ -201,7 +201,7 @@ class TargetAdminForm(forms.ModelForm):
         widget=forms.widgets.TextInput(attrs={
             "type": "button",
             "value": "Delete files",
-            "style": "background-color: #cc3300; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;",
+            "style": "background-color: #BA2121; color: white; padding: 9px 10px; border: none; border-radius: 4px; cursor: pointer;",
         })
     )
 
