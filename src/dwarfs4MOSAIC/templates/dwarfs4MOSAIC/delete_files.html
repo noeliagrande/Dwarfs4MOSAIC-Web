@@ -1,10 +1,11 @@
 <!--
-    Template for downloading data files associated with a specific target.
+    Template for deleting data files associated with a specific target.
     Arguments:
     - target: Target object whose files are being listed.
-    - lst_files: List of available filenames for download.
+    - previous_url
+    - lst_files: List of available filenames for deletion.
     - select_all_tooltip: Tooltip text for the "select all" checkbox.
-    - btn_download_tooltip: Tooltip text for the download button.
+    - btn_delete_tooltip: Tooltip text for the delete button.
 -->
 
 {% extends 'dwarfs4MOSAIC/base.html' %}
@@ -14,15 +15,17 @@
 {% block title %}{% html_title "Download Files" %}{% endblock %}
 
 {% block breadcrumb %}
-    <a href="{% url 'home' %}">Home</a> &gt
-    {{ target.name }}
+    <span><a href="{% url 'admin:index' %}" title="{{ 'Database administration page' }}">Admin</a> ></span>
+    <span><a href="{% url 'admin:dwarfs4MOSAIC_tbl_target_changelist' %}" title="{{ 'Database administration page' }}">Targets</a> ></span>
+    <a href="{% url 'admin:dwarfs4MOSAIC_tbl_target_change' target.id %}">{{ target.name }}</a> &gt;
+
 {% endblock %}
 
 {% block content %}
     <!-- Page header -->
     <h1>Target: {{ target.name }}</h1>
     <br>
-    <p class="view-explanation">Available datafiles for downloading. Please select files to download.</p>
+    <p class="view-explanation">Available data for deletion. Please select files to remove.</p>
 
     <form method="POST">
         {% csrf_token %}
@@ -68,10 +71,10 @@
         </div>
         <br>
 
-        <!-- Download button -->
+        <!-- Delete button -->
         <button type="submit" id="delete_button" style="cursor:pointer; background-color: var(--header-color);
                 color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;
-                font-size: 16px;" title="{{ btn_download_tooltip }}"> Download
+                font-size: 16px;" title="{{ btn_delete_tooltip }}"> Delete
         </button>
     </form>
 

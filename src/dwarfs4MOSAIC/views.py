@@ -163,8 +163,6 @@ def targets_view(request):
 # Allow the user to download one or multiple data files associated with a target.
 # - If one file is selected, it is served directly.
 # - If multiple files are selected, they are compressed into a ZIP archive.
-# Raises:
-#     Http404: If no files are selected or a file is missing.
 def download_files_view(request, target_id):
     target = get_object_or_404(Tbl_target, pk=target_id)
     files = get_files(target.datafiles_path) if target.datafiles_path else []
@@ -174,7 +172,8 @@ def download_files_view(request, target_id):
         source_dir = os.path.join(settings.MEDIA_ROOT, target.datafiles_path)
 
         if not selected_files:
-            raise Http404("No file selected.")
+            messages.error(request, "No file selected.")
+            return redirect("delete_files_view", target_id=target_id)
 
         # Send a single file
         if len(selected_files) == 1:
@@ -211,3 +210,38 @@ def download_files_view(request, target_id):
         'btn_download_tooltip': 'Download selected files',
     })
 
+# Allow the user to delete one or multiple data files associated with a target.
+def delete_files_view(request, target_id):
+    target = get_object_or_404(Tbl_target, pk=target_id)
+    previous_url = request.META.get('HTTP_REFERER', '/')
+
+    if request.method == "POST":
+        selected_files = request.POST.getlist('checkbox_single[]')
+        source_dir = os.path.join(settings.MEDIA_ROOT, target.datafiles_path)
+
+        if not selected_files:
+            messages.error(request, "No file selected.")
+            return redirect("delete_files_view", target_id=target_id)
+
+        for fname in selected_files:
+            safe_name = os.path.basename(fname)
+            full_path = os.path.join(source_dir, safe_name)
+            if os.path.exists(full_path):
+                try:
+                    os.remove(full_path)
+                except Exception as e:
+                    # Si quieres capturar errores individuales por fichero
+                    print(f"Error deleting file {full_path}: {e}")
+            else:
+                print(f"File not found: {safe_name}")
+
+    # Files list updated.
+    files = get_files(target.datafiles_path) if target.datafiles_path else []
+
+    return render(request, 'dwarfs4MOSAIC/delete_files.html', {
+        'target': target,
+        'previous_url': previous_url,
+        'lst_files': files,
+        'select_all_tooltip': 'Click to choose all files at once',
+        'btn_delete_tooltip': 'Delete selected files',
+    })

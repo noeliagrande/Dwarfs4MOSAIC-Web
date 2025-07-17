@@ -20,6 +20,7 @@ from .models import Tbl_observatory, Tbl_researcher, Tbl_target
 from django.contrib.auth.models import User
 
 from django.conf import settings
+from django.urls import reverse
 
 
 # Form for observatory admin with detailed longitude and latitude input fields.
@@ -194,6 +195,16 @@ class TargetAdminForm(forms.ModelForm):
 
     delete_image = forms.BooleanField(required=False, label="No image")
 
+    delete_files = forms.CharField(
+        required=False,
+        label="",
+        widget=forms.widgets.TextInput(attrs={
+            "type": "button",
+            "value": "Delete files",
+            "style": "background-color: #cc3300; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;",
+        })
+    )
+
     class Meta:
         model = Tbl_target
         exclude = ['image', 'datafiles_path']
@@ -216,17 +227,18 @@ class TargetAdminForm(forms.ModelForm):
                     if os.path.exists(full_path):
                         files = os.listdir(full_path)
                 except Exception as e:
-                    files = [f"(Error al acceder: {e})"]
+                    files = [f"(Failed to access: {e})"]
 
                 if files:
                     file_list = "<ul>" + "".join(f"<li>{f}</li>" for f in files) + "</ul>"
+                    self.fields['delete_files'].widget.attrs['onclick'] = \
+                        f"window.location.href='/delete_files/{self.instance.pk}/';"
+
                 else:
                     file_list = "No files found"
+                    if 'delete_files' in self.fields:
+                        self.fields['delete_files'].widget = forms.HiddenInput()
 
                 self.fields['upload_datafiles'].help_text = mark_safe(
                     f"<strong>Current data files:</strong><br>{file_list}"
                 )
-
-
-
-

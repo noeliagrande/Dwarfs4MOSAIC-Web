@@ -7,6 +7,7 @@
 <script>
     const checkbox_all = document.getElementById('checkbox_all');
     const checkbox_single = document.querySelectorAll('input[name="checkbox_single[]"]');
+    const delete_button = document.getElementById('delete_button');
 
     // When main checkbox changes, check or uncheck all individual checkboxes
     checkbox_all.addEventListener('change', function() {
@@ -15,6 +16,7 @@
         checkbox_single.forEach(function(checkbox) {
             checkbox.checked = isChecked;
         });
+        updateDeleteButtonVisibility();
     });
 
     // When any individual checkbox changes, update main checkbox accordingly
@@ -28,6 +30,31 @@
                 const allChecked = Array.from(checkbox_single).every(cb => cb.checked);
                 checkbox_all.checked = allChecked;
             }
+            updateDeleteButtonVisibility();
         });
     });
+
+    // Enable delete button only if at least one file is selected
+    function updateDeleteButtonVisibility() {
+        const anyChecked = Array.from(checkbox_single).some(cb => cb.checked);
+        if (delete_button) {
+        if (anyChecked) {
+            const rootStyles = getComputedStyle(document.documentElement);
+            const headerColor = rootStyles.getPropertyValue('--header-color').trim();
+
+            delete_button.disabled = false;
+            delete_button.style.backgroundColor = headerColor;
+            delete_button.style.color = 'white';
+            delete_button.style.cursor = 'pointer';
+            delete_button.style.opacity = '1';
+        } else {
+            delete_button.disabled = true;
+            delete_button.style.cursor = 'not-allowed';
+            delete_button.style.opacity = '0.5';
+        }
+    }
+    }
+
+    document.addEventListener("DOMContentLoaded", updateDeleteButtonVisibility);
+
 </script>

@@ -65,4 +65,7 @@ urlpatterns = [
     # File download view for a specific target
     path('download_files/<int:target_id>/', login_required(download_files_view), name='download_files_view'),
 
+    # Files deletion for a specific target
+    path('delete_files/<int:target_id>/', login_required(delete_files_view), name='delete_files_view'),
+
 ]
