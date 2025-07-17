@@ -12,12 +12,10 @@ from .models import *
 from .utils import get_files, get_unique_filename, sanitize_filename
 
 import os
-import shutil
 from django.conf import settings
 from django.contrib import messages
 
-from django.http import FileResponse, Http404
-from django.contrib.auth.decorators import login_required
+from django.http import FileResponse
 
 import zipfile
 import tempfile
@@ -171,16 +169,12 @@ def download_files_view(request, target_id):
         selected_files = request.POST.getlist('checkbox_single[]')
         source_dir = os.path.join(settings.MEDIA_ROOT, target.datafiles_path)
 
-        if not selected_files:
-            messages.error(request, "No file selected.")
-            return redirect("delete_files_view", target_id=target_id)
-
         # Send a single file
         if len(selected_files) == 1:
             filename = os.path.basename(selected_files[0])
             filepath = os.path.join(source_dir, sanitize_filename(filename))
             if not os.path.exists(filepath):
-                raise Http404("File not found.")
+                messages.error(request, "File not found.")
             return FileResponse(open(filepath, 'rb'), as_attachment=True, filename=filename)
 
         # If more than one file, create a ZIP archive of multiple files
@@ -219,10 +213,6 @@ def delete_files_view(request, target_id):
         selected_files = request.POST.getlist('checkbox_single[]')
         source_dir = os.path.join(settings.MEDIA_ROOT, target.datafiles_path)
 
-        if not selected_files:
-            messages.error(request, "No file selected.")
-            return redirect("delete_files_view", target_id=target_id)
-
         for fname in selected_files:
             safe_name = os.path.basename(fname)
             full_path = os.path.join(source_dir, safe_name)
@@ -230,10 +220,7 @@ def delete_files_view(request, target_id):
                 try:
                     os.remove(full_path)
                 except Exception as e:
-                    # Si quieres capturar errores individuales por fichero
-                    print(f"Error deleting file {full_path}: {e}")
-            else:
-                print(f"File not found: {safe_name}")
+                    messages.error(request, f"Error deleting file {full_path}")
 
     # Files list updated.
     files = get_files(target.datafiles_path) if target.datafiles_path else []

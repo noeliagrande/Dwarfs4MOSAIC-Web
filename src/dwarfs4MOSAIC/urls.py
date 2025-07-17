@@ -12,6 +12,7 @@ from django.urls import path
 # from django.contrib.auth import views as auth_views # to reset password
 from django.contrib.auth.views import LoginView, LogoutView
 from .views import *
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     # Home page (requires login)
