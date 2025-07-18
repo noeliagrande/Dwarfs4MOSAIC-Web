@@ -185,13 +185,15 @@ class TargetAdmin(admin.ModelAdmin):
                     "description": "⚠️ Files with the same name will overwrite existing ones.",
                     "fields": [
                         # Show delete checkbox only if there is already an image
-                        ("upload_image", "delete_image") if obj.image_name else "upload_image",
-                        "upload_datafiles"
+                        #("upload_image", "delete_image") if obj.image_name else "upload_image",
+                        "upload_image", "upload_datafiles"
                     ]
                 })
             )
             base_fieldsets.append(
-                ("Delete Data Files", {"fields": ["datafiles"]})
+                ("Delete Files", {
+                    "fields": ["delete_image", "datafiles"]
+                })
             )
 
         return base_fieldsets
