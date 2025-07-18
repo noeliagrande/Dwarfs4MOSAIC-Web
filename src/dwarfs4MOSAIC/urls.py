@@ -33,6 +33,9 @@ urlpatterns = [
     # Database summary page
     path('database/', login_required(database_view), name='database'),
 
+    # Groups list
+    path('groups/', login_required(groups_view), name='groups'),
+
     # Observatories list
     path('observatories/', login_required(observatories_view), name='observatories'),
 

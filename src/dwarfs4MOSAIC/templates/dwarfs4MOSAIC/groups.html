@@ -1,0 +1,56 @@
+<!--
+    Template to display a table of groups stored in Django.
+
+    Arguments:
+    - lst_groups: List of telescope objects.
+-->
+
+{% extends 'dwarfs4MOSAIC/base.html' %}
+{% load static %}
+{% load custom_tags %}
+
+{% block title %}{% html_title "Groups" %}{% endblock %}
+
+{% block breadcrumb %}
+    <a href="{% url 'database' %}">Database</a> &gt
+    Groups
+{% endblock %}
+
+{% block content %}
+    <!-- Page header -->
+    <h1>Groups table</h1>
+    <br>
+    <p class="view-explanation">Table content.</p>
+
+    <!-- Groups table -->
+    <section class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>NAME</th>
+                    <th>ALLOWED OBSERVING BLOCKS</th>
+                    <th>ADMINISTRATION PERMISSIONS</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for group in lst_groups %}
+                <tr>
+                    <td>
+                        {{ group.name }}
+                    </td>
+                    <td>
+                        {% for g in group.allowed_blocks.all %}
+                            {{ g.name }} <br>
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for p in group.permissions.all %}
+                            {{ p.name }} <br>
+                        {% endfor %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+{% endblock %}

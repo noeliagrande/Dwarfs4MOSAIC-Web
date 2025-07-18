@@ -68,10 +68,17 @@ def home_view(request):
 
     return render(request, 'dwarfs4MOSAIC/home.html', context)
 
-
 # Static database overview page
 def database_view(request):
     return render(request, 'dwarfs4MOSAIC/database.html')
+
+# Page listing all groups
+def groups_view(request):
+    lst_groups = Group.objects.exclude(name='admin').order_by("name")
+
+    return render(request, 'dwarfs4MOSAIC/groups.html', {
+        'lst_groups': lst_groups
+    })
 
 # Page listing all observatories
 def observatories_view(request):
