@@ -203,32 +203,3 @@ def download_files_view(request, target_id):
         'select_all_tooltip': 'Click to choose all files at once',
         'btn_download_tooltip': 'Download selected files',
     })
-
-# Allow the user to delete one or multiple data files associated with a target.
-def delete_files_view(request, target_id):
-    target = get_object_or_404(Tbl_target, pk=target_id)
-    previous_url = request.META.get('HTTP_REFERER', '/')
-
-    if request.method == "POST":
-        selected_files = request.POST.getlist('checkbox_single[]')
-        source_dir = os.path.join(settings.MEDIA_ROOT, target.datafiles_path)
-
-        for fname in selected_files:
-            safe_name = os.path.basename(fname)
-            full_path = os.path.join(source_dir, safe_name)
-            if os.path.exists(full_path):
-                try:
-                    os.remove(full_path)
-                except Exception as e:
-                    messages.error(request, f"Error deleting file {full_path}")
-
-    # Files list updated.
-    files = get_files(target.datafiles_path) if target.datafiles_path else []
-
-    return render(request, 'dwarfs4MOSAIC/delete_files.html', {
-        'target': target,
-        'previous_url': previous_url,
-        'lst_files': files,
-        'select_all_tooltip': 'Click to choose all files at once',
-        'btn_delete_tooltip': 'Delete selected files',
-    })

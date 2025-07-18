@@ -159,6 +159,10 @@ class TargetAdmin(admin.ModelAdmin):
 
     form = TargetAdminForm
 
+    class Media:
+        css = {'all': ('admin/css/widgets.css',)}
+        js = ('admin/js/core.js', 'admin/js/SelectBox.js', 'admin/js/SelectFilter2.js',)
+
     def get_fieldsets(self, request, obj=None):
         base_fieldsets = [
             ("General Information", {"fields": [
@@ -175,17 +179,20 @@ class TargetAdmin(admin.ModelAdmin):
 
         # Add file upload section only when editing an existing object
         if obj and obj.pk:
-            base_fieldsets.append((
-                "Upload Files",
+            base_fieldsets.append(
+                ("Upload Files",
                 {
                     "description": "⚠️ Files with the same name will overwrite existing ones.",
                     "fields": [
                         # Show delete checkbox only if there is already an image
                         ("upload_image", "delete_image") if obj.image_name else "upload_image",
-                        "upload_datafiles", "delete_files",
+                        "upload_datafiles"
                     ]
-                }
-            ))
+                })
+            )
+            base_fieldsets.append(
+                ("Delete Data Files", {"fields": ["datafiles"]})
+            )
 
         return base_fieldsets
 
@@ -262,6 +269,21 @@ class TargetAdmin(admin.ModelAdmin):
             with open(dest_path, "wb+") as destination:
                 for chunk in uploaded_file.chunks():
                     destination.write(chunk)
+
+        # Handle datafiles deletion
+        files_to_delete = form.cleaned_data.get("datafiles", [])
+        for filename in files_to_delete:
+            safe_name = os.path.basename(filename)
+            file_path = os.path.join(datafiles_path, safe_name)
+            if os.path.exists(file_path):
+                try:
+                    os.remove(file_path)
+                except Exception as e:
+                    self.message_user(
+                        request,
+                        f'Error deleting file "{filename}": {e}',
+                        level=messages.ERROR
+                    )
 
         # Save all changes
         obj.save()

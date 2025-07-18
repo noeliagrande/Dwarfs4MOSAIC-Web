@@ -16,11 +16,10 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
 
-from .models import Tbl_observatory, Tbl_researcher, Tbl_target
-from django.contrib.auth.models import User
+from .models import Tbl_observatory, Tbl_target
 
 from django.conf import settings
-from django.urls import reverse
+from django.contrib.admin.widgets import FilteredSelectMultiple
 
 
 # Form for observatory admin with detailed longitude and latitude input fields.
@@ -161,7 +160,6 @@ class ObservatoryAdminForm(forms.ModelForm):
 
         return cleaned_data
 
-
 # Custom widget allowing multiple file selection
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
@@ -195,14 +193,10 @@ class TargetAdminForm(forms.ModelForm):
 
     delete_image = forms.BooleanField(required=False, label="No image")
 
-    delete_files = forms.CharField(
+    datafiles = forms.MultipleChoiceField(
         required=False,
         label="",
-        widget=forms.widgets.TextInput(attrs={
-            "type": "button",
-            "value": "Delete files",
-            "style": "background-color: #BA2121; color: white; padding: 9px 10px; border: none; border-radius: 4px; cursor: pointer;",
-        })
+        widget=FilteredSelectMultiple("data files", is_stacked=False)
     )
 
     class Meta:
@@ -223,22 +217,16 @@ class TargetAdminForm(forms.ModelForm):
             if self.instance.datafiles_path:
                 files = []
                 try:
-                    full_path = os.path.join(settings.MEDIA_ROOT, self.instance.datafiles_path)
-                    if os.path.exists(full_path):
-                        files = os.listdir(full_path)
+                    files_path = os.path.join(settings.MEDIA_ROOT, self.instance.datafiles_path)
+                    if os.path.exists(files_path):
+                        #files = os.listdir(files_path)
+                        files = sorted(os.listdir(files_path))
                 except Exception as e:
                     files = [f"(Failed to access: {e})"]
 
                 if files:
-                    file_list = "<ul>" + "".join(f"<li>{f}</li>" for f in files) + "</ul>"
-                    self.fields['delete_files'].widget.attrs['onclick'] = \
-                        f"window.location.href='/delete_files/{self.instance.pk}/';"
+                    self.fields['datafiles'].choices = [(f, f) for f in files]
 
                 else:
-                    file_list = "No files found"
-                    if 'delete_files' in self.fields:
-                        self.fields['delete_files'].widget = forms.HiddenInput()
-
-                self.fields['upload_datafiles'].help_text = mark_safe(
-                    f"<strong>Current data files:</strong><br>{file_list}"
-                )
+                    self.fields['datafiles'].choices = []
+       
