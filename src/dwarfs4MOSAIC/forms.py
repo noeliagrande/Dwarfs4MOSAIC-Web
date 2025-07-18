@@ -127,7 +127,7 @@ class ObservatoryAdminForm(forms.ModelForm):
 
         # Allow all coordinate fields to be empty (no coordinates provided)
         if all(data in [None, ''] for data in [longitude_ew, longitude_deg, longitude_min, longitude_sec,
-                                         latitude_ns, latitude_deg, latitude_min, latitude_sec]):
+                                               latitude_ns, latitude_deg, latitude_min, latitude_sec]):
             cleaned_data['longitude'] = None
             cleaned_data['latitude'] = None
             self.instance.longitude = None
@@ -160,14 +160,20 @@ class ObservatoryAdminForm(forms.ModelForm):
 
         return cleaned_data
 
+
 # Custom widget allowing multiple file selection
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
+
 # FileField subclass to handle multiple file uploads and validation
+class CustomMultipleFileButton(MultipleFileInput):
+    template_name = 'dwarfs4MOSAIC/custom_widgets/custom_multiple_file_button.html'
+
 class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
-        kwargs.setdefault("widget", MultipleFileInput())
+        kwargs.setdefault("widget", CustomMultipleFileButton())
+        #kwargs.setdefault("widget", MultipleFileInput())
         super().__init__(*args, **kwargs)
 
     def clean(self, data, initial=None):
@@ -177,6 +183,7 @@ class MultipleFileField(forms.FileField):
         else:
             result = [single_file_clean(data, initial)]
         return result
+
 
 # Form for target admin to support uploading an image and multiple data files,
 # with options to delete current image and display current files.
@@ -208,7 +215,7 @@ class TargetAdminForm(forms.ModelForm):
 
         # Show current image name if editing an existing target with an image
         if self.instance and self.instance.pk:
-            #if self.instance.image:
+            # if self.instance.image:
             self.fields['upload_image'].help_text = mark_safe(
                 f"<strong>Current image:</strong> {self.instance.image_name}"
             )
@@ -219,7 +226,7 @@ class TargetAdminForm(forms.ModelForm):
                 try:
                     files_path = os.path.join(settings.MEDIA_ROOT, self.instance.datafiles_path)
                     if os.path.exists(files_path):
-                        #files = os.listdir(files_path)
+                        # files = os.listdir(files_path)
                         files = sorted(os.listdir(files_path))
                 except Exception as e:
                     files = [f"(Failed to access: {e})"]
@@ -229,4 +236,3 @@ class TargetAdminForm(forms.ModelForm):
 
                 else:
                     self.fields['datafiles'].choices = []
-       
