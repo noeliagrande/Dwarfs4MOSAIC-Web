@@ -221,12 +221,6 @@ class Tbl_researcher(models.Model):
         related_name='allowed_researchers'
     )
 
-    allowed_targets = models.ManyToManyField(
-        'Tbl_target',
-        blank=True,
-        related_name='allowed_researchers'
-    )
-
     @property
     def display_name(self):
         return self.name or "(Name not assigned)"
