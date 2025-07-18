@@ -33,7 +33,6 @@
                     <th>OBSERVING RUNS</th>
                     <th>EMAIL</th>
                     <th>COMMENTS</th>
-                    <th>ALLOWED OBSERVING BLOCKS</th>
                 </tr>
             </thead>
             <tbody>
@@ -68,12 +67,6 @@
                         <div class="resizable-div">
                             {{ researcher.comments }}
                         </div>
-                    </td>
-                    <!-- Allowed observing blocks -->
-                    <td>
-                        {% for block in researcher.allowed_blocks.all %}
-                            {{ block.name }}<br>
-                        {% endfor %}
                     </td>
                 </tr>
                 {% endfor %}

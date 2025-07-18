@@ -16,10 +16,12 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
 
-from .models import Tbl_observatory, Tbl_target
+from .models import Tbl_observatory, Tbl_target, Tbl_observing_block
 
 from django.conf import settings
 from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.auth.models import Group
+from django.contrib import admin
 
 
 # Form for observatory admin with detailed longitude and latitude input fields.
@@ -242,3 +244,29 @@ class TargetAdminForm(forms.ModelForm):
                     self.fields['datafiles'].choices = [(f, f) for f in files]
                 else:
                     self.fields['datafiles'].choices = []
+
+class GroupAdminForm(forms.ModelForm):
+    allowed_blocks = forms.ModelMultipleChoiceField(
+        queryset=Tbl_observing_block.objects.all(),
+        required=False,
+        label = '',
+        widget=admin.widgets.FilteredSelectMultiple("Observing Blocks", is_stacked=False)
+    )
+
+    class Meta:
+        model = Group
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance.pk:
+            self.fields['allowed_blocks'].initial = self.instance.allowed_blocks.all()
+
+    def save(self, commit=True):
+        group = super().save(commit=False)
+        if commit:
+            group.save()
+        if group.pk:
+            group.allowed_blocks.set(self.cleaned_data['allowed_blocks'])
+            self.save_m2m()
+        return group

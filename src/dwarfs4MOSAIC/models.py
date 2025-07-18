@@ -18,8 +18,9 @@ from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from django.db import models
+from django.contrib.auth.models import Group
 
-from dwarfs4MOSAIC.utils import sanitize_filename
+from .utils import sanitize_filename
 
 '''
 __str__(self): shows how information is displayed when accessing an object from admin
@@ -215,12 +216,6 @@ class Tbl_researcher(models.Model):
     # Many-to-many relationship is set in Tbl_observing_run model.
     # Django automatically creates reverse accessors.
 
-    allowed_blocks = models.ManyToManyField(
-        'Tbl_observing_block',
-        blank=True,
-        related_name='allowed_researchers'
-    )
-
     @property
     def display_name(self):
         return self.name or "(Name not assigned)"
@@ -348,6 +343,13 @@ class Tbl_observing_block(models.Model):
         blank=True,
         null=True,
         verbose_name="Comments")
+
+    allowed_groups = models.ManyToManyField(
+        Group,
+        blank=True,
+        related_name="allowed_blocks",
+        help_text="Groups that have access to this observing block"
+    )
 
     def __str__(self):
         return self.name

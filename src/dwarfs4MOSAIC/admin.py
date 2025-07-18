@@ -18,11 +18,26 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.http import HttpResponseRedirect
+from django.contrib.auth.admin import GroupAdmin as DefaultGroupAdmin
+
+from .forms import GroupAdminForm
+
 
 # Custom title for the Django Admin interface
 admin.site.site_header = "Dwarfs4MOSAIC Administration" # default: Django administration
 admin.site.site_title = "Dwarfs4MOSAIC Admin Portal"
 # admin.site.index_title = "Site administration" (default)
+
+# Unregister the original GroupAdmin and register the custom GroupAdmin
+admin.site.unregister(Group)
+@admin.register(Group)
+class GroupAdmin(DefaultGroupAdmin):
+    form = GroupAdminForm
+
+    fieldsets = (
+        (None, {'fields': ('name', 'permissions')}),
+        ('Authorization', {'fields': ('allowed_blocks',)}),
+    )
 
 # --- 'observatory' table ---
 @admin.register(Tbl_observatory)
@@ -87,11 +102,7 @@ class ResearcherAdmin(admin.ModelAdmin):
         (None, {"fields": ["user"]}),
         ("General Information", {"fields": [
             'is_phd', 'institution', 'comments']}),
-        ("Authorization", {"fields": [
-            "allowed_blocks"]}), ]
-
-    # Enable horizontal multi-selection widget
-    filter_horizontal = ['allowed_blocks']
+    ]
 
     # Redirect attempts to add a Researcher to the User admin page.
     def add_view(self, request, form_url='', extra_context=None):
@@ -105,7 +116,7 @@ class ResearcherAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj is not None and obj.user is None:
             # Researcher without linked user → make all fields read-only
-            return [f.name for f in self.model._meta.fields] + ['allowed_blocks']
+            return [f.name for f in self.model._meta.fields]
         if obj:
             # Editing a researcher with linked user → make only 'user' field read-only
             return ['user']
