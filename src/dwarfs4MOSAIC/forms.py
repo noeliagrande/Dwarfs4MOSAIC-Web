@@ -259,6 +259,29 @@ class GroupAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # Define how each block is displayed
+        def custom_label(obj):
+            # Observing_block name
+            name = obj.name
+
+            # Instrument (may not exist)
+            if obj.obs_run and obj.obs_run.instrument:
+                instrument = obj.obs_run.instrument.name
+            else:
+                instrument = "No instrument"
+
+            # Observation date (may not exist)
+            if obj.start_time:
+                obs_date = obj.start_time.strftime('%Y-%m-%d')
+            else:
+                obs_date = "No date"
+
+            return f"{name} - {instrument} ({obs_date})"
+
+        self.fields['allowed_blocks'].label_from_instance = custom_label
+
+        # Initialize allowed blocks if the group already exists
         if self.instance.pk:
             self.fields['allowed_blocks'].initial = self.instance.allowed_blocks.all()
 
