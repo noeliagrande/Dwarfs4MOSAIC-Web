@@ -26,6 +26,7 @@
                 <tr>
                     <th>NAME</th>
                     <th>ROLE</th>
+                    <th>GROUP</th>
                     <th>PhD</th>
                     <th>INSTITUTION</th>
                     <th>OBSERVING RUNS</th>
@@ -38,6 +39,11 @@
                 <tr>
                     <td>{{ researcher.display_name }}</td>
                     <td>{{ researcher.role }}</td>
+                    <td>
+                        {% for group in researcher.user.groups.all %}
+                            {{ group.name }} <br>
+                        {% endfor %}
+                    </td>
                     <!-- PhD status with icon -->
                     <td>
                         {% if researcher.is_phd %}

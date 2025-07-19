@@ -26,6 +26,7 @@
             <thead>
                 <tr>
                     <th>NAME</th>
+                    <th>MEMBERS</th>
                     <th>ALLOWED OBSERVING BLOCKS</th>
                     <th>ADMINISTRATION PERMISSIONS</th>
                 </tr>
@@ -35,6 +36,11 @@
                 <tr>
                     <td>
                         {{ group.name }}
+                    </td>
+                    <td>
+                        {% for user in group.user_set.all %}
+                            {{ user.username }} <br>
+                        {% endfor %}
                     </td>
                     <td>
                         {% for g in group.allowed_blocks.all %}
