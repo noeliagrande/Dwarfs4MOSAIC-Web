@@ -25,11 +25,12 @@ def home_view(request):
     context = {}
     if request.user.is_authenticated:
         # Prefetch related data to reduce database queries:
-        if request.user.is_superuser:
-            # admin has permission to see everything
+        if request.user.is_superuser or (
+                request.user.researcher.role == "core_team"):
+            # admin and core team has permission to see everything
             lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run__instrument')
         else:
-            # no admin users has permission to see authorized blocks
+            # 'collaborator' users has permission to see only authorized blocks
             lst_targets = Tbl_target.objects.filter(
                 observing_blocks__allowed_groups__in=request.user.groups.all()
             ).prefetch_related('observing_blocks__obs_run__instrument').distinct()

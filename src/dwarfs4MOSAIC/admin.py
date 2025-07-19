@@ -99,7 +99,7 @@ admin.site.register(User, CustomUserAdmin)
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
     fieldsets = [
-        (None, {"fields": ["user"]}),
+        (None, {"fields": ['user', 'role']}),
         ("General Information", {"fields": [
             'is_phd', 'institution', 'comments']}),
     ]

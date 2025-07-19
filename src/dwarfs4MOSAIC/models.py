@@ -190,11 +190,14 @@ class Tbl_researcher(models.Model):
         blank=True,
         verbose_name="email")
 
-    @property
-    def role(self):
-        if self.user and self.user.groups.exists():
-            return self.user.groups.first().name
-        return ""
+    role = models.CharField(
+        choices=[
+            ('core_team', 'Core Team'),
+            ('collaborator', 'Collaborator')],
+        max_length=15,  # maximum length in choices
+        default='collaborator',
+        null=False,
+        verbose_name="Role")
 
     institution = models.CharField(
         max_length=200,
