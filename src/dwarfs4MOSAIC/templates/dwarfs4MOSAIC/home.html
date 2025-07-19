@@ -91,7 +91,7 @@
                             {% if item.target.image_name %}
                                 <img src="{{ item.target.image_url }}" alt="Failed to load image" style="width: 150px;">
                             {% else %}
-                                <p>No image available</p>
+                                <img src="{% static 'dwarfs4MOSAIC/images/no_image.jpg' %}" alt="No image available" style="width: 150px;">
                             {% endif %}
                         </td>
                         <td>{{ item.target.name }}</td>
