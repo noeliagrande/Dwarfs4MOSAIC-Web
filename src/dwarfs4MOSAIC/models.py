@@ -354,6 +354,25 @@ class Tbl_observing_block(models.Model):
         help_text="Groups that have access to this observing block"
     )
 
+    @property
+    def detailed_name(self):
+        # Observing_block name
+        name = self.name
+
+        # Instrument (may not exist)
+        if self.obs_run and self.obs_run.instrument:
+            instrument = self.obs_run.instrument.name
+        else:
+            instrument = "No instrument"
+
+        # Observation date (may not exist)
+        if self.start_time:
+            obs_date = self.start_time.strftime('%Y-%m-%d')
+        else:
+            obs_date = "No date"
+
+        return f"{name} - {instrument} ({obs_date})"
+
     def __str__(self):
         return self.name
 
