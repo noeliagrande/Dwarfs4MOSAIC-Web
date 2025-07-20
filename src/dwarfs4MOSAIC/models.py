@@ -219,6 +219,12 @@ class Tbl_researcher(models.Model):
     # Many-to-many relationship is set in Tbl_observing_run model.
     # Django automatically creates reverse accessors.
 
+    denied_blocks = models.ManyToManyField(
+        'Tbl_observing_block',
+        blank=True,
+        related_name='denied_researchers'
+    )
+
     @property
     def display_name(self):
         return self.name or "(Name not assigned)"

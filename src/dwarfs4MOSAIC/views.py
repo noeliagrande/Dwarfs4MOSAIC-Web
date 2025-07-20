@@ -27,12 +27,18 @@ def home_view(request):
         # Prefetch related data to reduce database queries:
         if request.user.is_superuser or request.user.researcher.role == "core_team":
             # 'admin' and 'core team' have permission to see everything
-            lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run__instrument')
+            lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run__instrument').distinct()
         else:
             # 'collaborator' users has permission to see only authorized blocks
+            denied_blocks = request.user.researcher.denied_blocks.all()
+
             lst_targets = Tbl_target.objects.filter(
-                observing_blocks__allowed_groups__in=request.user.groups.all()
-            ).prefetch_related('observing_blocks__obs_run__instrument').distinct()
+                observing_blocks__allowed_groups__in = request.user.groups.all()
+            ).exclude(
+                observing_blocks__in = denied_blocks
+            ).prefetch_related(
+                'observing_blocks__obs_run__instrument'
+            ).distinct()
 
         lst_targets_and_files = []
 

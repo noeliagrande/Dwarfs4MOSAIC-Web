@@ -102,7 +102,12 @@ class ResearcherAdmin(admin.ModelAdmin):
         (None, {"fields": ['user', 'role']}),
         ("General Information", {"fields": [
             'is_phd', 'institution', 'comments']}),
+        ("Authorization", {"fields": [
+            "denied_blocks"]}),
     ]
+
+    # Enable horizontal multi-selection widget
+    filter_horizontal = ['denied_blocks']
 
     # Redirect attempts to add a Researcher to the User admin page.
     def add_view(self, request, form_url='', extra_context=None):
@@ -116,7 +121,7 @@ class ResearcherAdmin(admin.ModelAdmin):
     def get_readonly_fields(self, request, obj=None):
         if obj is not None and obj.user is None:
             # Researcher without linked user → make all fields read-only
-            return [f.name for f in self.model._meta.fields]
+            return [f.name for f in self.model._meta.fields] + ['denied_blocks']
         if obj:
             # Editing a researcher with linked user → make only 'user' field read-only
             return ['user']

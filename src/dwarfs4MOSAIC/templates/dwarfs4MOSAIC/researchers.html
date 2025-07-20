@@ -30,6 +30,7 @@
                     <th>PhD</th>
                     <th>INSTITUTION</th>
                     <th>OBSERVING RUNS</th>
+                    <th>DENIED OBSERVING BLOCKS</th>
                     <th>EMAIL</th>
                     <th>COMMENTS</th>
                 </tr>
@@ -60,6 +61,12 @@
                                 {{ observing_run.name }}
                             </a>
                             <br>
+                        {% endfor %}
+                    </td>
+                    <!-- Allowed observing blocks -->
+                    <td>
+                        {% for block in researcher.denied_blocks.all %}
+                            {{ block.detailed_name }}<br>
                         {% endfor %}
                     </td>
                     {% if researcher.email %}
