@@ -42,9 +42,7 @@
                 <span><a href="{% url 'admin:login' %}?next=/home/" style="cursor:pointer;
                        background-color: var(--header-color); color: white;
                        padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;
-                       display:inline-block;">
-                    LOGIN
-                </a></span>
+                       display:inline-block;">LOGIN</a></span>
 
             {% else %}
                 <!-- Project description with external links -->
@@ -74,16 +72,18 @@
                         <button type="submit" class="toolbar-logout-button">LOG OUT</button>
                     </form>
                 </span>
-            </div>
+            {% endif %}
+        </div>
 
-            <!-- Breadcrumb section shown only to authenticated users -->
+        <!-- Breadcrumb section -->
+        {% if user.is_superuser %}
             <div class="breadcrumb" style="display: flex; justify-content: space-between; align-items: center;">
                 <p>
                     You are here:
                     {% block breadcrumb %} {% endblock %}
                 </p>
-            {% endif %}
-        </div>
+            </div>
+        {% endif %}
 
         <!-- Main content area to be filled by each view -->
         <main>
