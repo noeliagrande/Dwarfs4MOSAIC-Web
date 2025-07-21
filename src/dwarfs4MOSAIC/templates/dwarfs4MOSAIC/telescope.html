@@ -6,9 +6,12 @@
     - lst_instruments: List of instrument objects linked to the telescope.
 -->
 
+{# Base template #}
 {% extends 'dwarfs4MOSAIC/base.html' %}
-{% load static %}
+
+{# Static template tags #}
 {% load custom_tags %}
+{% load static %}
 
 {% block title %}{% html_telescope_title telescope.name %}{% endblock %}
 

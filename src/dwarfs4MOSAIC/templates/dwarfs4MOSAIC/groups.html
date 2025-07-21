@@ -1,13 +1,16 @@
 <!--
-    Template to display a table of groups stored in Django.
+    Template to display a table of Group objects stored in Django.
 
     Arguments:
-    - lst_groups: List of telescope objects.
+    - lst_groups: List of Group objects, each containing related users, allowed observing blocks, and permissions.
 -->
 
+{# Base template #}
 {% extends 'dwarfs4MOSAIC/base.html' %}
-{% load static %}
+
+{# Static template tags #}
 {% load custom_tags %}
+{% load static %}
 
 {% block title %}{% html_title "Groups" %}{% endblock %}
 

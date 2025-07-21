@@ -6,9 +6,12 @@
     - lst_telescopes: List of telescope objects associated with the observatory.
 -->
 
+{# Base template #}
 {% extends 'dwarfs4MOSAIC/base.html' %}
-{% load static %}
+
+{# Static template tags #}
 {% load custom_tags %}
+{% load static %}
 
 {% block title %}{% html_observatory_title observatory_name %}{% endblock %}
 

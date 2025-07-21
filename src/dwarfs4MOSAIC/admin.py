@@ -10,7 +10,6 @@ and overrides default admin behavior where necessary.
 import os
 
 # Third-party libraries
-from django.conf import settings
 from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as DefaultGroupAdmin, UserAdmin as DefaultUserAdmin
 from django.http import HttpResponseRedirect

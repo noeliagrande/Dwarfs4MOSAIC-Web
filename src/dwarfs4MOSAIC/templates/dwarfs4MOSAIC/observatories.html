@@ -3,12 +3,19 @@
 
     Argument:
     - lst_observatories: List of observatory objects to display.
+
+    Notes:
+    - Longitude and latitude are displayed using the custom 'convert_to_dms' filter,
+      which converts decimal degrees into degrees, minutes, and seconds format.
 -->
 
+{# Base template #}
 {% extends 'dwarfs4MOSAIC/base.html' %}
-{% load static %}
-{% load filters %}
+
+{# Static template tags #}
 {% load custom_tags %}
+{% load filters %}
+{% load static %}
 
 {% block title %}{% html_title "Observatories" %}{% endblock %}
 

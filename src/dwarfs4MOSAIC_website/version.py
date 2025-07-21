@@ -1,10 +1,11 @@
 '''
-Application version (shown in templates and admin footer)
+Application version (displayed  in templates and admin footer)
 
-Standard versioning system SemVer (Semantic Versioning):
-- The first digit is incremented when there are changes that are incompatible with previous versions.
-- The second digit is incremented when new features compatible with previous versions are added.
-- The third digit is incremented when bug fixes or minor adjustments are made that do not affect compatibility.
+Versioning follows the Semantic Versioning (SemVer) system:
+- MAJOR version when there are incompatible API changes,
+- MINOR version when there are functionality in a backwards compatible manner,
+- PATCH version when there are backwards compatible bug fixes.
+
 '''
 
 __version__ = "v2.1.0 (July 2025)"

@@ -5,9 +5,15 @@
     Allows users to navigate quickly between different database tables.
 
     Extends the main base template and uses breadcrumb navigation for context.
+
+    Context:
+    - user: current authenticated user (implicit)
 -->
 
+{# Base template #}
 {% extends 'dwarfs4MOSAIC/base.html' %}
+
+{# Static template tags #}
 {% load custom_tags %}
 
 {% block title %}{% html_title "Database" %}{% endblock %}

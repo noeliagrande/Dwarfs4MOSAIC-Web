@@ -1,3 +1,17 @@
+<!--
+  Custom widget for selecting a single image file.
+
+  - Displays a button labeled "Select Image".
+  - Clicking the button opens the hidden file input dialog.
+  - When a file is selected, its name is displayed next to the button.
+
+  Context variables used:
+  - widget.name: the name attribute for the input field.
+  - widget.attrs.id: unique ID of the input, used to link the button and display area.
+
+  This widget is typically integrated in Django forms to provide a more user-friendly image upload interface.
+-->
+
 <div style="display: flex; align-items: center;">
   <button type="button" class="custom-single-btn" style="flex-shrink: 0;">Select Image</button>
   <!-- Container to show selected filename -->

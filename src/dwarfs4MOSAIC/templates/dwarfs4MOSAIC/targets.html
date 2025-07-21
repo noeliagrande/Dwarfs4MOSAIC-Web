@@ -5,9 +5,12 @@
     - lst_targets: List of target objects to be displayed in the table.
 -->
 
+{# Base template #}
 {% extends 'dwarfs4MOSAIC/base.html' %}
-{% load static %}
+
+{# Static template tags #}
 {% load custom_tags %}
+{% load static %}
 
 {% block title %}{% html_title "Targets" %}{% endblock %}
 

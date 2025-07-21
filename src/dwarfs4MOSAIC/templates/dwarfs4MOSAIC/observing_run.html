@@ -7,7 +7,10 @@
     - lst_researchers: List of researchers associated with the observing run.
 -->
 
+{# Base template #}
 {% extends 'dwarfs4MOSAIC/base.html' %}
+
+{# Static template tags #}
 {% load custom_tags %}
 
 {% block title %}{% html_observing_run_title observing_run.name %}{% endblock %}

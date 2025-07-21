@@ -7,9 +7,12 @@
     - btn_download_tooltip: Tooltip text for the download button.
 -->
 
+{# Base template #}
 {% extends 'dwarfs4MOSAIC/base.html' %}
-{% load static %}
+
+{# Static template tags #}
 {% load custom_tags %}
+{% load static %}
 
 {% block title %}{% html_title "Download Files" %}{% endblock %}
 

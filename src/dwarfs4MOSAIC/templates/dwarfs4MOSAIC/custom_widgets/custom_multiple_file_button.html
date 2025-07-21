@@ -1,3 +1,19 @@
+<!--
+  Custom file upload widget for Django forms.
+
+  Context:
+  - widget.attrs.id: The HTML id attribute of the hidden file input.
+  - widget.name: The name attribute for the input element.
+
+  Functionality:
+  - Displays a styled button labeled "Select Files" that triggers the hidden file input dialog.
+  - Allows multiple file selection via the hidden input.
+  - Shows dynamically the number of files selected and their names next to the button.
+  - Styles the button with custom colors and padding.
+
+  This widget improves user experience for multi-file uploads by providing a clear button and feedback on selected files.
+-->
+
 <div style="display: flex; align-items: flex-start;">
   <button type="button" class="custom-upload-btn" style="flex-shrink: 0;">Select Files</button>
   <!-- Container shows full list, no scroll, margin to separate -->
