@@ -15,8 +15,8 @@ import unicodedata
 # Third-party libraries
 from django.conf import settings
 
-# Return all rows from a database cursor as a list of dictionaries.
-# Each dictionary corresponds to a row, with column names as keys.
+# Convert all rows from a DB cursor into a list of dictionaries.
+# Each dictionary represents a row with column names as keys.
 def dictfetchall(cursor):
     columns = [col[0] for col in cursor.description]
     return [
@@ -24,11 +24,8 @@ def dictfetchall(cursor):
         for row in cursor.fetchall()
     ]
 
-# Return a list of files inside the directory specified by the relative media path.
-# Args:
-#     path (str): Relative path from MEDIA_ROOT to the target directory.
-# Returns:
-#     list: List of filenames if the directory exists, otherwise an empty list.
+# List files inside a directory relative to MEDIA_ROOT.
+# Returns a list of filenames or empty list if directory does not exist.
 def get_files(path):
     if not path:
         return []
@@ -41,14 +38,8 @@ def get_files(path):
     except FileNotFoundError:
         return []
 
-# Add a numeric suffix to the filename if it already exists in the destination directory.
-# Prevents overwriting existing files by creating unique variants like:
-# 'file.txt' → 'file (1).txt', 'file (2).txt', etc.
-# Args:
-#     dest_dir (str): Destination directory.
-#     filename (str): Desired filename.
-# Returns:
-#     str: A unique filename within the destination directory.
+# Generate a unique filename by adding a numeric suffix if needed.
+# Example: file.txt → file (1).txt → file (2).txt, etc.
 def get_unique_filename(dest_dir, filename):
     base, ext = os.path.splitext(filename)
     counter = 1
@@ -60,16 +51,12 @@ def get_unique_filename(dest_dir, filename):
 
     return new_filename
 
-# Convert a filename to a safe, ASCII-only format.
-# - Removes accents and special characters.
-# - Keeps only alphanumeric characters, dashes, underscores, periods, and spaces.
-# - Replaces spaces with underscores.
-# Args:
-#     name (str): Original filename or string.
-# Returns:
-#     str: Sanitized filename.
+# Sanitize a filename by:
+# - Removing accents and special Unicode characters.
+# - Keeping only letters, numbers, dashes, underscores, periods, and spaces.
+# - Replacing spaces with underscores.
 def sanitize_filename(name):
-    # Normalize Unicode characters (e.g., é → e, ñ → n)
+    # Normalize Unicode characters to ASCII equivalents (e.g., é → e, ñ → n)
     name = unicodedata.normalize('NFKD', name).encode('ascii', 'ignore').decode('ascii')
 
     # Remove invalid characters

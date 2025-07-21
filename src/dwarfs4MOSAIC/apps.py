@@ -9,16 +9,17 @@ It also imports signal handlers when the app is fully loaded.
 # Third-party libraries
 from django.apps import AppConfig
 
+# Configuration class for the dwarfs4MOSAIC app
 class Dwarfs4MOSAICConfig(AppConfig):
-    # Default primary key type for models in this app
+    # Default type for auto-generated primary keys
     default_auto_field = 'django.db.models.BigAutoField'
 
-    # Internal name of the Django app
+    # Internal name of the app
     name = 'dwarfs4MOSAIC'
 
-    # Display name of the app in the Django admin
+    # Name displayed in the Django admin
     verbose_name = "Database"
 
     def ready(self):
-        # Import signal handlers to connect signals with their receivers
+        # Import signals to connect model events to handlers
         from . import signals

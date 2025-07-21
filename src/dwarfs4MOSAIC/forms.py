@@ -26,7 +26,7 @@ from django.utils.safestring import mark_safe
 from .models import Tbl_observatory, Tbl_target, Tbl_observing_block
 
 
-# Form for observatory admin with detailed longitude and latitude input fields.
+# Admin form for observatories with detailed longitude and latitude input fields.
 # Longitude and latitude are split into direction (E/W, N/S), degrees, minutes, and seconds.
 # Includes conversion between decimal degrees and DMS, and validation of input completeness and range.
 class ObservatoryAdminForm(forms.ModelForm):
@@ -95,9 +95,9 @@ class ObservatoryAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Initialize longitude and latitude fields from decimal values on instance
+        # Populate longitude and latitude fields from instance values
         if self.instance.longitude is not None:
-            # Convert longitude to deg, min, sec
+            # Convert stored longitude (decimal degrees) to degrees, minutes, seconds
             longitude_deg, remainder = divmod(abs(self.instance.longitude), 1)
             longitude_min, longitude_sec = divmod(remainder * 60, 1)
             longitude_sec *= 60
@@ -107,7 +107,7 @@ class ObservatoryAdminForm(forms.ModelForm):
             self.fields['longitude_ew'].initial = 'W' if self.instance.longitude < 0 else 'E'
 
         if self.instance.latitude is not None:
-            # Convert latitude to deg, min, sec
+            # Convert stored latitude (decimal degrees) to degrees, minutes, seconds
             latitude_deg, remainder = divmod(abs(self.instance.latitude), 1)
             latitude_min, latitude_sec = divmod(remainder * 60, 1)
             latitude_sec *= 60
@@ -117,6 +117,7 @@ class ObservatoryAdminForm(forms.ModelForm):
             self.fields['latitude_ns'].initial = 'S' if self.instance.latitude < 0 else 'N'
 
     def clean(self):
+        # Validate and convert longitude and latitude input to decimal values
         cleaned_data = super().clean()
 
         longitude_ew = cleaned_data.get('longitude_ew')
@@ -129,7 +130,7 @@ class ObservatoryAdminForm(forms.ModelForm):
         latitude_min = cleaned_data.get('latitude_min')
         latitude_sec = cleaned_data.get('latitude_sec')
 
-        # Allow all coordinate fields to be empty (no coordinates provided)
+        # Allow all fields empty (no coordinates provided)
         if all(data in [None, ''] for data in [longitude_ew, longitude_deg, longitude_min, longitude_sec,
                                                latitude_ns, latitude_deg, latitude_min, latitude_sec]):
             cleaned_data['longitude'] = None
@@ -138,11 +139,11 @@ class ObservatoryAdminForm(forms.ModelForm):
             self.instance.latitude = None
             return cleaned_data
 
-        # If any longitude field is provided, all must be provided
+        # Validate that all longitude fields are filled if any are provided
         if any(data in [None, ''] for data in [longitude_ew, longitude_deg, longitude_min, longitude_sec]):
             raise ValidationError("Three longitude fields must be provided.")
 
-        # If any latitude field is provided, all must be provided
+        # Validate that all latitude fields are filled if any are provided
         if any(data in [None, ''] for data in [latitude_ns, latitude_deg, latitude_min, latitude_sec]):
             raise ValidationError("Three latitude fields must be provided.")
 
@@ -164,29 +165,32 @@ class ObservatoryAdminForm(forms.ModelForm):
 
         return cleaned_data
 
-# Custom widget allowing single file selection
+# Custom widget for selecting a single file
 class CustomSingleFileButton(forms.ClearableFileInput):
     template_name = 'dwarfs4MOSAIC/custom_widgets/custom_single_file_button.html'
 
-# Custom widget allowing multiple file selection
+# Custom widget for selecting multiple files
 class MultipleFileInput(forms.ClearableFileInput):
     allow_multiple_selected = True
 
+# File field that uses the custom single file widget
 class SingleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("widget", CustomSingleFileButton())
         super().__init__(*args, **kwargs)
 
-# FileField subclass to handle multiple file uploads and validation
+# Custom widget template for multiple file uploads
 class CustomMultipleFileButton(MultipleFileInput):
     template_name = 'dwarfs4MOSAIC/custom_widgets/custom_multiple_file_button.html'
 
+# File field that allows multiple file uploads
 class MultipleFileField(forms.FileField):
     def __init__(self, *args, **kwargs):
         kwargs.setdefault("widget", CustomMultipleFileButton())
         super().__init__(*args, **kwargs)
 
     def clean(self, data, initial=None):
+        # Validate each uploaded file individually
         single_file_clean = super().clean
         if isinstance(data, (list, tuple)):
             result = [single_file_clean(d, initial) for d in data]
@@ -195,7 +199,7 @@ class MultipleFileField(forms.FileField):
         return result
 
 
-# Form for target admin to support uploading an image and multiple data files,
+# Admin form for targets, supports uploading images and multiple data files
 # with options to delete current image and display current files.
 class TargetAdminForm(forms.ModelForm):
     upload_image = SingleFileField(
@@ -210,6 +214,7 @@ class TargetAdminForm(forms.ModelForm):
 
     delete_image = forms.BooleanField(required=False, label="Delete image")
 
+    # Field for selecting data files to delete
     datafiles = forms.MultipleChoiceField(
         required=False,
         label="",
@@ -232,7 +237,7 @@ class TargetAdminForm(forms.ModelForm):
             else:
                 self.fields['upload_image'].help_text = None
 
-            # List current data files if path exists
+            # List available data files if datafiles_path exists
             if self.instance.datafiles_path:
                 files = []
                 try:
@@ -247,6 +252,8 @@ class TargetAdminForm(forms.ModelForm):
                 else:
                     self.fields['datafiles'].choices = []
 
+
+# Admin form for groups with custom allowed blocks field
 class GroupAdminForm(forms.ModelForm):
     allowed_blocks = forms.ModelMultipleChoiceField(
         queryset=Tbl_observing_block.objects.all(),
@@ -262,13 +269,15 @@ class GroupAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Use detailed name for allowed blocks in the selection list
         self.fields['allowed_blocks'].label_from_instance = lambda obj: obj.detailed_name
 
-        # Initialize allowed blocks if the group already exists
+        # Set initial allowed blocks if the group already exists
         if self.instance.pk:
             self.fields['allowed_blocks'].initial = self.instance.allowed_blocks.all()
 
     def save(self, commit=True):
+        # Save group and update allowed blocks relation
         group = super().save(commit=False)
         if commit:
             group.save()

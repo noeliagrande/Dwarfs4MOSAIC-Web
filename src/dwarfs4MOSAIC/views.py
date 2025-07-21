@@ -22,16 +22,15 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .models import *
 from .utils import get_files, get_unique_filename, sanitize_filename
 
-# Home page showing all targets and associated files (if authenticated)
+# Home page showing all targets and their files for authenticated users
 def home_view(request):
     context = {}
     if request.user.is_authenticated:
-        # Prefetch related data to reduce database queries:
         if request.user.is_superuser or request.user.researcher.role == "core_team":
-            # 'admin' and 'core team' have permission to see everything
+            # If user is admin or core team, show all targets with related data
             lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run__instrument').distinct()
         else:
-            # 'collaborator' users has permission to see only authorized blocks
+            # For collaborators, filter targets by allowed groups and exclude denied blocks
             denied_blocks = request.user.researcher.denied_blocks.all()
 
             lst_targets = Tbl_target.objects.filter(
@@ -45,10 +44,10 @@ def home_view(request):
         lst_targets_and_files = []
 
         for target in lst_targets:
-            # Get associated files if 'datafiles_path' is defined
+            # Get list of files for the target if datafiles_path is set
             files = get_files(target.datafiles_path) if target.datafiles_path else []
 
-            # Deduplicate observing runs
+            # Remove duplicate observing runs for this target
             seen_runs = set() # Set to track already added obs_run
             unique_runs = []  # Final list of unique obs_run objects
 
@@ -59,7 +58,7 @@ def home_view(request):
                     seen_runs.add(key)
                     unique_runs.append(run)
 
-            # Deduplicate instruments
+            # Remove duplicate instruments from the unique observing runs
             seen_instruments = set()  # Set to track already added instruments
             unique_instruments = []   # Final list of unique instrument objects
             for run in unique_runs:
@@ -69,7 +68,7 @@ def home_view(request):
                     seen_instruments.add(key)
                     unique_instruments.append(instr)
 
-            # Add everything to the rendering context
+            # Add target info and related data to the context list
             lst_targets_and_files.append({
                 'target': target,
                 'files': files,
@@ -80,15 +79,17 @@ def home_view(request):
         context['authenticated'] = True
         context['lst_targets_and_files'] = lst_targets_and_files
     else:
+        # User not authenticated
         context['authenticated'] = False
 
+    # Render the home page template with context
     return render(request, 'dwarfs4MOSAIC/home.html', context)
 
-# Static database overview page
+# Render static database overview page
 def database_view(request):
     return render(request, 'dwarfs4MOSAIC/database.html')
 
-# Page listing all groups
+# List all user groups except 'admin'
 def groups_view(request):
     lst_groups = Group.objects.exclude(name='admin').order_by("name")
 
@@ -96,7 +97,7 @@ def groups_view(request):
         'lst_groups': lst_groups
     })
 
-# Page listing all observatories
+# List all observatories ordered by name
 def observatories_view(request):
     lst_observatories = Tbl_observatory.objects.all().order_by("name")
 
@@ -104,17 +105,17 @@ def observatories_view(request):
         'lst_observatories': lst_observatories
     })
 
-# Page listing all telescopes of a specific observatory
+# Show one observatory and its telescopes
 def observatory_view(request, observatory_name):
     observatory = get_object_or_404(Tbl_observatory, name = observatory_name) # Get observatory by name
-    telescopes = Tbl_telescope.objects.filter(obs_tel = observatory) # Get telescopes belonging to the observatory
+    telescopes = Tbl_telescope.objects.filter(obs_tel = observatory) # Get telescopes for this observatory
 
     return render(request, 'dwarfs4MOSAIC/observatory.html', {
         'observatory_name': observatory_name,
         'lst_telescopes': telescopes
     })
 
-# Page listing all telescopes
+# List all telescopes with related observatories
 def telescopes_view(request):
     lst_telescopes = Tbl_telescope.objects.all().select_related("obs_tel").order_by("name")
 
@@ -122,17 +123,17 @@ def telescopes_view(request):
         'lst_telescopes': lst_telescopes
     })
 
-# Page listing all instruments of a specific telescope
+# Show one telescope and its instruments
 def telescope_view(request, telescope_name):
     telescope = get_object_or_404(Tbl_telescope, name = telescope_name) # Get telescope by name
-    instruments = Tbl_instrument.objects.filter(tel_ins = telescope) # Get instruments belonging to the telescope
+    instruments = Tbl_instrument.objects.filter(tel_ins = telescope) # Get instruments for this telescope
 
     return render(request, 'dwarfs4MOSAIC/telescope.html', {
         'telescope': telescope,
         'lst_instruments': instruments
     })
 
-# Page listing all instruments
+# List all instruments with related telescopes
 def instruments_view(request):
     lst_instruments = Tbl_instrument.objects.all().select_related("tel_ins").order_by("name")
 
@@ -140,7 +141,7 @@ def instruments_view(request):
         'lst_instruments': lst_instruments
     })
 
-# Page listing all researchers
+# List all researchers
 def researchers_view(request):
     lst_researchers = Tbl_researcher.objects.all()
 
@@ -148,7 +149,7 @@ def researchers_view(request):
         'lst_researchers': lst_researchers
     })
 
-# Page listing all observing runs
+# List all observing runs with related instruments
 def observing_runs_view(request):
     lst_observing_runs = Tbl_observing_run.objects.all().select_related('instrument')
 
@@ -156,34 +157,34 @@ def observing_runs_view(request):
         'lst_observing_runs': lst_observing_runs
     })
 
-# Page showing a specific observing run with its blocks and researchers
+# Show details for one observing run, including blocks and researchers
 def observing_run_view(request, observing_run_name):
     observing_run = get_object_or_404(Tbl_observing_run, name = observing_run_name) # Get observing_run by name
-    observing_blocks = Tbl_observing_block.objects.filter(obs_run = observing_run.id) # Get observing_blocks belonging to the observing_run
-    researchers = observing_run.researchers.all() # Get researchers participating in the observing_run
+    observing_blocks = Tbl_observing_block.objects.filter(obs_run = observing_run.id) # Blocks of this run
+    researchers = observing_run.researchers.all() # Researchers involved
 
     return render(request, 'dwarfs4MOSAIC/observing_run.html', {
         'observing_run': observing_run,
         'lst_observing_blocks': observing_blocks,
         'lst_researchers': researchers})
 
-# Page listing all observing blocks
+# List all observing blocks with related observing runs and targets
 def observing_blocks_view(request):
     lst_observing_blocks = Tbl_observing_block.objects.all().select_related('obs_run').prefetch_related('target')
 
     return render(request, 'dwarfs4MOSAIC/observing_blocks.html', {
         'lst_observing_blocks': lst_observing_blocks})
 
-# Page listing all targets
+# List all targets
 def targets_view(request):
     lst_targets = Tbl_target.objects.all()
 
     return render(request, 'dwarfs4MOSAIC/targets.html', {
         'lst_targets': lst_targets})
 
-# Allow the user to download one or multiple data files associated with a target.
-# - If one file is selected, it is served directly.
-# - If multiple files are selected, they are compressed into a ZIP archive.
+# Allow download of one or multiple files for a target
+# - Single file served directly
+# - Multiple files compressed into a ZIP archive
 def download_files_view(request, target_id):
     target = get_object_or_404(Tbl_target, pk=target_id)
     files = get_files(target.datafiles_path) if target.datafiles_path else []
@@ -192,7 +193,7 @@ def download_files_view(request, target_id):
         selected_files = request.POST.getlist('checkbox_single[]')
         source_dir = os.path.join(settings.MEDIA_ROOT, target.datafiles_path)
 
-        # Send a single file
+        # Serve a single selected file
         if len(selected_files) == 1:
             filename = os.path.basename(selected_files[0])
             filepath = os.path.join(source_dir, sanitize_filename(filename))
@@ -200,24 +201,26 @@ def download_files_view(request, target_id):
                 messages.error(request, "File not found.")
             return FileResponse(open(filepath, 'rb'), as_attachment=True, filename=filename)
 
-        # If more than one file, create a ZIP archive of multiple files
+        # Create a ZIP file for multiple selected files
         tmp_zip = tempfile.NamedTemporaryFile(suffix=".zip", delete=False)
         with zipfile.ZipFile(tmp_zip.name, 'w') as zipf:
             for fname in selected_files:
                 safe_name = os.path.basename(fname)
                 full_path = os.path.join(source_dir, safe_name)
                 if os.path.exists(full_path):
-                    zipf.write(full_path, arcname=safe_name)  # arcname = no internal path
+                    zipf.write(full_path, arcname=safe_name)  # Add file without folder structure
 
-        # Custom download filename
+        # Define the ZIP file name
         if hasattr(target, 'name'):
             safe_name = sanitize_filename(target.name)
             zip_filename = f"{safe_name}_files.zip"
         else:
             zip_filename = "files.zip"
 
+        # Serve the ZIP archive for download
         return FileResponse(open(tmp_zip.name, 'rb'), as_attachment=True, filename=zip_filename)
 
+    # Render the file selection page
     return render(request, 'dwarfs4MOSAIC/download_files.html', {
         'target': target,
         'lst_files': files,

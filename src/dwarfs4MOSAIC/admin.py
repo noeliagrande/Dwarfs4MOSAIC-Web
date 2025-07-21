@@ -22,28 +22,30 @@ from .models import *
 from .utils import sanitize_filename
 
 
-# Custom title for the Django Admin interface
+# Set custom header and title for the admin site
 admin.site.site_header = "Dwarfs4MOSAIC Administration" # default: Django administration
 admin.site.site_title = "Dwarfs4MOSAIC Admin Portal"
 # admin.site.index_title = "Site administration" (default)
 
-# Unregister the original GroupAdmin and register the custom GroupAdmin
+# Replace default Group admin with custom form and fieldsets
 admin.site.unregister(Group)
 @admin.register(Group)
 class GroupAdmin(DefaultGroupAdmin):
     form = GroupAdminForm
 
+    # Define fields and additional authorization fields
     fieldsets = (
         (None, {'fields': ('name', 'permissions')}),
         ('Authorization', {'fields': ('allowed_blocks',)}),
     )
 
-# --- 'observatory' table ---
+# Admin configuration for the Observatory model
 @admin.register(Tbl_observatory)
 class ObservatoryAdmin(admin.ModelAdmin):
     form = ObservatoryAdminForm
-    empty_value_display = ""  # Display empty string instead of 'None'
+    empty_value_display = ""  # Show empty string instead of None
 
+    # Organize fields into sections
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
@@ -53,9 +55,10 @@ class ObservatoryAdmin(admin.ModelAdmin):
             ("latitude_deg", "latitude_min", "latitude_sec", "latitude_ns"),
             "altitude"]}),]
 
-# --- 'telescope' table ---
+# Admin configuration for the Telescope model
 @admin.register(Tbl_telescope)
 class TelescopeAdmin(admin.ModelAdmin):
+    # Organize fields into sections
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
@@ -63,21 +66,22 @@ class TelescopeAdmin(admin.ModelAdmin):
         ("Characteristics", {"fields": [
             "aperture"]}),]
 
-# --- 'instrument' table ---
+# Admin configuration for the Instrument model
 @admin.register(Tbl_instrument)
 class InstrumentAdmin(admin.ModelAdmin):
+    # Organize fields into sections
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
             "description", "tel_ins", "website", "status"]}),]
 
-# --- 'user' admin
+# Custom User admin to add link to linked Researcher if exists
 class CustomUserAdmin(DefaultUserAdmin):
     def change_view(self, request, object_id, form_url='', extra_context=None):
         user = User.objects.filter(pk=object_id).first()
         extra_context = extra_context or {}
 
-        # If the user has a linked researcher, pass its admin change URL
+        # Add link to Researcher admin page if user has linked researcher
         try:
             researcher = user.researcher
             researcher_url = reverse(
@@ -90,13 +94,14 @@ class CustomUserAdmin(DefaultUserAdmin):
 
         return super().change_view(request, object_id, form_url, extra_context=extra_context)
 
-# Replace default admin
+# Replace default User admin with custom one
 admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
 
-# --- 'researcher' table ---
+# Admin configuration for the Researcher model
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
+    # Organize fields into sections
     fieldsets = [
         (None, {"fields": ['user', 'role']}),
         ("General Information", {"fields": [
@@ -105,42 +110,43 @@ class ResearcherAdmin(admin.ModelAdmin):
             "denied_blocks"]}),
     ]
 
-    # Enable horizontal multi-selection widget
+    # Multi-select widget for denied_blocks
     filter_horizontal = ['denied_blocks']
 
-    # Redirect attempts to add a Researcher to the User admin page.
+    # Redirect adding a Researcher to User creation page
     def add_view(self, request, form_url='', extra_context=None):
         user_admin_url = reverse('admin:auth_user_add')
         return redirect(user_admin_url)
 
+    # Always show user field, just make it readonly when editing.
     def get_fieldsets(self, request, obj=None):
-        # Always show 'user', just make it readonly when editing
         return self.fieldsets
 
+    # Customize read-only fields
     def get_readonly_fields(self, request, obj=None):
         if obj is not None and obj.user is None:
-            # Researcher without linked user → make all fields read-only
+            # If no linked user, make all fields read-only
             return [f.name for f in self.model._meta.fields] + ['denied_blocks']
         if obj:
-            # Editing a researcher with linked user → make only 'user' field read-only
+            # When editing with linked user, make only 'user' read-only
             return ['user']
         return super().get_readonly_fields(request, obj)
 
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
-        # Add extra context to hide save buttons when user is missing
+        # Hide save buttons if researcher has no linked user
         extra_context = extra_context or {}
         if object_id:
             researcher = Tbl_researcher.objects.get(pk=object_id)
-            # If researcher has no user, disable all save buttons
             if researcher.user is None:
                 extra_context['show_save'] = False
                 extra_context['show_save_and_add_another'] = False
                 extra_context['show_save_and_continue'] = False
         return super().changeform_view(request, object_id, form_url, extra_context=extra_context)
 
-# --- 'observing_run' table ---
+# Admin configuration for Observing Run model
 @admin.register(Tbl_observing_run)
 class ObservingRunAdmin(admin.ModelAdmin):
+    # Organize fields into sections
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
@@ -150,12 +156,13 @@ class ObservingRunAdmin(admin.ModelAdmin):
         ("Additional Data", {"fields": [
             "comments"]}),]
 
-    # Enable horizontal multi-selection widget
+    # Multi-select widget for researchers
     filter_horizontal = ['researchers']
 
-# --- 'observing_block' table ---
+# Admin configuration for Observing Block model
 @admin.register(Tbl_observing_block)
 class ObservingBlockAdmin(admin.ModelAdmin):
+    # Organize fields into sections
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
@@ -165,20 +172,23 @@ class ObservingBlockAdmin(admin.ModelAdmin):
         ("Additional Data", {"fields": [
             "comments"]}),]
 
-    # Enable horizontal multi-selection widget
+    # Multi-select widget for targets
     filter_horizontal = ['target']
 
-# --- 'target' table ---
+# Admin configuration for Target model with custom file handling
 @admin.register(Tbl_target)
 class TargetAdmin(admin.ModelAdmin):
 
+    # Custom form with file upload fields
     form = TargetAdminForm
 
+    # Include necessary CSS and JS for admin widgets
     class Media:
         css = {'all': ('admin/css/widgets.css',)}
         js = ('admin/js/core.js', 'admin/js/SelectBox.js', 'admin/js/SelectFilter2.js',)
 
     def get_fieldsets(self, request, obj=None):
+        # Organize fields into sections
         base_fieldsets = [
             ("General Information", {"fields": [
                 "type", "right_ascension", "declination", "magnitude", "redshift", "size"]}),
@@ -187,20 +197,18 @@ class TargetAdmin(admin.ModelAdmin):
                 ]}),
         ]
 
-        # Show 'name' field when creating a new object
+        # When creating new Target, show 'name' field
         if obj is None:
             base_fieldsets.insert(0, (None, {"fields": ["name"]}))
             return base_fieldsets
 
-        # Add file upload section only when editing an existing object
+        # When editing existing Target, add file upload and deletion sections
         if obj and obj.pk:
             base_fieldsets.append(
                 ("Upload Files",
                 {
                     "description": "⚠️ Files with the same name will overwrite existing ones.",
                     "fields": [
-                        # Show delete checkbox only if there is already an image
-                        #("upload_image", "delete_image") if obj.image_name else "upload_image",
                         "upload_image", "upload_datafiles"
                     ]
                 })
@@ -214,58 +222,63 @@ class TargetAdmin(admin.ModelAdmin):
         return base_fieldsets
 
     def save_model(self, request, obj, form, change):
-        is_new = obj.pk is None  # True if the object is being created
+        # Detect if the object is new (being created)
+        is_new = obj.pk is None
 
+        # Save the model normally first
         super().save_model(request, obj, form, change)
 
+        # Define safe filesystem paths for storing files related to this target
         safe_name = sanitize_filename(obj.name)
-        base_path = os.path.join(settings.MEDIA_ROOT, safe_name) # MEDIA_ROOT/target_name
-        datafiles_path = os.path.join(base_path, "datafiles")    # MEDIA_ROOT/target_name/datafiles
-        image_path = os.path.join(base_path, "image")            # MEDIA_ROOT/target_name/image
+        base_path = os.path.join(settings.MEDIA_ROOT, safe_name) # Base folder: MEDIA_ROOT/target_name
+        datafiles_path = os.path.join(base_path, "datafiles")    # Folder for data files: MEDIA_ROOT/target_name/datafiles
+        image_path = os.path.join(base_path, "image")            # Folder for image file: MEDIA_ROOT/target_name/image
 
-        # Ensure directories exist
+        # Create directories if they do not exist
         os.makedirs(datafiles_path, exist_ok=True)
         os.makedirs(image_path, exist_ok=True)
 
         if is_new:
-            # Save relative paths on first creation
+            # For new objects, store relative paths and save again
             obj.datafiles_path = os.path.relpath(datafiles_path, settings.MEDIA_ROOT)
             obj.image = os.path.relpath(image_path, settings.MEDIA_ROOT)
             obj.save()
             return
 
-        # Handle image deletion
+        # Delete image if requested and exists
         if form.cleaned_data.get('delete_image') and obj.image_name:
             image_file_path = os.path.join(settings.MEDIA_ROOT, obj.image)
             if os.path.exists(image_file_path):
                 os.remove(image_file_path)
 
-            # Check if image was really deleted
+            # Check if deletion succeeded
             if os.path.exists(image_file_path):
+                # Show warning if image could not be deleted
                 self.message_user(
                     request,
                     f'Warning: the image "{obj.image_name}" could not be deleted.',
                     level=messages.WARNING
                 )
             else:
+                # Reset image path to default folder
                 obj.image = os.path.relpath(image_path, settings.MEDIA_ROOT) # Reset to default image relative path
 
         else:
-            # Handle image upload
+            # Handle image upload if provided
             upload_image = form.cleaned_data.get('upload_image')
             if upload_image:
 
                 previous_image_name = obj.image_name
                 previous_image_path = os.path.join(settings.MEDIA_ROOT, obj.image)
 
-                # Save new image
+                # Save uploaded image to disk
                 file_path = os.path.join(image_path, upload_image.name)
                 with open(file_path, 'wb+') as destination:
                     for chunk in upload_image.chunks():
                         destination.write(chunk)
 
-                # Check if the file was actually saved
                 if not os.path.isfile(file_path):
+                    # Warn if upload failed
                     self.message_user(
                         request,
                         f'Warning: the image "{upload_image.name}" could not be uploaded.',
@@ -273,13 +286,14 @@ class TargetAdmin(admin.ModelAdmin):
                     )
 
                 else:
+                    # Update image path to new file
                     obj.image = os.path.relpath(file_path, settings.MEDIA_ROOT) # new image
 
-                    # Delete previous image
+                    # Remove old image file if it exists
                     if previous_image_name and os.path.exists(previous_image_path):
                         os.remove(previous_image_path)
 
-        # Handle multiple file uploads
+        # Save multiple data files uploaded by user
         datafiles = form.cleaned_data.get("upload_datafiles", [])
         for uploaded_file in datafiles:
             dest_path = os.path.join(datafiles_path, uploaded_file.name)
@@ -287,7 +301,7 @@ class TargetAdmin(admin.ModelAdmin):
                 for chunk in uploaded_file.chunks():
                     destination.write(chunk)
 
-        # Handle datafiles deletion
+        # Delete selected data files if requested
         files_to_delete = form.cleaned_data.get("datafiles", [])
         for filename in files_to_delete:
             safe_name = os.path.basename(filename)
@@ -296,17 +310,18 @@ class TargetAdmin(admin.ModelAdmin):
                 try:
                     os.remove(file_path)
                 except Exception as e:
+                    # Show error message if deletion fails
                     self.message_user(
                         request,
                         f'Error deleting file "{filename}": {e}',
                         level=messages.ERROR
                     )
 
-        # Save all changes
+        # Save the model instance after file operations
         obj.save()
 
     def get_actions(self, request):
-        # Replace default bulk delete action with a custom one
+        # Override default bulk delete action with a custom version
         actions = super().get_actions(request)
         if "delete_selected" in actions:
             actions["delete_selected"] = (
@@ -327,8 +342,8 @@ class TargetAdmin(admin.ModelAdmin):
             level=messages.SUCCESS,
         )
 
-    # Override response after adding object to always redirect to change page,
-    # except when pressing "Save and add another" (then go to add new).
+    # Override response after adding object: redirect to change page,
+    # except when using "Save and add another" (then redirect to add new)
     def response_add(self, request, obj, post_url_continue=None):
         if "_addanother" in request.POST:
             # Default behaviour for 'Save and add another' (go to add new)
@@ -341,6 +356,7 @@ class TargetAdmin(admin.ModelAdmin):
         else:
             return super().response_add(request, obj, post_url_continue)
 
+    # Build URL for change page of this object in admin
     def get_change_url(self, obj):
         opts = self.model._meta
         return f"/admin/{opts.app_label}/{opts.model_name}/{obj.pk}/change/"
