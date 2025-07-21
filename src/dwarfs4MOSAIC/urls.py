@@ -8,11 +8,14 @@ database tables (observatories, telescopes, instruments, etc.), and data downloa
 All pages except login/logout require authentication.
 """
 
-from django.urls import path
-# from django.contrib.auth import views as auth_views # to reset password
-from django.contrib.auth.views import LoginView, LogoutView
-from .views import *
+# Third-party libraries
+#from django.contrib.auth import views as auth_views  # to reset password
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import LoginView, LogoutView
+from django.urls import path
+
+# Local application imports
+from .views import *
 
 urlpatterns = [
     # Home page (requires login)

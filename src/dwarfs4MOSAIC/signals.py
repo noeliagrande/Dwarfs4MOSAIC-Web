@@ -5,10 +5,12 @@ This module listens to creation or update events on User model to:
 - Update related Tbl_researcher fields when a User is updated.
 """
 
+# Third-party libraries
 from django.contrib.auth.models import User
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_delete, post_save
 from django.dispatch import receiver
 
+# Local application imports
 from .models import Tbl_researcher
 
 

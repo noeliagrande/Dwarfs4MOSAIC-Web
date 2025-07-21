@@ -7,18 +7,20 @@ This module provides page rendering and logic for:
 - Downloading data files (individually or as ZIP)
 """
 
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import *
-from .utils import get_files, get_unique_filename, sanitize_filename
-
+# Standard libraries
 import os
+import tempfile
+import zipfile
+
+# Third-party libraries
 from django.conf import settings
 from django.contrib import messages
-
 from django.http import FileResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
-import zipfile
-import tempfile
+# Local application imports
+from .models import *
+from .utils import get_files, get_unique_filename, sanitize_filename
 
 # Home page showing all targets and associated files (if authenticated)
 def home_view(request):

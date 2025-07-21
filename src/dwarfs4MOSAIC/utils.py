@@ -7,11 +7,13 @@ This module includes:
   and sanitizing filenames for safe usage across platforms.
 """
 
+# Standard libraries
 import os
-import shutil
-from django.conf import settings
-import unicodedata
 import re
+import unicodedata
+
+# Third-party libraries
+from django.conf import settings
 
 # Return all rows from a database cursor as a list of dictionaries.
 # Each dictionary corresponds to a row, with column names as keys.

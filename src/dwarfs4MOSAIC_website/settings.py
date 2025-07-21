@@ -10,9 +10,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
+# Standard libraries
 from pathlib import Path
 import os
 
+# Local application imports
 from .version import __version__ as APP_VERSION
 
 # Quick-start development settings - unsuitable for production

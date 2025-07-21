@@ -6,21 +6,21 @@ It includes custom forms, custom file handling logic (images and data files for 
 and overrides default admin behavior where necessary.
 """
 
-from django.contrib import admin
-from .forms import ObservatoryAdminForm, TargetAdminForm
-from .models import *
-from .utils import sanitize_filename
-
+# Standard libraries
 import os
+
+# Third-party libraries
 from django.conf import settings
-from django.contrib import messages
+from django.contrib import admin, messages
+from django.contrib.auth.admin import GroupAdmin as DefaultGroupAdmin, UserAdmin as DefaultUserAdmin
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
-from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
-from django.http import HttpResponseRedirect
-from django.contrib.auth.admin import GroupAdmin as DefaultGroupAdmin
 
-from .forms import GroupAdminForm
+# Local application imports
+from .forms import GroupAdminForm, ObservatoryAdminForm, TargetAdminForm
+from .models import *
+from .utils import sanitize_filename
 
 
 # Custom title for the Django Admin interface

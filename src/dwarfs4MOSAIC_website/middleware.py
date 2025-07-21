@@ -1,6 +1,7 @@
-from django.contrib.sessions.middleware import SessionMiddleware
-from django.contrib.sessions.exceptions import SessionInterrupted
+# Third-party libraries
 from django.contrib import messages
+from django.contrib.sessions.exceptions import SessionInterrupted
+from django.contrib.sessions.middleware import SessionMiddleware
 from django.shortcuts import redirect
 
 class SafeSessionMiddleware(SessionMiddleware):

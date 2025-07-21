@@ -6,6 +6,7 @@ app name, and the human-readable name shown in the Django admin interface.
 It also imports signal handlers when the app is fully loaded.
 """
 
+# Third-party libraries
 from django.apps import AppConfig
 
 class Dwarfs4MOSAICConfig(AppConfig):

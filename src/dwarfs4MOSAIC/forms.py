@@ -8,20 +8,22 @@ Includes:
 - Support for uploading multiple files and images associated with targets.
 """
 
+# Standard libraries
 import os
 
+# Third-party libraries
 from django import forms
+from django.conf import settings
+from django.contrib import admin
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms.widgets import TextInput
 from django.utils.safestring import mark_safe
 
+# Local application imports
 from .models import Tbl_observatory, Tbl_target, Tbl_observing_block
-
-from django.conf import settings
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.contrib.auth.models import Group
-from django.contrib import admin
 
 
 # Form for observatory admin with detailed longitude and latitude input fields.

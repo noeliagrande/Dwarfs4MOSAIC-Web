@@ -10,16 +10,17 @@ notes, so please refer to the respective form documentation for specific field
 descriptions and validation rules.
 """
 
+# Standard libraries
 import os
 import shutil
 
+# Third-party libraries
 from django.conf import settings
-from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.contrib.auth.models import Group, User
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.contrib.auth.models import Group
 
+# Local application imports
 from .utils import sanitize_filename
 
 '''

@@ -1,5 +1,8 @@
-from django import template
+# Standard libraries
 from math import floor
+
+# Third-party libraries
+from django import template
 from django.core.exceptions import ValidationError
 
 register = template.Library()
