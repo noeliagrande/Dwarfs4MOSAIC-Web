@@ -1,7 +1,6 @@
 /* Basic table style */
 table {
     width: 100%;                /* Use full available width */
-    /*width: auto;              /* Table resizes columns based on content */
     max-width: 25%;             /* Limit table width to 25% of viewport */
     table-layout: auto;         /* Allows dynamic column widths */
     margin: 20px 0;             /* Vertical margin (top and bottom) */

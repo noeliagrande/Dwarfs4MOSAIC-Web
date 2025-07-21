@@ -208,8 +208,6 @@ def download_files_view(request, target_id):
                 full_path = os.path.join(source_dir, safe_name)
                 if os.path.exists(full_path):
                     zipf.write(full_path, arcname=safe_name)  # arcname = no internal path
-                else:
-                    print(f"File not found: {safe_name}")  # Optional: log or warning
 
         # Custom download filename
         if hasattr(target, 'name'):

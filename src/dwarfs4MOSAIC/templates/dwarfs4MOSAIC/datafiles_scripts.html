@@ -5,56 +5,59 @@
 -->
 
 <script>
-    const checkbox_all = document.getElementById('checkbox_all');
-    const checkbox_single = document.querySelectorAll('input[name="checkbox_single[]"]');
-    const action_button = document.getElementById('action_button');
+    document.addEventListener("DOMContentLoaded", function() {
+        const checkbox_all = document.getElementById('checkbox_all');
+        const checkbox_single = document.querySelectorAll('input[name="checkbox_single[]"]');
+        const action_button = document.getElementById('action_button');
 
-    // When main checkbox changes, check or uncheck all individual checkboxes
-    checkbox_all.addEventListener('change', function() {
-        const isChecked = checkbox_all.checked;
+        if (!checkbox_all || checkbox_single.length === 0) return;
 
-        checkbox_single.forEach(function(checkbox) {
-            checkbox.checked = isChecked;
-        });
-        updateActionButton();
-    });
+        // When main checkbox changes, check or uncheck all individual checkboxes
+        checkbox_all.addEventListener('change', function() {
+            const isChecked = checkbox_all.checked;
 
-    // When any individual checkbox changes, update main checkbox accordingly
-    checkbox_single.forEach(function(checkbox) {
-        checkbox.addEventListener('change', function() {
-            if (!this.checked) {
-                // If any single checkbox is unchecked, uncheck the main checkbox
-                checkbox_all.checked = false;
-            } else {
-                // If all individual checkboxes are checked, check the main checkbox
-                const allChecked = Array.from(checkbox_single).every(cb => cb.checked);
-                checkbox_all.checked = allChecked;
-            }
+            checkbox_single.forEach(function(checkbox) {
+                checkbox.checked = isChecked;
+            });
             updateActionButton();
         });
-    });
 
-    // Enable button only if at least one file is selected
-    function updateActionButton() {
-        const anyChecked = Array.from(checkbox_single).some(cb => cb.checked);
-        if (action_button) {
-            if (anyChecked) {
-                const rootStyles = getComputedStyle(document.documentElement);
-                const headerColor = rootStyles.getPropertyValue('--header-color').trim();
+        // When any individual checkbox changes, update main checkbox accordingly
+        checkbox_single.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                if (!this.checked) {
+                    // If any single checkbox is unchecked, uncheck the main checkbox
+                    checkbox_all.checked = false;
+                } else {
+                    // If all individual checkboxes are checked, check the main checkbox
+                    const allChecked = Array.from(checkbox_single).every(cb => cb.checked);
+                    checkbox_all.checked = allChecked;
+                }
+                updateActionButton();
+            });
+        });
 
-                action_button.disabled = false;
-                action_button.style.backgroundColor = headerColor;
-                action_button.style.color = 'white';
-                action_button.style.cursor = 'pointer';
-                action_button.style.opacity = '1';
-            } else {
-                action_button.disabled = true;
-                action_button.style.cursor = 'not-allowed';
-                action_button.style.opacity = '0.5';
+        // Enable button only if at least one file is selected
+        function updateActionButton() {
+            const anyChecked = Array.from(checkbox_single).some(cb => cb.checked);
+            if (action_button) {
+                if (anyChecked) {
+                    const rootStyles = getComputedStyle(document.documentElement);
+                    const headerColor = rootStyles.getPropertyValue('--header-color').trim();
+
+                    action_button.disabled = false;
+                    action_button.style.backgroundColor = headerColor;
+                    action_button.style.color = 'white';
+                    action_button.style.cursor = 'pointer';
+                    action_button.style.opacity = '1';
+                } else {
+                    action_button.disabled = true;
+                    action_button.style.cursor = 'not-allowed';
+                    action_button.style.opacity = '0.5';
+                }
             }
         }
-    }
 
-    document.addEventListener("DOMContentLoaded", updateActionButton);
-
+        updateActionButton(); // Update status when the page loads
+    });
 </script>

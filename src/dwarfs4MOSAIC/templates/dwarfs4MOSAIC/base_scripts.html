@@ -7,13 +7,13 @@
 <!-- Logout when closing the tab or browser -->
 <script>
     window.addEventListener("beforeunload", function (event) {
+        const referrer = document.referrer;
+        const origin = window.location.origin;
         // Only log out if the previous page is not from the same origin
-        if (!document.referrer.startsWith(window.location.origin)) {
-            fetch("{% url 'logout' %}", {
-                method: "POST",
-                headers: { "X-CSRFToken": "{{ csrf_token }}" },
-                keepalive: true // Allows the request to be sent even when the page is unloading
-            });
+        if (referrer && !referrer.startsWith(origin)) {
+            navigator.sendBeacon("{% url 'logout' %}", new URLSearchParams({
+                'csrfmiddlewaretoken': '{{ csrf_token }}'
+            }));
         }
     });
 </script>
