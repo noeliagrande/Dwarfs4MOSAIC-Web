@@ -11,8 +11,10 @@
 {# Static template tags #}
 {% load custom_tags %}
 
+{# Sets the page title #}
 {% block title %}{% html_title "Observing Runs" %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
     Observing Runs
@@ -25,6 +27,7 @@
     <!-- Observing runs table -->
     <section class="table-container">
         <table>
+            <!-- Table header with column names -->
             <thead>
                 <tr>
                     <th>NAME</th>
@@ -35,23 +38,33 @@
                     <th>COMMENTS</th>
                 </tr>
             </thead>
+
+            <!-- Table body: iterate through the list of observing runs -->
             <tbody>
                 {% for observing_run in lst_observing_runs %}
                 <tr>
+                    <!-- Name with link to details page -->
                     <td>
-                        <!-- Link to individual observing run detail view -->
                         <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=observing_runs">
                             {{ observing_run.name }}
                         </a>
                     </td>
+
+                    <!-- Instrument used in the observing run -->
                     <td>{{ observing_run.instrument.name }}</td>
+
+                    <!-- Description with resizable text container -->
                     <td class="resizable-td">
                         <div class="resizable-div">
                             {{ observing_run.description }}
                         </div>
                     </td>
+
+                    <!-- Start and end date ((empty if None) -->
                     <td>{{ observing_run.start_date }}</td>
                     <td>{{ observing_run.end_date|default_if_none:"" }}</td>
+
+                    <!-- Comments with resizable text container -->
                     <td class="resizable-td">
                         <div class="resizable-div">
                             {{ observing_run.comments }}

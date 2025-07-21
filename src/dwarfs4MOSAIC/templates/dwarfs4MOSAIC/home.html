@@ -24,17 +24,20 @@
 {% load custom_tags %}
 {% load static %}
 
+{# Sets the page title #}
 {% block title %}{% html_title "Home" %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %} Home {% endblock %}
 
 {% block content %}
     {% if not authenticated %}
-        <!-- Guest view: Welcome landing page with background image -->
+        <!-- Guest view: Show welcome landing page with a background image and credits -->
         <div style="position: relative; width: 100%; height: 100vh;
                 background-image: url('{% static 'dwarfs4MOSAIC/images/e-elt-night-v1-cc-mz-cc.jpg' %}');
                 background-size: cover; background-position: center;
                 padding: 50px;">
+            <!-- Centered welcome text with project and instrument links -->
             <div style="color: white; font-size: 2rem; text-align: center; padding: 20px;">
                 Welcome to
                 <a href="https://guaix.ucm.es/dwarfs4mosaic/" target="_blank"
@@ -47,6 +50,8 @@
                 <a href="https://elt.eso.org/" target="_blank"
                    style="color: white; text-decoration: underline;">ELT</a>.
             </div>
+
+            <!-- Image credit displayed at the bottom-left -->
             <div style="position: absolute; bottom: 10px; left: 10px;
                 color: white; font-size: 0.8rem; background-color: rgba(0, 0, 0, 0.5);
                 padding: 4px 8px; border-radius: 4px;">
@@ -54,9 +59,13 @@
             </div>
         </div>
     {% else %}
-        <!-- Authenticated user view: List of research targets -->
+        <!-- Authenticated user view: Show detailed research objects table -->
+
+        <!-- Page header -->
         <h1>Research Objects</h1>
         <br>
+
+        <!-- Brief explanation about the content -->
         <p class="view-explanation">
             List of celestial objects intended for study, along with details and relevant
             properties for each object.
@@ -65,6 +74,7 @@
         <!-- Table displaying targets and associated metadata -->
         <section class="table-container">
             <table>
+                <!-- Table header with column names -->
                 <thead>
                     <tr>
                         <th>IMAGE</th>
@@ -73,11 +83,12 @@
                         <th>RA</th>
                         <th>DEC</th>
                         <th>MAG
+                            <!-- Info icon with tooltip explaining magnitude reference -->
                             <img src="{% static 'dwarfs4MOSAIC/icons/circle-info-solid-white.svg' %}"
                                  alt="Info" style="width: 12px; height: 12px;"
                                  title="Referenced to Vega System">
                         </th>
-                        <th>Z</th>
+                        <th>z</th>
                         <th>SIZE (arcsec)</th>
                         <th>VISIBILITY SEMESTER</th>
                         <th>OBSERVING RUN</th>
@@ -86,9 +97,12 @@
                         <th>COMMENTS</th>
                     </tr>
                 </thead>
+
+                <!-- Table body: iterate through the list of targets -->
                 <tbody>
                     {% for item in lst_targets_and_files %}
                     <tr>
+                        <!-- Image if available, otherwise placeholder -->
                         <td style="text-align: center;">
                             {% if item.target.image_name %}
                                 <img src="{{ item.target.image_url }}" alt="Failed to load image" style="width: 150px;">
@@ -96,19 +110,37 @@
                                 <img src="{% static 'dwarfs4MOSAIC/images/no_image.jpg' %}" alt="No image available" style="width: 150px;">
                             {% endif %}
                         </td>
+
+                        <!-- Name -->
                         <td>{{ item.target.name }}</td>
+
+                        <!-- Type  -->
                         <td>{{ item.target.type }}</td>
+
+                        <!-- Equatorial coordinates (right ascension and declination, if available) -->
                         <td>{{ item.target.right_ascension|default_if_none:"" }}</td>
                         <td>{{ item.target.declination|default_if_none:"" }}</td>
+
+                        <!-- Magnitude (empty if not available) -->
                         <td>{{ item.target.magnitude|default_if_none:"" }}</td>
+
+                        <!-- Redshift (z) -->
                         <td>{{ item.target.redshift|default_if_none:""}}</td>
+
+                        <!-- Apparent size in arcseconds -->
                         <td>{{ item.target.size|default_if_none:"" }}</td>
+
+                        <!-- Visibility semester -->
                         <td>{{ item.target.semester }}</td>
+
+                        <!-- List unique runs -->
                         <td>
                             {% for run in item.unique_obs_runs %}
                                 {{ run }}<br>
                             {% endfor %}
                         </td>
+
+                        <!-- List unique instruments with website link (if available) -->
                         <td>
                             {% for instr in item.unique_instruments %}
                                 {% if instr.website %}
@@ -120,20 +152,22 @@
                             {% endfor %}
                         </td>
 
-                        <!-- Data files associated with the target -->
+                        <!-- Available data files with download icon -->
                         <td>
                             {% if item.files %}
                                 {% for file in item.files %}
                                     {{ file }} <br>
                                 {% endfor %}
                                 <br>
-                                <!-- Download files icon -->
+                                <!-- Download files icon linking to download view -->
                                 <a href="{% url 'download_files_view' item.target.id %}" title="{{ 'Download files' }}">
                                     <img src="{% static 'dwarfs4MOSAIC/icons/download-solid.svg' %}"
                                          alt="Download files" style="width: 15px; height: 15px;">
                                 </a>
                             {% endif %}
                         </td>
+
+                        <!-- Comments with resizable text container -->
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ item.target.comments }}

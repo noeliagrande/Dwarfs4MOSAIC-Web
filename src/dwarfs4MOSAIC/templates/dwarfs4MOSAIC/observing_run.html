@@ -13,8 +13,10 @@
 {# Static template tags #}
 {% load custom_tags %}
 
+{# Sets the page title #}
 {% block title %}{% html_observing_run_title observing_run.name %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
     <a href="{% url 'observing_runs' %}">Observing Runs</a> &gt
@@ -30,6 +32,7 @@
     <h2>Researchers involved in the observing run</h2>
     <section class="table-container">
         <table>
+            <!-- Table header with column names -->
             <thead>
                 <tr>
                     <th>NAME</th>
@@ -40,11 +43,18 @@
                     <th>COMMENTS</th>
                 </tr>
             </thead>
+
+            <!-- Table body: iterate through the list of researchers -->
             <tbody>
                 {% for researcher in lst_researchers %}
                     <tr>
+                        <!-- Name -->
                         <td>{{ researcher.display_name }}</td>
+
+                        <!-- Role -->
                         <td>{{ researcher.role }}</td>
+
+                        <!-- PhD status with checkmark or cross -->
                         <td>
                             {% if researcher.is_phd %}
                                 <span style="color: green;">✔</span>
@@ -52,12 +62,18 @@
                                 <span style="color: red;">✘</span>
                             {% endif %}
                         </td>
+
+                        <!-- Institution -->
                         <td>{{ researcher.institution }}</td>
+
+                        <!-- Email (if available) -->
                         {% if researcher.email %}
                             <td style="text-align: center;"> {{ researcher.email }} </td>
                         {% else %}
                             <td></td>
                         {% endif %}
+
+                        <!-- Comments with resizable text container -->
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ researcher.comments }}
@@ -74,6 +90,7 @@
     <h2>Observing blocks included in the observing run</h2>
     <section class="table-container">
         <table>
+            <!-- Table header with column names -->
             <thead>
                 <tr>
                     <th>BLOCK NAME</th>
@@ -88,22 +105,41 @@
                     <th>COMMENTS</th>
                 </tr>
             </thead>
+
+            <!-- Table body: iterate through the list of observing blocks -->
             <tbody>
                 {% for block in lst_observing_blocks %}
                     <tr>
+                        <!-- Name -->
                         <td>{{ block.name }}</td>
+
+                        <!-- Comments with resizable text container -->
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ block.description }}
                             </div>
                         </td>
+
+                        <!-- Start and end time -->
                         <td>{{ block.start_time }}</td>
                         <td>{{ block.end_time|default_if_none:"" }}</td>
+
+                        <!-- Observation mode -->
                         <td>{{ block.observation_mode }}</td>
+
+                        <!-- Filters (empty if None) -->
                         <td>{{ block.filters|default_if_none:"" }}</td>
+
+                        <!-- Exposure time (empty if None) -->
                         <td>{{ block.exposure_time|default_if_none:"" }}</td>
+
+                        <!-- Seeing (empty if None) -->
                         <td>{{ block.seeing|default_if_none:"" }}</td>
+
+                        <!-- Weather conditions -->
                         <td>{{ block.weather_conditions }}</td>
+
+                        <!-- Comments with resizable text container -->
                         <td class="resizable-td">
                             <div class="resizable-div">
                                 {{ block.comments }}

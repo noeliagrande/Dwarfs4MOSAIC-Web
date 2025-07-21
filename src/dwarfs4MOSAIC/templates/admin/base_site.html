@@ -10,9 +10,13 @@
 {# Static template tags #}
 {% load static %}
 
+{# Set the HTML title of the admin page #}
 {% block title %}Dwarfs4MOSAIC | Admin{% endblock %}
 
 {% block extrahead %}
+    {# Keep any additional head content from the parent template #}
     {{ block.super }}
+
+    {# Add a custom favicon to the admin pages #}
     <link rel="icon" type="image/x-icon" href="{% static 'dwarfs4MOSAIC/icons/favicon.ico' %}">
 {% endblock %}

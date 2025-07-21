@@ -13,8 +13,10 @@
 {% load custom_tags %}
 {% load static %}
 
+{# Sets the page title #}
 {% block title %}{% html_title "Telescopes" %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
     Telescopes
@@ -27,6 +29,7 @@
     <!-- Telescopes table -->
     <section class="table-container">
         <table>
+            <!-- Table header with column names -->
             <thead>
                 <tr>
                     <th>NAME</th>
@@ -38,29 +41,33 @@
                     <th>WEBSITE</th>
                 </tr>
             </thead>
+
+            <!-- Table body: iterate through the list of telescopes -->
             <tbody>
                 {% for telescope in lst_telescopes %}
                 <tr>
-                    <!-- Name with link to detail view -->
+                    <!-- Name with link to details page -->
                     <td>
                         <a href="{% url 'telescope' telescope_name=telescope.name %}?from_page=telescopes">
                             {{ telescope.name }}
                         </a>
                     </td>
 
+                    <!-- Description if available -->
                     {% if telescope.description %}
                          <td> {{ telescope.description }} </td>
                     {% else %}
                         <td></td>
                     {% endif %}
 
-                    <!-- Observatory with link -->
+                    <!-- Observatory where the telescope is located with link to observatory details -->
                     <td>
                         <a href="{% url 'observatory' observatory_name=telescope.obs_tel.name %}?from_page=telescopes">
                             {{ telescope.obs_tel.name }}
                         </a>
                     </td>
 
+                    <!-- Owner with resizable text container -->
                     <td class="resizable-td">
                         <div class="resizable-div">
                             {{ telescope.owner }}
@@ -76,6 +83,7 @@
                         {{ telescope.status }}
                     </td>
 
+                    <!-- Aperture size in meters -->
                     <td>{{ telescope.aperture }}</td>
 
                     <!-- Website link if available -->

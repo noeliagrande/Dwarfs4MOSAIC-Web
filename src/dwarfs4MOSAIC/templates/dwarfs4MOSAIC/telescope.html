@@ -13,8 +13,10 @@
 {% load custom_tags %}
 {% load static %}
 
+{# Sets the page title #}
 {% block title %}{% html_telescope_title telescope.name %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
     <a href="{% url 'telescopes' %}">Telescopes</a> &gt
@@ -30,11 +32,14 @@
         {% endif %}
     </h1>
     <br>
+
+    <!-- Brief explanation about the content -->
     <p class="view-explanation">Instruments belonging to the telescope.</p>
 
     <!-- Instruments table -->
     <section class="table-container">
         <table>
+            <!-- Table header with column names -->
             <thead>
                 <tr>
                     <th>INSTRUMENT</th>
@@ -43,20 +48,27 @@
                     <th>WEBSITE</th>
                 </tr>
             </thead>
+
+            <!-- Table body: iterate through the list of instruments -->
             <tbody>
                 {% for instrument in lst_instruments %}
                 <tr>
+                    <!-- Name -->
                     <td>{{ instrument.name }}</td>
+
+                    <!-- Description (empty if not available) -->
                     {% if instrument.description %}
                          <td> {{ instrument.description }} </td>
                     {% else %}
                         <td></td>
                     {% endif %}
+
+                    <!-- Status (in red if 'inoperative') -->
                     <td style="color: {% if instrument.status == 'inoperative' %}red{% else %}black{% endif %};">
                         {{ instrument.status }}
                     </td>
 
-                    <!-- Website link (if available) -->
+                    <!-- Website link (icon opens in new tab, empty if not available) -->
                     {% if instrument.website %}
                         <td style="text-align: center;">
                             <a href="{{ instrument.website }}" target="_blank" title="{{ 'Visit site' }}">

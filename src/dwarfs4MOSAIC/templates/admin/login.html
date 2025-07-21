@@ -22,10 +22,14 @@
 -->
 
 {% comment %}
+{# Load internationalization (i18n) tags for translations #}
 {% load i18n %}
 
 {% block content %}
+  {# Include the content from the parent template #}
   {{ block.super }}
+
+  {# Add a centered link for password reset below the main content #}
   <p style="text-align: center; margin-top: 1em;">
     <a href="{% url 'password_reset' %}">{% trans "Forgot your password?" %}</a>
   </p>

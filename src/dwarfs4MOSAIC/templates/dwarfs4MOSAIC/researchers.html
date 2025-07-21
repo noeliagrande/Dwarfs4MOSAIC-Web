@@ -11,8 +11,10 @@
 {# Static template tags #}
 {% load custom_tags %}
 
+{# Sets the page title #}
 {% block title %}{% html_title "Researchers" %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
     Researchers
@@ -25,6 +27,7 @@
     <!-- Researchers table -->
     <section class="table-container">
         <table>
+            <!-- Table header with column names -->
             <thead>
                 <tr>
                     <th>NAME</th>
@@ -38,17 +41,25 @@
                     <th>COMMENTS</th>
                 </tr>
             </thead>
+
+            <!-- Table body: iterate through the list of researchers -->
             <tbody>
                 {% for researcher in lst_researchers %}
                 <tr>
+                    <!-- Name -->
                     <td>{{ researcher.display_name }}</td>
+
+                    <!-- Role -->
                     <td>{{ researcher.role }}</td>
+
+                    <!-- List of groups associated with the researcher's user account -->
                     <td>
                         {% for group in researcher.user.groups.all %}
                             {{ group.name }} <br>
                         {% endfor %}
                     </td>
-                    <!-- PhD status with icon -->
+
+                    <!-- Show PhD status with a checkmark or cross icon -->
                     <td>
                         {% if researcher.is_phd %}
                             <span style="color: green;">✔</span>
@@ -56,8 +67,11 @@
                             <span style="color: red;">✘</span>
                         {% endif %}
                     </td>
+
+                    <!-- Institution (empty if None) -->
                     <td>{{ researcher.institution|default_if_none:""  }}</td>
-                    <!-- Related observing runs -->
+
+                    <!-- List related observing runs, linking each to its detail page -->
                     <td>
                         {% for observing_run in researcher.observing_runs.all %}
                             <a href="{% url 'observing_run' observing_run_name=observing_run.name %}?from_page=researchers">
@@ -66,17 +80,22 @@
                             <br>
                         {% endfor %}
                     </td>
-                    <!-- Allowed observing blocks -->
+
+                    <!-- Denied observing blocks associated with the researcher -->
                     <td>
                         {% for block in researcher.denied_blocks.all %}
                             {{ block.detailed_name }}<br>
                         {% endfor %}
                     </td>
+
+                    <!-- Email (if available) -->
                     {% if researcher.email %}
                         <td style="text-align: center;"> {{ researcher.email }} </td>
                     {% else %}
                         <td></td>
                     {% endif %}
+
+                    <!-- Comments with resizable text container -->
                     <td class="resizable-td">
                         <div class="resizable-div">
                             {{ researcher.comments }}

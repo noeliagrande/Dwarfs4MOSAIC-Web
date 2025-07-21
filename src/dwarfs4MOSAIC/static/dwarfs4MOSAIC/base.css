@@ -11,7 +11,7 @@
     box-sizing: border-box; /* width and height of an element includes border and padding */
 }
 
-/* :root selector is used to set variables */
+/* :root selector is used to define CSS custom properties (variables) globally */
 :root {
     --left-padding: 50px;
     --link-color: #1b6e9a;
@@ -27,16 +27,17 @@ main {
     font-size: 20px;
 }
 
-/* Container with horizontal scrolling */
+/* Container with horizontal scrolling enabled */
 .table-container {
     margin-top: 20px;
-    overflow-x: auto;  /* Activates horizontal scrolling */
-    max-width: 100%;   /* Ensures that the container does not exceed the width of the screen. */
+    overflow-x: auto;   /* Enables horizontal scroll if content overflows */
+    max-width: 100%;    /* Limits container width to the viewport width */
 }
 
+/* Style for all anchor links */
 a {
     color: var(--link-color);
-    text-decoration: none;
+    text-decoration: none; /* Remove underline from links */
 }
 
 /* Page body style */
@@ -46,18 +47,19 @@ body {
     color: black;
 }
 
-/* Logo style */
+/* Logo container style within the admin toolbar */
 .admin-style-toolbar .logo {
-    flex-shrink: 0;
+    flex-shrink: 0; /* Prevent the logo from shrinking when flexbox container resizes */
     max-width: 10%;
 }
 
+/* Logo image style */
 .admin-style-toolbar .logo img {
-    width: 100%;
-    height: auto;
+    width: 100%;    /* Make image fill the container width */
+    height: auto;   /* Maintain image aspect ratio */
 }
 
-/* hierarchical navigation */
+/* Styles for hierarchical navigation (breadcrumb) */
 .breadcrumb {
     font-size: 16px;
     background-color: var(--breadcrumbs-color);
@@ -67,28 +69,31 @@ body {
     text-decoration: none;
 }
 
+/* Styles for links inside breadcrumb */
 .breadcrumb a {
     color: white;
     text-decoration-line: underline;
 }
 
-/* Toolbar */
+/* Toolbar container styles */
 .admin-style-toolbar {
     background-color: var(--header-color);
     color: white;
     padding: 10px var(--left-padding);
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* Space out child elements evenly */
+    align-items: center;            /* Vertically center items */
     margin: 0;
     width: 100%;
 }
 
+/* Styles for links inside the toolbar */
 .admin-style-toolbar .toolbar-links a {
     color: white;
     text-decoration: underline;
 }
 
+/* Styles for the logout button in the toolbar */
 .toolbar-logout-button {
     background: none;
     border: none;
@@ -100,41 +105,45 @@ body {
     font: inherit;
 }
 
-/* Navigation links */
+/* Container for navigation links */
 .nav-links {
     display: flex;
     align-items: center;        /* Center the content vertically */
-    padding: 0 20px;            /* Optional, adds some padding around the nav */
-    justify-content: center;
+    padding: 0 20px;            /* Horizontal padding around the nav */
+    justify-content: center;    /* Center the links horizontally */
 }
 
+/* Unordered list inside nav-links */
 .nav-links ul {
-    display: flex;              /* aligns list items in a row */
-    align-items: center;
-    list-style-type: none;
+    display: flex;              /* Arrange list items in a row */
+    align-items: center;        /* Vertically center list items */
+    list-style-type: none;      /* Remove default bullets */
     margin: 0;
     padding: 0;
     height: 100%;               /* Ensures the ul takes the full height of its parent */
     justify-content: center;
 }
 
+/* Individual list items */
 .nav-links li {
     margin-left: 20px;  /* Space between links */
     height: 100%;       /* Ensures the ul takes the full height of its parent */
 }
 
+/* Anchor links inside the navigation */
 .nav-links a {
     text-decoration: none;  /* Remove underlining */
     color: black;
     font-size: 25px;
-    display: block;
+    display: block;         /* Makes the entire area clickable */
 }
 
-/* Add hover for links */
+/* Hover effect on navigation links */
 .nav-links a:hover {
     color: var(--link-color);
 }
 
+/* Active navigation link style */
 .nav-links a.active {
     color: var(--link-color);
 }

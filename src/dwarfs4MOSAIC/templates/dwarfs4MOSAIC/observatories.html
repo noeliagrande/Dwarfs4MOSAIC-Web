@@ -17,8 +17,10 @@
 {% load filters %}
 {% load static %}
 
+{# Sets the page title #}
 {% block title %}{% html_title "Observatories" %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
     Observatories
@@ -31,6 +33,7 @@
     <!-- Observatories table -->
     <section class="table-container">
         <table>
+            <!-- Table header with column names -->
             <thead>
                 <tr>
                     <th>NAME</th>
@@ -41,18 +44,33 @@
                     <th>WEBSITE</th>
                 </tr>
             </thead>
+
+            <!-- Table body: iterate through the list of observatories -->
             <tbody>
                 {% for observatory in lst_observatories %}
                 <tr>
+                    <!-- Name with link to details page -->
                     <td>
                         <a href="{% url 'observatory' observatory_name=observatory.name %}?from_page=observatories">
                             {{ observatory.name }}
                         </a>
                     </td>
+
+                    <!-- Location -->
                     <td>{{ observatory.location }}</td>
-                    <td>{{ observatory.longitude|convert_to_dms:"longitude" }}</td>
-                    <td>{{ observatory.latitude|convert_to_dms:"latitude" }}</td>
+
+                    <!-- Coordinates in DMS format -->
+                    <td>
+                        {{ observatory.longitude|convert_to_dms:"longitude" }}
+                    </td>
+                    <td>
+                        {{ observatory.latitude|convert_to_dms:"latitude" }}
+                    </td>
+
+                    <!-- Altitude -->
                     <td>{{ observatory.altitude|default_if_none:"" }}</td>
+
+                    <!-- Website link with icon if available -->
                     {% if observatory.website %}
                         <td style="text-align: center; vertical-align: middle;">
                             <a href="{{ observatory.website }}" target="_blank" title="{{ 'Visit site' }}">

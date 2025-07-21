@@ -13,8 +13,10 @@
 {% load custom_tags %}
 {% load static %}
 
+{# Sets the page title #}
 {% block title %}{% html_observatory_title observatory_name %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
     <a href="{% url 'observatories' %}">Observatories</a> &gt
@@ -25,11 +27,14 @@
     <!-- Page header -->
     <h1>Observatory: {{ observatory_name }}</h1>
     <br>
+
+    <!-- Brief explanation about the content -->
     <p class="view-explanation">Telescopes belonging to the observatory.</p>
 
     <!-- Telescopes table -->
     <section class="table-container">
         <table>
+            <!-- Table header with column names -->
             <thead>
                 <tr>
                     <th>TELESCOPE</th>
@@ -40,26 +45,39 @@
                     <th>WEBSITE</th>
                 </tr>
             </thead>
+
+            <!-- Table body: iterate through the list of telescopes -->
             <tbody>
                 {% for telescope in lst_telescopes %}
                 <tr>
+                    <!-- Name linking to the telescope detail page -->
                     <td>
                         <a href="{% url 'telescope' telescope_name=telescope.name %}?from_page=observatory">
                             {{ telescope.name }}
                         </a>
                     </td>
+
+                    <!-- Description if available -->
                     {% if telescope.description %}
                          <td> {{ telescope.description }} </td>
                     {% else %}
                         <td></td>
                     {% endif %}
+
+                    <!-- Owner with resizable text container -->
                     <td class="resizable-td">
                         <div class="resizable-div">
                             {{ telescope.owner }}
                         </div>
                     </td>
+
+                    <!-- Status -->
                     <td>{{ telescope.status }}</td>
+
+                     <!-- Aperture -->
                     <td>{{ telescope.aperture }}</td>
+
+                    <!-- Website link with icon (if available) -->
                     {% if telescope.website %}
                         <td style="text-align: center;">
                             <a href="{{ telescope.website }}" target="_blank" title="{{ 'Visit site' }}">

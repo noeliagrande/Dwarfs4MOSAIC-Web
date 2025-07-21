@@ -1,36 +1,44 @@
+/*
+ * General stylesheet for table layout and design.
+ * Defines base table structure, header and cell formatting,
+ * resizable cell support (requires JavaScript), and hover effects.
+ */
+
 /* Basic table style */
 table {
-    width: 100%;                /* Use full available width */
-    max-width: 25%;             /* Limit table width to 25% of viewport */
-    table-layout: auto;         /* Allows dynamic column widths */
-    margin: 20px 0;             /* Vertical margin (top and bottom) */
-    border-collapse: collapse;  /* Collapse borders into single lines */
-    text-align: left;
-    font-family: Arial, sans-serif;
+    width: 100%;                /* Take full available width of the container */
+    max-width: 25%;             /* Restrict max width to 25% of viewport */
+    table-layout: auto;         /* Columns adjust width based on content */
+    margin: 20px 0;             /* Vertical margin above and below table */
+    border-collapse: collapse;  /* Merge adjacent borders into one */
+    text-align: left;           /* Align text to the left in cells */
+    font-family: Arial, sans-serif; /* Use Arial font */
 }
 
-/* Cell styling */
+/* Table header and data cell styling */
 th, td {
     border: 1px solid #ddd;
-    padding: 10px 10px;     /* Padding inside cells */
-    white-space: nowrap;    /* Prevents text from splitting into multiple lines */
+    padding: 10px 10px;         /* Padding inside each cell */
+    white-space: nowrap;        /* Prevent line breaks inside cells */
 }
 
-/* IMPORTANT: This does not work well yet and needs to be supplemented with JavaScript */
+/* Cells intended to be resizable */
+/* NOTE: This feature requires JavaScript to work properly */
 .resizable-td {
     padding: 5px;
     width: auto;
 }
 
+/* Inner div to allow horizontal resizing inside table cells */
 .resizable-div {
-    white-space: normal;    /* Allow text to wrap */
-    word-wrap: break-word;  /* Break long words */
-    width: 300px;
-    min-width: 100px;
-    max-width: 1000px;
-    resize: horizontal;
-    overflow: auto;
-    display: inline-block;
+    white-space: normal;        /* Allow text wrapping */
+    word-wrap: break-word;      /* Break long words to fit */
+    width: 300px;               /* Initial width */
+    min-width: 100px;           /* Minimum width allowed */
+    max-width: 1000px;          /* Maximum width allowed */
+    resize: horizontal;         /* Allow user to resize horizontally */
+    overflow: auto;             /* Show scrollbars if needed */
+    display: inline-block;      /* Inline block for resizing behavior */
 }
 
 
@@ -40,8 +48,7 @@ th {
     color: white;
 }
 
-/* Hover effect */
-/* Change background color when hovering over a table row */
+/* Hover effect for table rows */
 tr:hover {
     background-color: #ddd;
 }

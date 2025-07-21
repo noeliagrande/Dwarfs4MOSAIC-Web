@@ -21,16 +21,19 @@
 
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}{% html_title "" %}{% endblock %}</title>  <!-- Page title, can be overridden -->
-        <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/base.css' %}">  <!-- Base CSS -->
-        <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">  <!-- Table CSS -->
-        <link rel="icon" type="image/png" href="{% static 'dwarfs4MOSAIC/icons/favicon.ico' %}">  <!-- Favicon -->
+        <!-- Dynamic page title block, overridable by child templates -->
+        <title>{% block title %}{% html_title "" %}{% endblock %}</title>
+        <!-- Link to base and table CSS stylesheets -->
+        <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/base.css' %}">
+        <link rel="stylesheet" href="{% static 'dwarfs4MOSAIC/tables.css' %}">
+        <!-- Favicon displayed in browser tab -->
+        <link rel="icon" type="image/x-icon" href="{% static 'dwarfs4MOSAIC/icons/favicon.ico' %}">
     </head>
 
     <body>
         <div class="admin-style-toolbar">
 
-            <!-- Logo -->
+            <!-- Logo that links back to the home page -->
             <span class="logo">
                 <a href="{% url 'home' %}">
                     <img src="{% static 'dwarfs4MOSAIC/images/logo_dwarfs4mosaic.png' %}"
@@ -39,35 +42,40 @@
             </span>
 
             {% if not user.is_authenticated %}
-                <!-- Login link styled as button -->
+                <!-- Login button linking to admin login page, if user is not authenticated -->
                 <span><a href="{% url 'admin:login' %}?next=/home/" style="cursor:pointer;
                        background-color: var(--header-color); color: white;
                        padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;
                        display:inline-block;">LOGIN</a></span>
 
             {% else %}
-                <!-- Project description with external links -->
+                <!-- Toolbar links shown when user is logged in -->
                 <span class="toolbar-links"
                       style="font-size: 12px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;">
 
-                    <!-- Options for ADMIN -->
+                    <!-- Admin-specific navigation options -->
                     {% if user.is_superuser %}
                         <span>WELCOME, ADMIN /</span>
                         <span><a href="{% url 'home' %}" title="{{ 'Home page' }}">HOME</a>&nbsp;/</span>
                         <span><a href="{% url 'database' %}" title="{{ 'Database tables page' }}">DATABASE</a>&nbsp;/</span>
                         <span><a href="{% url 'admin:index' %}" title="{{ 'Database administration page' }}">ADMIN</a> /</span>
                     {% else %}
+                        <!-- Greeting for non-admin authenticated users -->
                         <span>WELCOME, {{ user.get_short_name|default:user.username|upper }}&nbsp;/</span>
                     {% endif %}
 
-                    <!-- Change password -->
-                    <!-- It was working correctly in July 2025, but the feature was disabled.
-                    The code is retained in case it is decided to enable it in the future./-->
+                    <!--
+                        Change password option (Currently disabled)
+                        It was working correctly in July 2025, but the feature was disabled.
+                        The code is retained in case it is decided to enable it in the future.
+                    -->
                     {% comment %}
+                    <!--  Change password option -->
                     <a href="{% url 'password_change' %}">Change password</a>
                     {% endcomment %}
 
-                    <!-- Logout -->
+
+                    <!-- Logout button that submits POST to log the user out -->
                     <form method="post" action="{% url 'logout' %}" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="toolbar-logout-button">LOG OUT</button>
@@ -76,7 +84,7 @@
             {% endif %}
         </div>
 
-        <!-- Breadcrumb section -->
+        <!-- Breadcrumb navigation shown only to superusers -->
         {% if user.is_superuser %}
             <div class="breadcrumb" style="display: flex; justify-content: space-between; align-items: center;">
                 <p>
@@ -86,17 +94,17 @@
             </div>
         {% endif %}
 
-        <!-- Main content area to be filled by each view -->
+        <!-- Main content block where child templates insert page-specific content -->
         <main>
             {% block content %}
-            <!-- Content inserted here -->
+                <!-- Content inserted here -->
             {% endblock %}
         </main>
 
-        <!-- Include JavaScript files -->
+        <!-- Include external JavaScript files shared across the site -->
         {% include "dwarfs4MOSAIC/base_scripts.html" %}
 
-        <!-- Footer showing app version -->
+        <!-- Footer showing the current application version -->
         <footer style="text-align: center; padding: 1em; color: #777;">
             {{ APP_VERSION }}
         </footer>

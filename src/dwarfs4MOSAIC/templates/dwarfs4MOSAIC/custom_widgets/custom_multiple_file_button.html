@@ -15,49 +15,53 @@
 -->
 
 <div style="display: flex; align-items: flex-start;">
-  <button type="button" class="custom-upload-btn" style="flex-shrink: 0;">Select Files</button>
-  <!-- Container shows full list, no scroll, margin to separate -->
-  <div id="{{ widget.attrs.id }}_count"
-       style=" margin-left: 10px; white-space: normal;">
-  </div>
+    <!-- Custom button to trigger hidden file input -->
+    <button type="button" class="custom-upload-btn" style="flex-shrink: 0;">Select Files</button>
+
+    <!-- Container for showing file selection summary -->
+    <div id="{{ widget.attrs.id }}_count"
+         style=" margin-left: 10px; white-space: normal;">
+    </div>
 </div>
+
+<!-- Hidden file input that allows multiple file selection -->
 <input type="file" name="{{ widget.name }}" id="{{ widget.attrs.id }}" multiple style="display:none;">
 
 <script>
-// When button is clicked, trigger hidden file input click
-document.querySelector('.custom-upload-btn').addEventListener('click', function(){
-    document.getElementById('{{ widget.attrs.id }}').click();
-});
+    //When the custom button is clicked, simulate a click on the hidden file input
+    document.querySelector('.custom-upload-btn').addEventListener('click', function(){
+        document.getElementById('{{ widget.attrs.id }}').click();
+    });
 
-// When files are selected, update the text with number and names of files chosen
-document.getElementById('{{ widget.attrs.id }}').addEventListener('change', function(){
-    var countDiv = document.getElementById('{{ widget.attrs.id }}_count');
-    var files = this.files;
+    // When files are selected, display the number of files and their names
+    document.getElementById('{{ widget.attrs.id }}').addEventListener('change', function(){
+        var countDiv = document.getElementById('{{ widget.attrs.id }}_count');
+        var files = this.files;
 
-    if(files.length === 0){
-        countDiv.textContent = '';
-    } else {
-        // Start with number of files selected + newline
-        var text = '<strong>' + files.length + ' file' + (files.length > 1 ? 's' : '') + ' selected:</strong>\n';
-        // Append each file name on its own line
-        for(var i=0; i < files.length; i++){
-            text += files[i].name + '\n';
+        if(files.length === 0){
+            countDiv.textContent = ''; // No files selected, clear the display
+        } else {
+            // Create summary text: number of files + their names
+            var text = '<strong>' + files.length + ' file' + (files.length > 1 ? 's' : '') + ' selected:</strong>\n';
+            for(var i=0; i < files.length; i++){
+                text += files[i].name + '\n'; // Append each file name on a new line
+            }
+            // Replace newlines with <br> for HTML display
+            countDiv.innerHTML = text.replace(/\n/g, '<br>');
         }
-        countDiv.innerHTML = text.replace(/\n/g, '<br>');
-    }
-});
+    });
 </script>
 
 <style>
-.custom-upload-btn {
-    background-color: #417690;
-    color: white;
-    padding: 9px 9px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-left: 10px;
-}
-
+    /* Styling for the custom upload button */
+    .custom-upload-btn {
+        background-color: #417690;  /* Match site color theme */
+        color: white;
+        padding: 9px 9px;
+        border: none;
+        border-radius: 6px;         /* Rounded corners */
+        cursor: pointer;
+        margin-left: 10px;
+    }
 </style>
 

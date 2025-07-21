@@ -16,27 +16,36 @@
 {# Static template tags #}
 {% load custom_tags %}
 
+{# Sets the page title #}
 {% block title %}{% html_title "Database" %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %} Database {% endblock %}
 
 {% block content %}
     <!-- Page header -->
     <h1>Database table query interface</h1>
     <br>
+
+    <!-- Brief explanation about the content -->
     <p class="view-explanation">
         List of database tables displaying their fields and contents along with additional related information.
     </p>
 
-    <!-- Database tables list -->
+    <!-- Section containing the list of database tables -->
     <section class="table-container">
         <table>
+            <!-- Table header with column name -->
             <thead>
                 <tr>
                     <th>TABLE NAME</th>
                 </tr>
             </thead>
+
+            <!-- Table body -->
             <tbody>
+                <!-- Each table name is a clickable link directing to the corresponding table view,
+                     with a URL parameter to indicate navigation origin -->
                 <tr><td><a href="{% url 'groups' %}?from_page=database">group</a></td></tr>
                 <tr><td><a href="{% url 'instruments' %}?from_page=database">instrument</a></td></tr>
                 <tr><td><a href="{% url 'observatories' %}?from_page=database">observatory</a></td></tr>

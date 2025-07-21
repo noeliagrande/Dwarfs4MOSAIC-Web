@@ -95,18 +95,19 @@
 
 <!-- REPLACE BLOCK submit_buttons_bottom -->
 
-<!-- Original block (Django) -->
+{# Original block (Django) #}
 {% comment %} % block submit_buttons_bottom %}{% submit_row %}{% endblock %} {% endcomment %}
 
-<!-- NEW BLOCK (Dwarfs4MOSAIC) -->
-<!-- Add button to open 'researcher' view -->
+{# New block (Dwarfs4MOSAIC) #}
+
 {% block submit_buttons_bottom %}
   {% submit_row %}
-  {% if researcher_link %}
-      <a href="{{ researcher_link }}" class="button" style="background-color:#417690; color:white; margin-left: 10px; padding: 9px 9px;">
-        Open Researcher
-      </a>
-  {% endif %}
+    {# If 'researcher_link' exists, display a custom button linking to the Researcher #}
+    {% if researcher_link %}
+        <a href="{{ researcher_link }}" class="button" style="background-color:#417690; color:white; margin-left: 10px; padding: 9px 9px;">
+            Open Researcher
+        </a>
+    {% endif %}
 {% endblock %}
 
 <!-- REPLACE BLOCK submit_buttons_bottom (end) -->

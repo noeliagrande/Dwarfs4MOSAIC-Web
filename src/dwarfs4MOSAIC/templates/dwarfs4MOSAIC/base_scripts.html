@@ -6,11 +6,13 @@
 
 <!-- Logout when closing the tab or browser -->
 <script>
+    // Listen for the browser/tab close or page unload event
     window.addEventListener("beforeunload", function (event) {
         const referrer = document.referrer;
         const origin = window.location.origin;
-        // Only log out if the previous page is not from the same origin
+        // Only trigger logout if the user is coming from a different origin (external page)
         if (referrer && !referrer.startsWith(origin)) {
+            // Use navigator.sendBeacon to send a logout request asynchronously
             navigator.sendBeacon("{% url 'logout' %}", new URLSearchParams({
                 'csrfmiddlewaretoken': '{{ csrf_token }}'
             }));
@@ -22,26 +24,30 @@
 <script>
     let timeout;
 
+    // Function to reset the inactivity timer
     function resetTimer() {
         clearTimeout(timeout);
-        timeout = setTimeout(logout, 900000); // Restart the logout timer for 900000 ms (15 minutes)
+        // Set a timer to logout after 900,000 ms (15 minutes) of inactivity
+        timeout = setTimeout(logout, 900000);
     }
 
+    // Function to perform logout via a POST request
     function logout() {
         fetch("{% url 'logout' %}", {
             method: "POST",
             headers: { "X-CSRFToken": "{{ csrf_token }}" },
-            keepalive: true
+            keepalive: true // Keep the request alive if the page unloads
         }).then(() => {
-            window.location.href = "{% url 'admin:login' %}?next=/home/"; // Redirect to login page after logging out
+            // Redirect to the login page after successful logout
+            window.location.href = "{% url 'admin:login' %}?next=/home/";
         });
     }
 
-    // Reset the timer on any user interaction
+    // Reset the inactivity timer on user interactions: mouse movement, keypress, clicks, and scrolls
     document.addEventListener("mousemove", resetTimer);
     document.addEventListener("keypress", resetTimer);
     document.addEventListener("click", resetTimer);
     document.addEventListener("scroll", resetTimer);
 
-    resetTimer(); // Start the timer when the page loads
+    resetTimer(); // Initialize the timer when the page loads
 </script>

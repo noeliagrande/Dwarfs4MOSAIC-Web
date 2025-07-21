@@ -13,41 +13,45 @@
 -->
 
 <div style="display: flex; align-items: center;">
-  <button type="button" class="custom-single-btn" style="flex-shrink: 0;">Select Image</button>
-  <!-- Container to show selected filename -->
-  <div id="{{ widget.attrs.id }}_count" style="margin-left: 10px; white-space: normal;"></div>
+    <!-- Custom button to trigger file selection -->
+    <button type="button" class="custom-single-btn" style="flex-shrink: 0;">Select Image</button>
+
+    <!-- Container that displays the selected file name -->
+    <div id="{{ widget.attrs.id }}_count" style="margin-left: 10px; white-space: normal;"></div>
 </div>
 
+<!-- Hidden file input field -->
 <input type="file" name="{{ widget.name }}" id="{{ widget.attrs.id }}" style="display:none;">
 
 <script>
-// When button is clicked, open file selector
-document.querySelector('.custom-single-btn').addEventListener('click', function(){
-    document.getElementById('{{ widget.attrs.id }}').click();
-});
+    // When the custom button is clicked, trigger the hidden file input
+    document.querySelector('.custom-single-btn').addEventListener('click', function(){
+        document.getElementById('{{ widget.attrs.id }}').click();
+    });
 
-// When a file is selected, show its name
-document.getElementById('{{ widget.attrs.id }}').addEventListener('change', function(){
-    var countDiv = document.getElementById('{{ widget.attrs.id }}_count');
-    var files = this.files;
+    // When a file is selected, display its name in the container
+    document.getElementById('{{ widget.attrs.id }}').addEventListener('change', function(){
+        var countDiv = document.getElementById('{{ widget.attrs.id }}_count');
+        var files = this.files;
 
-    if(files.length === 0){
-        countDiv.textContent = '';  // no file selected
-    } else {
-        countDiv.innerHTML = '<strong>Selected image:</strong> &nbsp;' + files[0].name;
-    }
-});
+        if(files.length === 0){
+            countDiv.textContent = '';  // Clear if no file is selected
+        } else {
+            countDiv.innerHTML = '<strong>Selected image:</strong> &nbsp;' + files[0].name;
+        }
+    });
 </script>
 
 <style>
-.custom-single-btn {
-    background-color: #417690;
-    color: white;
-    padding: 9px 9px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-left: 10px;
-}
+    /* Style for the custom "Select Image" button */
+    .custom-single-btn {
+        background-color: #417690;
+        color: white;
+        padding: 9px 9px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-left: 10px;
+    }
 </style>
 

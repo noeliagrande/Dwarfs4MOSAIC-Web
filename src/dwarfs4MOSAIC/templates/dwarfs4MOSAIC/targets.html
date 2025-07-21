@@ -12,8 +12,10 @@
 {% load custom_tags %}
 {% load static %}
 
+{# Sets the page title #}
 {% block title %}{% html_title "Targets" %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
     Targets
@@ -26,6 +28,7 @@
     <!-- Targets table -->
     <section class="table-container">
         <table>
+            <!-- Table header with column names -->
             <thead>
                 <tr>
                     <th>IMAGE</th>
@@ -36,11 +39,12 @@
                     <th>DEC</th>
                     <th>
                         MAG
+                        <!-- Info icon with tooltip explaining magnitude reference -->
                         <img src="{% static 'dwarfs4MOSAIC/icons/circle-info-solid-white.svg' %}"
                              alt="Info" style="width: 12px; height: 12px;"
                              title="Referenced to Vega System">
                     </th>
-                    <th>Z</th>
+                    <th>z</th>
                     <th>SIZE (arcsec)</th>
                     <th>VISIBILITY SEMESTER</th>
                     <th>COMMENTS</th>
@@ -52,42 +56,57 @@
                     </th>
                 </tr>
             </thead>
+
+            <!-- Table body: iterate through the list of targets -->
             <tbody>
                 {% for target in lst_targets %}
                 <tr>
+                    <!-- Image if available, otherwise placeholder -->
                     <td>
                         {% if target.image_name %}
-                            <img src="{{ target.image_url }}" alt="{{ target.name }}" style="width: 200px;">
+                            <img src="{{ target.image_url }}" alt="Failed to load image" style="width: 150px;">
                         {% else %}
-                            <p>No image available</p>
+                            <img src="{% static 'dwarfs4MOSAIC/images/no_image.jpg' %}" alt="No image available" style="width: 150px;">
                         {% endif %}
                     </td>
+
+                    <!-- Name -->
                     <td>{{ target.name }}</td>
 
-                    <!-- Associated observing blocks -->
+                    <!-- List all observing blocks associated with this target -->
                     <td>
                         {% for block in target.observing_blocks.all %}
                             {{ block.detailed_name }} <br>
                         {% endfor %}
                     </td>
 
+                    <!-- Type -->
                     <td>{{ target.type }}</td>
 
-                    <!-- Equatorial coordinates -->
+                    <!-- Equatorial coordinates (right ascension and declination, if available) -->
                     <td>{{ target.right_ascension|default_if_none:"" }}</td>
                     <td>{{ target.declination|default_if_none:"" }}</td>
 
+                    <!-- Magnitude (empty if not available) -->
                     <td title="Magnitudes referenced to Vega System">{{ target.magnitude|default_if_none:"" }}</td>
+
+                    <!-- Redshift (empty if not available) -->
                     <td>{{ target.redshift|default_if_none:"" }}</td>
+
+                    <!-- Apparent size in arcseconds (empty if not available) -->
                     <td>{{ target.size|default_if_none:"" }}</td>
+
+                    <!-- Visibility semester -->
                     <td>{{ target.semester }}</td>
+
+                    <!-- Comments with resizable text container -->
                     <td class="resizable-td">
                         <div class="resizable-div">
                             {{ target.comments }}
                         </div>
                     </td>
 
-                    <!-- Path to associated data files -->
+                    <!-- Path to associated data files, if available -->
                     <td>
                         {% if target.datafiles_path %}
                             {{ target.datafiles_path }}

@@ -10,19 +10,20 @@
         const checkbox_single = document.querySelectorAll('input[name="checkbox_single[]"]');
         const action_button = document.getElementById('action_button');
 
+        // If the main checkbox or individual checkboxes don't exist, exit early
         if (!checkbox_all || checkbox_single.length === 0) return;
 
-        // When main checkbox changes, check or uncheck all individual checkboxes
+        // When the main checkbox changes, check or uncheck all individual checkboxes accordingly
         checkbox_all.addEventListener('change', function() {
             const isChecked = checkbox_all.checked;
 
             checkbox_single.forEach(function(checkbox) {
                 checkbox.checked = isChecked;
             });
-            updateActionButton();
+            updateActionButton(); // Update the action button state
         });
 
-        // When any individual checkbox changes, update main checkbox accordingly
+        // When any individual checkbox changes, update the main checkbox and action button state
         checkbox_single.forEach(function(checkbox) {
             checkbox.addEventListener('change', function() {
                 if (!this.checked) {
@@ -33,15 +34,16 @@
                     const allChecked = Array.from(checkbox_single).every(cb => cb.checked);
                     checkbox_all.checked = allChecked;
                 }
-                updateActionButton();
+                updateActionButton(); // Update the action button state
             });
         });
 
-        // Enable button only if at least one file is selected
+        // Enable or disable the action button depending on whether any checkbox is selected
         function updateActionButton() {
             const anyChecked = Array.from(checkbox_single).some(cb => cb.checked);
             if (action_button) {
                 if (anyChecked) {
+                    // Enable button and apply active styles
                     const rootStyles = getComputedStyle(document.documentElement);
                     const headerColor = rootStyles.getPropertyValue('--header-color').trim();
 
@@ -51,6 +53,7 @@
                     action_button.style.cursor = 'pointer';
                     action_button.style.opacity = '1';
                 } else {
+                    // Disable button and apply inactive styles
                     action_button.disabled = true;
                     action_button.style.cursor = 'not-allowed';
                     action_button.style.opacity = '0.5';

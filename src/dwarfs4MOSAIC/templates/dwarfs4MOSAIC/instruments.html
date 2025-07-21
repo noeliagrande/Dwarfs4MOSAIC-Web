@@ -12,8 +12,10 @@
 {% load custom_tags %}
 {% load static %}
 
+{# Sets the page title #}
 {% block title %}{% html_title "Instruments" %}{% endblock %}
 
+{# Defines the breadcrumb text for navigation #}
 {% block breadcrumb %}
     <a href="{% url 'database' %}">Database</a> &gt
     Instruments
@@ -26,6 +28,7 @@
     <!-- Instruments table -->
     <section class="table-container">
         <table>
+            <!-- Table header with column names -->
             <thead>
                 <tr>
                     <th>NAME</th>
@@ -35,20 +38,29 @@
                     <th>WEBSITE</th>
                 </tr>
             </thead>
+
+            <!-- Table body: iterate through the list of instruments -->
             <tbody>
                 {% for instrument in lst_instruments %}
                 <tr>
+                    <!-- Name -->
                     <td>{{ instrument.name }}</td>
+
+                    <!-- Description if available -->
                     {% if instrument.description %}
                          <td> {{ instrument.description }} </td>
                     {% else %}
                         <td></td>
                     {% endif %}
+
+                    <!-- Link to the related telescope page -->
                     <td>
                         <a href="{% url 'telescope' telescope_name=instrument.tel_ins.name %}?from_page=instruments">
                             {{ instrument.tel_ins.name }}
                         </a>
                     </td>
+
+                    <!-- Instrument status with color-coded text -->
                     <td style="color:
                             {% if instrument.status == 'inoperative' %} red
                             {% elif instrument.status == 'maintenance'%} orange
@@ -56,6 +68,8 @@
                             {% endif %};">
                         {{ instrument.status }}
                     </td>
+
+                    <!-- Website link with icon (if available) -->
                     {% if instrument.website %}
                         <td style="text-align: center;">
                             <a href="{{ instrument.website }}" target="_blank" title="{{ 'Visit site' }}">
