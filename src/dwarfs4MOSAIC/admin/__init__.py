@@ -1,7 +1,18 @@
 """
+Main admin configuration for the Dwarfs4MOSAIC app.
+Sets custom admin site headers and imports all model-specific admin modules.
+
 Aggregate imports for all model-specific admin modules.
 This allows easy and clean import from `admin.py`.
 """
+
+# Third-party libraries
+from django.contrib import admin
+
+# Set custom header and title for the admin site
+admin.site.site_header = "Dwarfs4MOSAIC Administration" # default: "Django administration"
+admin.site.site_title = "Dwarfs4MOSAIC Admin Portal"
+admin.site.index_title = "dwarfs4MOSAIC Administration" # default: "Site administration"
 
 from . import admin_group
 from . import admin_instrument
