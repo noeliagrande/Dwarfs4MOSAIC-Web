@@ -1,0 +1,15 @@
+<!--
+    Custom admin template extension to add a "Close without saving" button below submit buttons.
+    This button links back to the changelist page for the current model.
+-->
+
+{% extends "admin/change_form.html" %}
+
+{% block submit_buttons_bottom %}
+    {{ block.super }}
+    <a class="button"
+       href="{% url 'admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}"
+       style="margin-left: 15px; padding: 0px 14px; height: 36px; line-height: 20px; display: inline-flex; align-items: center;">
+       Close without saving
+    </a>
+{% endblock %}
