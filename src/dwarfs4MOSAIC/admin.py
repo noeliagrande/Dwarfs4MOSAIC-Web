@@ -215,6 +215,7 @@ class TargetAdmin(admin.ModelAdmin):
             )
             base_fieldsets.append(
                 ("Delete Files", {
+                    "description": "⚠️ On save, files are deleted before new uploads occur.",
                     "fields": ["delete_image", "datafiles"]
                 })
             )
@@ -222,6 +223,9 @@ class TargetAdmin(admin.ModelAdmin):
         return base_fieldsets
 
     def save_model(self, request, obj, form, change):
+        '''
+        On save, selected files (old ones) are deleted before new uploads occur.
+        '''
         # Detect if the object is new (being created)
         is_new = obj.pk is None
 
@@ -293,14 +297,6 @@ class TargetAdmin(admin.ModelAdmin):
                     if previous_image_name and os.path.exists(previous_image_path):
                         os.remove(previous_image_path)
 
-        # Save multiple data files uploaded by user
-        datafiles = form.cleaned_data.get("upload_datafiles", [])
-        for uploaded_file in datafiles:
-            dest_path = os.path.join(datafiles_path, uploaded_file.name)
-            with open(dest_path, "wb+") as destination:
-                for chunk in uploaded_file.chunks():
-                    destination.write(chunk)
-
         # Delete selected data files if requested
         files_to_delete = form.cleaned_data.get("datafiles", [])
         for filename in files_to_delete:
@@ -316,6 +312,14 @@ class TargetAdmin(admin.ModelAdmin):
                         f'Error deleting file "{filename}": {e}',
                         level=messages.ERROR
                     )
+
+        # Save multiple data files uploaded by user
+        datafiles = form.cleaned_data.get("upload_datafiles", [])
+        for uploaded_file in datafiles:
+            dest_path = os.path.join(datafiles_path, uploaded_file.name)
+            with open(dest_path, "wb+") as destination:
+                for chunk in uploaded_file.chunks():
+                    destination.write(chunk)
 
         # Save the model instance after file operations
         obj.save()
