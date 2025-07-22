@@ -81,7 +81,8 @@ def process_observing_run_row(row, idx, errors):
 # Register the Tbl_observing_run model in the admin with custom settings
 @admin.register(Tbl_observing_run)
 class ObservingRunAdmin(admin.ModelAdmin):
-    # Organize fields into sections
+
+    # Group fields into sections in the admin form
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
