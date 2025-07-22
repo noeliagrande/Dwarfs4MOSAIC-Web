@@ -3,23 +3,43 @@ This file defines how Tbl_observatory model is displayed and managed in the Djan
 """
 
 # Third-party libraries
-from django.contrib import admin, messages
+from django.contrib import admin
 from django.urls import path
-from django.shortcuts import render, redirect
-import csv
-from io import TextIOWrapper
 
 # Local application imports
 from ..forms import ObservatoryAdminForm
 from ..forms.form_import_csv import CsvImportForm
 from ..models import Tbl_observatory
+from ..utils import import_csv_file
 
+# Process each row of the CSV when importing observatories
+def process_observatory_row(row, idx, errors):
+    # Get name, skip row if empty
+    name = row.get("name")
+    if not name:
+        errors.append(f"Row {idx}: 'name' field is empty, skipping")
+        return None
+
+    # Update or create the observatory entry in the database
+    obj, created_flag = Tbl_observatory.objects.update_or_create(
+        name=name,
+        defaults={
+            "location": row.get("location", ""),
+            "website": row.get("website", ""),
+            "longitude": float(row.get("longitude") or 0),
+            "latitude": float(row.get("latitude") or 0),
+            "altitude": float(row.get("altitude") or 0),
+        },
+    )
+    return created_flag
+
+# Register the Tbl_observatory model in the admin with custom settings
 @admin.register(Tbl_observatory)
 class ObservatoryAdmin(admin.ModelAdmin):
     form = ObservatoryAdminForm
     empty_value_display = ""  # Show empty string instead of None
 
-    # Organize fields into sections
+    # Group fields into sections in the admin form
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
@@ -30,9 +50,9 @@ class ObservatoryAdmin(admin.ModelAdmin):
             "altitude"]}),]
 
     # Override the change list template to add the custom "Import CSV" button
-    change_list_template = "admin/tbl_observatory_changelist.html"
+    change_list_template = "admin/dwarfs4MOSAIC/tbl_observatory_changelist.html"
 
-    # Add a custom URL to handle CSV import
+    # Add a custom URL for CSV import view
     def get_urls(self):
         urls = super().get_urls()
         custom_urls = [
@@ -40,50 +60,13 @@ class ObservatoryAdmin(admin.ModelAdmin):
         ]
         return custom_urls + urls
 
-    # Handle CSV upload and import
+    # Handle CSV upload and import using a helper function
     def import_csv(self, request):
-        if request.method == "POST":
-            form = CsvImportForm(request.POST, request.FILES)
-            if form.is_valid():
-                csv_file = TextIOWrapper(request.FILES["csv_file"].file, encoding="utf-8")
-                reader = csv.DictReader(csv_file)
-                created = 0
-                updated = 0
-                errors = []
+        return import_csv_file(
+            request,
+            CsvImportForm,
+            Tbl_observatory,
+            process_observatory_row,
+            title="Import observatories from CSV"
+        )
 
-                for idx, row in enumerate(reader, start=2):
-                    name = row.get("name")
-                    if not name:
-                        errors.append(f"Row {idx}: 'name' field is empty, skipping")
-                        continue
-                    try:
-                        obj, created_flag = Tbl_observatory.objects.update_or_create(
-                            name=name,
-                            defaults={
-                                "location": row.get("location", ""),
-                                "website": row.get("website", ""),
-                                "longitude": float(row.get("longitude") or 0),
-                                "latitude": float(row.get("latitude") or 0),
-                                "altitude": float(row.get("altitude") or 0),
-                            },
-                        )
-                        if created_flag:
-                            created += 1
-                        else:
-                            updated += 1
-                    except Exception as e:
-                        errors.append(f"Row {idx}: error {e}")
-                msg = f"Import completed: {created} created, {updated} updated."
-                if errors:
-                    msg += f" Errors: {'; '.join(errors)}"
-                self.message_user(request, msg, messages.SUCCESS)
-                return redirect("..")
-        else:
-            form = CsvImportForm()
-        context = {
-            "form": form,
-            "title": "Import observatories from CSV",
-            "opts": self.model._meta,
-            "app_label": self.model._meta.app_label,
-        }
-        return render(request, "admin/csv_form.html", context)

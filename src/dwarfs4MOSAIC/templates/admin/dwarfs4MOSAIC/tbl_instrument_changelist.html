@@ -1,3 +1,9 @@
+<!--
+    Template extending the Django admin change list page.
+    Adds a custom "Import CSV" button in the object-tools section
+    to allow CSV import functionality for the instruments.
+-->
+
 {% extends "admin/change_list.html" %}
 
 {# Override the object-tools block to add a custom "Import CSV" button #}
@@ -5,7 +11,7 @@
     {{ block.super }}
     <ul class="object-tools" style="clear: both; margin-top: 10px;">
         <li>
-            <a href="{% url 'admin:tbl_observatory_import_csv' %}" class="addlink">Import CSV</a>
+            <a href="{% url 'admin:tbl_instrument_import_csv' %}">Import CSV</a>
         </li>
     </ul>
 {% endblock %}

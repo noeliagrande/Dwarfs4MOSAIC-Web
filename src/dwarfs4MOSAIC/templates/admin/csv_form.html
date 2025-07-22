@@ -1,22 +1,29 @@
 <!--
-    Simple form page to upload the CSV file.
+    Django admin template to display a simple CSV upload form.
+    It extends the default admin change_form.html.
+    It adds breadcrumbs navigation and styles a custom import button.
+    The form enables CSV file upload with CSRF protection.
+    The import button is disabled until a file is selected.
 -->
 
+{# Base template #}
 {% extends "admin/change_form.html" %}
 
 {% block breadcrumbs %}
 <div class="breadcrumbs">
-    <a href="{% url 'admin:index' %}">Home</a>
-    &rsaquo;
-    <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
-    &rsaquo;
+    {# Link to admin home #}
+    <a href="{% url 'admin:index' %}">Home</a> &rsaquo;
+    {# Link to app list #}
+    <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a> &rsaquo;
+    {# Link to model changelist #}
     <a href="{% url 'admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}">
         {{ opts.verbose_name_plural|capfirst }}
-    </a>
-    &rsaquo; Import CSV
+    </a> &rsaquo;
+    Import CSV
 </div>
 {% endblock %}
 
+{# Additional styles block for custom buttons #}
 {% block extrahead %}
 <style>
     input.custom-button, a.custom-button {
@@ -27,19 +34,33 @@
 </style>
 {% endblock %}
 
+{# Main content block: form for CSV file upload #}
 {% block content %}
     <form method="post" enctype="multipart/form-data" novalidate>
+        {# CSRF token for security #}
         {% csrf_token %}
+
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 3.0em;">
             <label for="{{ form.csv_file.id_for_label }}">{{ form.csv_file.label }}</label>
             {{ form.csv_file }}
         </div>
         <div style="display: flex; gap: 10px;">
-            <input type="submit" value="Import" class="button default custom-button">
+            <input type="submit" value="Import" class="button default custom-button" id="import-button" disabled>
             <a href="{% url 'admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}"
                class="button default custom-button">
                 Cancel
             </a>
         </div>
     </form>
+
+    {# Enable import button only if a file is selected #}
+    <script>
+        const fileInput = document.getElementById("{{ form.csv_file.id_for_label }}");
+        const importButton = document.getElementById("import-button");
+
+        fileInput.addEventListener('change', function() {
+            importButton.disabled = !fileInput.files.length;
+        });
+    </script>
+
 {% endblock %}
