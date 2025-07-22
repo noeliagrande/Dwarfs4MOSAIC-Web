@@ -6,7 +6,6 @@ This file defines how Tbl_observatory model is displayed and managed in the Djan
 from django.contrib import admin, messages
 from django.urls import path
 from django.shortcuts import render, redirect
-from django import forms
 import csv
 from io import TextIOWrapper
 
@@ -87,4 +86,4 @@ class ObservatoryAdmin(admin.ModelAdmin):
             "opts": self.model._meta,
             "app_label": self.model._meta.app_label,
         }
-        return render(request, "admin/form_import_csv.html", context)
+        return render(request, "admin/csv_form.html", context)
