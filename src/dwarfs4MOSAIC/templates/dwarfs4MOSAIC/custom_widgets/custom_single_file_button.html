@@ -1,7 +1,7 @@
 <!--
-  Custom widget for selecting a single image file.
+  Custom widget for selecting a single file.
 
-  - Displays a button labeled "Select Image".
+  - Displays a button labeled "Select File".
   - Clicking the button opens the hidden file input dialog.
   - When a file is selected, its name is displayed next to the button.
 
@@ -9,12 +9,12 @@
   - widget.name: the name attribute for the input field.
   - widget.attrs.id: unique ID of the input, used to link the button and display area.
 
-  This widget is typically integrated in Django forms to provide a more user-friendly image upload interface.
+  This widget is typically integrated in Django forms to provide a more user-friendly file upload interface.
 -->
 
 <div style="display: flex; align-items: center;">
     <!-- Custom button to trigger file selection -->
-    <button type="button" class="custom-single-btn" style="flex-shrink: 0;">Select Image</button>
+    <button type="button" class="custom-single-btn" style="flex-shrink: 0;">Select File</button>
 
     <!-- Container that displays the selected file name -->
     <div id="{{ widget.attrs.id }}_count" style="margin-left: 10px; white-space: normal;"></div>
@@ -37,13 +37,13 @@
         if(files.length === 0){
             countDiv.textContent = '';  // Clear if no file is selected
         } else {
-            countDiv.innerHTML = '<strong>Selected image:</strong> &nbsp;' + files[0].name;
+            countDiv.innerHTML = '<strong>Selected file:</strong> &nbsp;' + files[0].name;
         }
     });
 </script>
 
 <style>
-    /* Style for the custom "Select Image" button */
+    /* Style for the custom "Select File" button */
     .custom-single-btn {
         background-color: #417690;
         color: white;
