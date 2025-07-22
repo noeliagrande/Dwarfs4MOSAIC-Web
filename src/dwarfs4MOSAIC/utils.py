@@ -14,6 +14,7 @@ import unicodedata
 
 # Third-party libraries
 from django.conf import settings
+from django import forms
 
 # Convert all rows from a DB cursor into a list of dictionaries.
 # Each dictionary represents a row with column names as keys.
@@ -66,3 +67,36 @@ def sanitize_filename(name):
     name = name.replace(' ', '_')
 
     return name
+
+# Custom widget for selecting a single file
+class CustomSingleFileButton(forms.ClearableFileInput):
+    template_name = 'dwarfs4MOSAIC/custom_widgets/custom_single_file_button.html'
+
+# File field that uses the custom single file widget
+class SingleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", CustomSingleFileButton())
+        super().__init__(*args, **kwargs)
+
+# Custom widget for selecting multiple files
+class MultipleFileInput(forms.ClearableFileInput):
+    allow_multiple_selected = True
+
+# Custom widget template for multiple file uploads
+class CustomMultipleFileButton(MultipleFileInput):
+    template_name = 'dwarfs4MOSAIC/custom_widgets/custom_multiple_file_button.html'
+
+# File field that allows multiple file uploads
+class MultipleFileField(forms.FileField):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("widget", CustomMultipleFileButton())
+        super().__init__(*args, **kwargs)
+
+    def clean(self, data, initial=None):
+        # Validate each uploaded file individually
+        single_file_clean = super().clean
+        if isinstance(data, (list, tuple)):
+            result = [single_file_clean(d, initial) for d in data]
+        else:
+            result = [single_file_clean(data, initial)]
+        return result
