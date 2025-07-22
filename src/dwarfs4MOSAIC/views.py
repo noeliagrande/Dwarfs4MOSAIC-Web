@@ -8,15 +8,13 @@ This module provides page rendering and logic for:
 """
 
 # Standard libraries
-import os
 import tempfile
 import zipfile
 
 # Third-party libraries
-from django.conf import settings
 from django.contrib import messages
 from django.http import FileResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import render
 
 # Local application imports
 from .models import *
@@ -107,8 +105,11 @@ def observatories_view(request):
 
 # Show one observatory and its telescopes
 def observatory_view(request, observatory_name):
-    observatory = get_object_or_404(Tbl_observatory, name = observatory_name) # Get observatory by name
-    telescopes = Tbl_telescope.objects.filter(obs_tel = observatory) # Get telescopes for this observatory
+    # Try to get the observatory by name, returns None if not found
+    observatory = Tbl_observatory.objects.filter(name=observatory_name).first()
+
+    # Get telescopes for the observatory only if the observatory exists, otherwise return an empty list
+    telescopes = Tbl_telescope.objects.filter(obs_tel=observatory) if observatory else []
 
     return render(request, 'dwarfs4MOSAIC/observatory.html', {
         'observatory_name': observatory_name,
@@ -125,8 +126,11 @@ def telescopes_view(request):
 
 # Show one telescope and its instruments
 def telescope_view(request, telescope_name):
-    telescope = get_object_or_404(Tbl_telescope, name = telescope_name) # Get telescope by name
-    instruments = Tbl_instrument.objects.filter(tel_ins = telescope) # Get instruments for this telescope
+    # Try to get the telescope by name, returns None if not found
+    telescope = Tbl_telescope.objects.filter(name=telescope_name).first()
+
+    # Get instruments for the telescope only if the telescope exists, otherwise return an empty list
+    instruments = Tbl_instrument.objects.filter(tel_ins=telescope) if telescope else []
 
     return render(request, 'dwarfs4MOSAIC/telescope.html', {
         'telescope': telescope,
@@ -159,9 +163,14 @@ def observing_runs_view(request):
 
 # Show details for one observing run, including blocks and researchers
 def observing_run_view(request, observing_run_name):
-    observing_run = get_object_or_404(Tbl_observing_run, name = observing_run_name) # Get observing_run by name
-    observing_blocks = Tbl_observing_block.objects.filter(obs_run = observing_run.id) # Blocks of this run
-    researchers = observing_run.researchers.all() # Researchers involved
+    # Try to get the observing run by name, returns None if not found
+    observing_run = Tbl_observing_run.objects.filter(name=observing_run_name).first()
+
+    # Get observing blocks of the observing run only if the observing run exists, else empty list
+    observing_blocks = Tbl_observing_block.objects.filter(obs_run=observing_run.id) if observing_run else []
+
+    # Get researchers involved only if the observing run exists, else empty queryset
+    researchers = observing_run.researchers.all() if observing_run else []
 
     return render(request, 'dwarfs4MOSAIC/observing_run.html', {
         'observing_run': observing_run,
@@ -186,8 +195,11 @@ def targets_view(request):
 # - Single file served directly
 # - Multiple files compressed into a ZIP archive
 def download_files_view(request, target_id):
-    target = get_object_or_404(Tbl_target, pk=target_id)
-    files = get_files(target.datafiles_path) if target.datafiles_path else []
+    # Try to get the target by primary key, returns None if not found
+    target = Tbl_target.objects.filter(pk=target_id).first()
+
+    # Get files only if target exists and has a datafiles_path, else empty list
+    files = get_files(target.datafiles_path) if target and target.datafiles_path else []
 
     if request.method == "POST":
         selected_files = request.POST.getlist('checkbox_single[]')
