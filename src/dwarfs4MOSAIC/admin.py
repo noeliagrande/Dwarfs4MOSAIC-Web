@@ -12,9 +12,11 @@ import os
 # Third-party libraries
 from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as DefaultGroupAdmin, UserAdmin as DefaultUserAdmin
+from django.contrib.auth.models import User, Group
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
+
 
 # Local application imports
 from .forms import GroupAdminForm, ObservatoryAdminForm, TargetAdminForm

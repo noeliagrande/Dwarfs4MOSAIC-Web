@@ -25,7 +25,6 @@ from django.utils.safestring import mark_safe
 # Local application imports
 from .models import Tbl_observatory, Tbl_target, Tbl_observing_block
 
-
 # Admin form for observatories with detailed longitude and latitude input fields.
 # Longitude and latitude are split into direction (E/W, N/S), degrees, minutes, and seconds.
 # Includes conversion between decimal degrees and DMS, and validation of input completeness and range.
