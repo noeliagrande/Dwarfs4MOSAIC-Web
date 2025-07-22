@@ -9,13 +9,65 @@ import os
 from django.conf import settings
 from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
+from django.urls import path
 
 # Local application imports
 from ..forms import TargetAdminForm
-from ..models import *
-from ..utils import sanitize_filename
+from ..forms.form_import_csv import CsvImportForm
+from ..models import Tbl_target
+from ..utils import sanitize_filename, import_csv_file
 
-# Admin configuration for Target model with custom file handling
+# Process each row of the CSV when importing observatories
+def process_target_row(row, idx, errors):
+    # Required fields: name, semester
+    name = row.get("name")
+    semester = row.get("semester")
+
+    if not name:
+        errors.append(f"Row {idx}: 'name' field is empty, skipping")
+        return None
+
+    if not semester:
+        errors.append(f"Row {idx}: 'semester' field is empty, skipping")
+        return None
+
+    # Prepare defaults
+    defaults = {
+        "type": row.get("type", "galaxy"),  # default defined in model
+        "right_ascension": row.get("right_ascension") or None,
+        "declination": row.get("declination") or None,
+        "magnitude": None,
+        "redshift": None,
+        "size": None,
+        "semester": semester,
+        "comments": row.get("comments", ""),
+        "image": row.get("image") or None,
+        "datafiles_path": row.get("datafiles_path") or None,
+    }
+
+    # Parse float fields (magnitude, redshift, size)
+    for field in ["magnitude", "redshift", "size"]:
+        value_str = row.get(field)
+        if value_str:
+            try:
+                defaults[field] = float(value_str)
+            except ValueError:
+                errors.append(f"Row {idx}: invalid {field} '{value_str}', ignoring")
+                defaults[field] = None
+
+    # Create or update the target by unique name
+    obj, created_flag = Tbl_target.objects.update_or_create(
+        name=name,
+        defaults=defaults,
+    )
+
+    return created_flag
+
+
+
+
+
+# Register the Tbl_target model in the admin with custom settings
 @admin.register(Tbl_target)
 class TargetAdmin(admin.ModelAdmin):
 
@@ -27,8 +79,8 @@ class TargetAdmin(admin.ModelAdmin):
         css = {'all': ('admin/css/widgets.css',)}
         js = ('admin/js/core.js', 'admin/js/SelectBox.js', 'admin/js/SelectFilter2.js',)
 
+    # Group fields into sections in the admin form
     def get_fieldsets(self, request, obj=None):
-        # Organize fields into sections
         base_fieldsets = [
             ("General Information", {"fields": [
                 "type", "right_ascension", "declination", "magnitude", "redshift", "size"]}),
@@ -62,10 +114,8 @@ class TargetAdmin(admin.ModelAdmin):
 
         return base_fieldsets
 
+    # On save, selected files (old ones) are deleted before new uploads occur.
     def save_model(self, request, obj, form, change):
-        '''
-        On save, selected files (old ones) are deleted before new uploads occur.
-        '''
         # Detect if the object is new (being created)
         is_new = obj.pk is None
 
@@ -164,8 +214,8 @@ class TargetAdmin(admin.ModelAdmin):
         # Save the model instance after file operations
         obj.save()
 
+    # Override default bulk delete action with a custom version
     def get_actions(self, request):
-        # Override default bulk delete action with a custom version
         actions = super().get_actions(request)
         if "delete_selected" in actions:
             actions["delete_selected"] = (
@@ -174,8 +224,9 @@ class TargetAdmin(admin.ModelAdmin):
             )
         return actions
 
+    # Delete selected objects and show a summary message
     def custom_delete_selected(self, modeladmin, request, queryset):
-        # Delete selected objects and show a summary message
+
         deleted_count = 0
         for obj in queryset:
             obj.delete()
@@ -204,3 +255,25 @@ class TargetAdmin(admin.ModelAdmin):
     def get_change_url(self, obj):
         opts = self.model._meta
         return f"/admin/{opts.app_label}/{opts.model_name}/{obj.pk}/change/"
+
+
+    # Override the change list template to add the custom "Import CSV" button
+    change_list_template = "admin/dwarfs4MOSAIC/tbl_target_changelist.html"
+
+    # Add a custom URL for CSV import view
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('import-csv/', self.admin_site.admin_view(self.import_csv), name='tbl_target_import_csv'),
+        ]
+        return custom_urls + urls
+
+    # Handle CSV upload and import using a helper function
+    def import_csv(self, request):
+        return import_csv_file(
+            request,
+            CsvImportForm,
+            Tbl_target,
+            process_target_row,
+            title="Import targets from CSV"
+        )
