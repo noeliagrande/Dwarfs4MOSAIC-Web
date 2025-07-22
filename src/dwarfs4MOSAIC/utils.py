@@ -11,19 +11,18 @@ Includes:
 """
 
 # Standard libraries
+import csv
 import os
 import re
 import unicodedata
+from io import TextIOWrapper
 
 # Third-party libraries
-from django.conf import settings
 from django import forms
-
-from django.shortcuts import redirect, render
+from django.conf import settings
 from django.contrib import messages
+from django.shortcuts import redirect, render
 from django.utils.text import capfirst
-from io import TextIOWrapper
-import csv
 
 
 '''
