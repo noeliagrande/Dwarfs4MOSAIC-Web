@@ -13,6 +13,10 @@
 {# Set the HTML title of the admin page #}
 {% block title %}Dwarfs4MOSAIC | Admin{% endblock %}
 
+{% block branding %}
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">Dwarfs4MOSAIC Administration</a></h1>
+{% endblock %}
+
 {% block extrahead %}
     {# Keep any additional head content from the parent template #}
     {{ block.super }}
