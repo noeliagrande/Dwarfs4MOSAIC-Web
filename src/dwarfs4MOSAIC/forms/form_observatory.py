@@ -1,34 +1,20 @@
 """
-Django admin forms for managing custom validation, display, and data processing
-for the observatory, researcher, and target models.
-
-Includes:
-- Custom handling of geographic coordinates (longitude and latitude) for observatories.
-- Validation to ensure unique assignment of users to researchers.
-- Support for uploading multiple files and images associated with targets.
+Admin form for observatories with detailed longitude and latitude input fields.
+Longitude and latitude are split into direction (E/W, N/S), degrees, minutes, and seconds.
+Includes conversion between decimal degrees and DMS, and validation of input completeness and range.
 """
-
-# Standard libraries
-import os
 
 # Third-party libraries
 from django import forms
-from django.conf import settings
-from django.contrib import admin
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.forms.widgets import TextInput
-from django.utils.safestring import mark_safe
 
 # Local application imports
-from .models import Tbl_observatory, Tbl_target, Tbl_observing_block
+from ..models import Tbl_observatory
 
-# Admin form for observatories with detailed longitude and latitude input fields.
-# Longitude and latitude are split into direction (E/W, N/S), degrees, minutes, and seconds.
-# Includes conversion between decimal degrees and DMS, and validation of input completeness and range.
 class ObservatoryAdminForm(forms.ModelForm):
+
     # Longitude components
     longitude_ew = forms.ChoiceField(
         choices=[('', ''), ('E', 'E'), ('W', 'W')],
@@ -164,123 +150,3 @@ class ObservatoryAdminForm(forms.ModelForm):
 
         return cleaned_data
 
-# Custom widget for selecting a single file
-class CustomSingleFileButton(forms.ClearableFileInput):
-    template_name = 'dwarfs4MOSAIC/custom_widgets/custom_single_file_button.html'
-
-# Custom widget for selecting multiple files
-class MultipleFileInput(forms.ClearableFileInput):
-    allow_multiple_selected = True
-
-# File field that uses the custom single file widget
-class SingleFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("widget", CustomSingleFileButton())
-        super().__init__(*args, **kwargs)
-
-# Custom widget template for multiple file uploads
-class CustomMultipleFileButton(MultipleFileInput):
-    template_name = 'dwarfs4MOSAIC/custom_widgets/custom_multiple_file_button.html'
-
-# File field that allows multiple file uploads
-class MultipleFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("widget", CustomMultipleFileButton())
-        super().__init__(*args, **kwargs)
-
-    def clean(self, data, initial=None):
-        # Validate each uploaded file individually
-        single_file_clean = super().clean
-        if isinstance(data, (list, tuple)):
-            result = [single_file_clean(d, initial) for d in data]
-        else:
-            result = [single_file_clean(data, initial)]
-        return result
-
-
-# Admin form for targets, supports uploading images and multiple data files
-# with options to delete current image and display current files.
-class TargetAdminForm(forms.ModelForm):
-    upload_image = SingleFileField(
-        required=False,
-        label="Image",
-    )
-
-    upload_datafiles = MultipleFileField(
-        required=False,
-        label="Data files",
-    )
-
-    delete_image = forms.BooleanField(required=False, label="Delete image")
-
-    # Field for selecting data files to delete
-    datafiles = forms.MultipleChoiceField(
-        required=False,
-        label="",
-        widget=FilteredSelectMultiple("data files to delete", is_stacked=False)
-    )
-
-    class Meta:
-        model = Tbl_target
-        exclude = ['image', 'datafiles_path']
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Show current image name if editing an existing target with an image
-        if self.instance and self.instance.pk:
-            if self.instance.image_name:
-                self.fields['upload_image'].help_text = mark_safe(
-                    f"<strong>Current image:</strong> {self.instance.image_name}"
-                )
-            else:
-                self.fields['upload_image'].help_text = None
-
-            # List available data files if datafiles_path exists
-            if self.instance.datafiles_path:
-                files = []
-                try:
-                    files_path = os.path.join(settings.MEDIA_ROOT, self.instance.datafiles_path)
-                    if os.path.exists(files_path):
-                        files = sorted(os.listdir(files_path))
-                except Exception as e:
-                    files = [f"(Failed to access: {e})"]
-
-                if files:
-                    self.fields['datafiles'].choices = [(f, f) for f in files]
-                else:
-                    self.fields['datafiles'].choices = []
-
-
-# Admin form for groups with custom allowed blocks field
-class GroupAdminForm(forms.ModelForm):
-    allowed_blocks = forms.ModelMultipleChoiceField(
-        queryset=Tbl_observing_block.objects.all(),
-        required=False,
-        label = '',
-        widget=admin.widgets.FilteredSelectMultiple("Observing Blocks", is_stacked=False)
-    )
-
-    class Meta:
-        model = Group
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        # Use detailed name for allowed blocks in the selection list
-        self.fields['allowed_blocks'].label_from_instance = lambda obj: obj.detailed_name
-
-        # Set initial allowed blocks if the group already exists
-        if self.instance.pk:
-            self.fields['allowed_blocks'].initial = self.instance.allowed_blocks.all()
-
-    def save(self, commit=True):
-        # Save group and update allowed blocks relation
-        group = super().save(commit=False)
-        if commit:
-            group.save()
-        if group.pk:
-            group.allowed_blocks.set(self.cleaned_data['allowed_blocks'])
-            self.save_m2m()
-        return group

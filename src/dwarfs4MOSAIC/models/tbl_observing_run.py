@@ -9,7 +9,7 @@ behaviors for managing astronomical observation data.
 from django.db import models
 
 # Local application imports
-from ..models import Tbl_instrument
+from .tbl_instrument import Tbl_instrument
 
 class Tbl_observing_run(models.Model):
 

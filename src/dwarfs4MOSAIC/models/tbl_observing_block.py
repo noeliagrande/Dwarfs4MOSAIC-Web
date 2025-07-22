@@ -10,7 +10,7 @@ from django.contrib.auth.models import Group
 from django.db import models
 
 # Local application imports
-from ..models import Tbl_observing_run
+from .tbl_observing_run import Tbl_observing_run
 
 class Tbl_observing_block(models.Model):
 

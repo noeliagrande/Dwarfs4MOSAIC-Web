@@ -19,7 +19,7 @@ from django.urls import reverse
 
 
 # Local application imports
-from .forms import GroupAdminForm, ObservatoryAdminForm, TargetAdminForm
+from .forms import ObservatoryAdminForm, GroupAdminForm, TargetAdminForm
 from .models import *
 from .utils import sanitize_filename
 
