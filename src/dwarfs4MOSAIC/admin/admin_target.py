@@ -173,6 +173,7 @@ class TargetAdmin(admin.ModelAdmin):
             upload_image = form.cleaned_data.get('upload_image')
             if upload_image:
 
+                # Previous values before updating
                 previous_image_name = obj.image_name
                 previous_image_path = os.path.join(settings.MEDIA_ROOT, obj.image)
 
@@ -194,8 +195,11 @@ class TargetAdmin(admin.ModelAdmin):
                     # Update image path to new file
                     obj.image = os.path.relpath(file_path, settings.MEDIA_ROOT) # new image
 
-                    # Remove old image file if it exists
-                    if previous_image_name and os.path.exists(previous_image_path):
+                    # Delete the old image if it exists and its name is different from the new image's name.
+                    # (Otherwise, new image could be deleted)
+                    if (previous_image_name and
+                            os.path.exists(previous_image_path) and
+                            previous_image_name != upload_image.name):
                         os.remove(previous_image_path)
 
         # Delete selected data files if requested
