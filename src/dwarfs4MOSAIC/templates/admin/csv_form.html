@@ -16,6 +16,7 @@
     {# Link to app list #}
     <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a> &rsaquo;
     {# Link to model changelist #}
+    {# There is no real issue with |: Django allows it and resolves the URL correctly. #}
     <a href="{% url 'admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}">
         {{ opts.verbose_name_plural|capfirst }}
     </a> &rsaquo;
@@ -56,6 +57,7 @@
 
         <div style="display: flex; gap: 10px;">
             <input type="submit" value="Import" class="button default custom-button" id="import-button" disabled>
+            {# There is no real issue with |: Django allows it and resolves the URL correctly. #}
             <a href="{% url 'admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}"
                class="button default custom-button">
                 Cancel

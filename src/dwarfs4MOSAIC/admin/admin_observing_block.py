@@ -2,9 +2,6 @@
 This file defines how Tbl_observing_block model is displayed and managed in the Django Admin interface.
 """
 
-# Standard libraries
-from datetime import timedelta
-
 # Third-party libraries
 from django.contrib import admin
 from django.urls import path
@@ -16,7 +13,7 @@ from ..utils import import_csv_file
 
 # Process each row of the CSV when importing observing blocks
 def process_observing_block_row(row, idx, errors):
-    from datetime import datetime, time, timedelta
+    from datetime import datetime, timedelta
 
     # Required field: name, start_time
     name = row.get("name")

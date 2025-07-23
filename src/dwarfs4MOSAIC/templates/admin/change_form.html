@@ -8,6 +8,7 @@
 {% block submit_buttons_bottom %}
     {{ block.super }}
     <a class="button"
+       {# There is no real issue with |: Django allows it and resolves the URL correctly. #}
        href="{% url 'admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}"
        style="margin-left: 15px; padding: 0px 14px; height: 36px; line-height: 20px; display: inline-flex; align-items: center;">
        Close without saving
