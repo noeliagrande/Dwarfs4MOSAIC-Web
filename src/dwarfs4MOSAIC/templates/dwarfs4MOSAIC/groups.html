@@ -34,7 +34,6 @@
                     <th>NAME</th>
                     <th>MEMBERS</th>
                     <th>ALLOWED OBSERVING BLOCKS</th>
-                    <th>ADMINISTRATION PERMISSIONS</th>
                 </tr>
             </thead>
 
@@ -56,13 +55,6 @@
                     <td>
                         {% for g in group.allowed_blocks.all %}
                             {{ g.detailed_name }} <br>
-                        {% endfor %}
-                    </td>
-
-                    <!-- Administration permissions assigned to the group -->
-                    <td>
-                        {% for p in group.permissions.all %}
-                            {{ p.name }} <br>
                         {% endfor %}
                     </td>
                 </tr>
