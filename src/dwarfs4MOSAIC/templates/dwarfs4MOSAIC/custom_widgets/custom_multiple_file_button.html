@@ -16,7 +16,7 @@
 
 <div style="display: flex; align-items: flex-start;">
     <!-- Custom button to trigger hidden file input -->
-    <button type="button" class="custom-single-btn" style="
+    <button type="button" class="custom-btn" style="
         flex-shrink: 0;
         background-color: #417690;
         cursor: pointer;"
@@ -37,7 +37,7 @@
 
 <script>
     //When the custom button is clicked, simulate a click on the hidden file input
-    document.querySelector('.custom-upload-btn').addEventListener('click', function(){
+    document.querySelector('.custom-btn').addEventListener('click', function(){
         document.getElementById('{{ widget.attrs.id }}').click();
     });
 
@@ -61,8 +61,8 @@
 </script>
 
 <style>
-    /* Styling for the custom upload button */
-    .custom-upload-btn {
+    /* Styling for the custom button */
+    .custom-btn {
         background-color: #417690;  /* Match site color theme */
         color: white;
         padding: 9px 9px;
