@@ -34,6 +34,8 @@ class TargetAdminForm(forms.ModelForm):
     datafiles = forms.MultipleChoiceField(
         required=False,
         label="",
+        help_text="Data files that will be deleted. "
+                  "Hold down “Control”, or “Command” on a Mac, to select more than one.",
         widget=FilteredSelectMultiple("data files to delete", is_stacked=False)
     )
 

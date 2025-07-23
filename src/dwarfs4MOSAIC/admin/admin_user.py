@@ -14,6 +14,21 @@ from ..models import Tbl_researcher
 
 # Custom User admin to add link to linked Researcher if exists
 class CustomUserAdmin(DefaultUserAdmin):
+
+    # Hide fields "Superuser status" and "User permissions" in the admin form
+    fieldsets = (
+        (None, {'fields': ('username', 'password')}),
+        ('Personal info', {'fields': ('first_name', 'last_name', 'email')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'groups')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
+    )
+
+    # Replace help_text for staff check_box
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['is_staff'].help_text = "Designates whether the user can log into this site."
+        return form
+
     def change_view(self, request, object_id, form_url='', extra_context=None):
         user = User.objects.filter(pk=object_id).first()
         extra_context = extra_context or {}

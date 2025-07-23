@@ -23,7 +23,7 @@ class GroupAdmin(DefaultGroupAdmin):
     # Group fields into sections in the admin form
     def get_fieldsets(self, request, obj=None):
         base_fieldsets = [
-            (None, {'fields': ('name', 'permissions')})
+            (None, {'fields': ('name',)})
         ]
 
         # When editing existing Group, add authorization section

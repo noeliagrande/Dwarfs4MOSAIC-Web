@@ -45,6 +45,7 @@ class Tbl_observing_run(models.Model):
     researchers = models.ManyToManyField(
         'Tbl_researcher',
         blank=True,
+        help_text="Researchers who participated in the observing run.",
         related_name='observing_runs'
     )
 

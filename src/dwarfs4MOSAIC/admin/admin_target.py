@@ -118,7 +118,7 @@ class TargetAdmin(admin.ModelAdmin):
             )
             base_fieldsets.append(
                 ("Delete Files", {
-                    "description": "⚠️ On save, files are deleted before new uploads occur.",
+                    "description": "⚠️ On save, files are deleted before new uploads are processed.",
                     "fields": ["delete_image", "datafiles"]
                 })
             )

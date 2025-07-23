@@ -67,6 +67,8 @@ class Tbl_researcher(models.Model):
     denied_blocks = models.ManyToManyField(
         'Tbl_observing_block',
         blank=True,
+        help_text="The user does not have authorized access to these blocks "
+                  "(even if they belong to a group that does have authorized access). ",
         related_name='denied_researchers'
     )
 

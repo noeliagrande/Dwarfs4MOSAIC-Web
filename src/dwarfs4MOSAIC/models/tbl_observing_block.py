@@ -46,6 +46,7 @@ class Tbl_observing_block(models.Model):
     target = models.ManyToManyField(
         'Tbl_target',
         blank=True,
+        help_text= "Targets that belong to the block.",
         related_name='observing_blocks'
     )
 

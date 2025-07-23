@@ -18,6 +18,8 @@ class GroupAdminForm(forms.ModelForm):
         queryset=Tbl_observing_block.objects.all(),
         required=False,
         label = '',
+        help_text = 'Authorized blocks for users belonging to the group. '
+                    'Hold down “Control”, or “Command” on a Mac, to select more than one.',
         widget=admin.widgets.FilteredSelectMultiple("Observing Blocks", is_stacked=False)
     )
 
