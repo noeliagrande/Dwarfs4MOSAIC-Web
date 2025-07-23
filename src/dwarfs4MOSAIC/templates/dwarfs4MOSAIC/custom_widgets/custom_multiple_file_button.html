@@ -16,7 +16,15 @@
 
 <div style="display: flex; align-items: flex-start;">
     <!-- Custom button to trigger hidden file input -->
-    <button type="button" class="custom-upload-btn" style="flex-shrink: 0;">Select Files</button>
+    <button type="button" class="custom-single-btn" style="
+        flex-shrink: 0;
+        background-color: #417690;
+        cursor: pointer;"
+        onmouseover="this.style.backgroundColor='#205067'; "
+        onmouseout="this.style.backgroundColor='#417690'; "
+    >
+        Select Files
+    </button>
 
     <!-- Container for showing file selection summary -->
     <div id="{{ widget.attrs.id }}_count"

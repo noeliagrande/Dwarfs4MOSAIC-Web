@@ -40,10 +40,19 @@
         {# CSRF token for security #}
         {% csrf_token %}
 
+        <div style="background: #d2dadd; padding: 15px; margin: 20px 0;
+        border-radius: 5px; ">
+            <strong style="color: red;">Important notice:</strong><br>
+            The CSV is downloaded <em>as-is</em> without any data validation.<br><br>
+            <strong>IDs are not preserved</strong> and cannot be managed through this file.<br>
+            After downloading, you must manually update the objects to define their relationships with other tables.
+        </div>
+
         <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 3.0em;">
             <label for="{{ form.csv_file.id_for_label }}">{{ form.csv_file.label }}</label>
             {{ form.csv_file }}
         </div>
+
         <div style="display: flex; gap: 10px;">
             <input type="submit" value="Import" class="button default custom-button" id="import-button" disabled>
             <a href="{% url 'admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}"
