@@ -35,8 +35,9 @@ class GroupAdminForm(forms.ModelForm):
         if self.instance.pk:
             self.fields['allowed_blocks'].initial = self.instance.allowed_blocks.all()
 
+    # Save group and update allowed blocks relation
     def save(self, commit=True):
-        # Save group and update allowed blocks relation
+
         group = super().save(commit=False)
         if commit:
             group.save()
