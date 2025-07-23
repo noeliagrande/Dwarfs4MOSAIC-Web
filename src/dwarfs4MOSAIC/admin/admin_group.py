@@ -3,10 +3,11 @@ This file defines how Group admin model is displayed and managed in the Django A
 """
 
 # Third-party libraries
-from django.contrib import admin
+from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as DefaultGroupAdmin
 from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 # Local application imports
 from ..forms import GroupAdminForm
@@ -53,6 +54,12 @@ class GroupAdmin(DefaultGroupAdmin):
         elif "_continue" in request.POST or "_save" in request.POST:
             # For both 'Save and continue editing' and 'Save',
             # redirect to the change page of the newly created object
+            self.message_user(
+                request,
+                f'The group "{obj}" was added successfully. You may edit it again below.',
+                level=messages.SUCCESS
+            )
+
             url = self.get_change_url(obj)
             return HttpResponseRedirect(url)
         else:
@@ -61,4 +68,4 @@ class GroupAdmin(DefaultGroupAdmin):
     # Build URL for change page of this object in admin
     def get_change_url(self, obj):
         opts = self.model._meta
-        return f"/admin/{opts.app_label}/{opts.model_name}/{obj.pk}/change/"
+        return reverse(f'admin:{opts.app_label}_{opts.model_name}_change', args=[obj.pk])

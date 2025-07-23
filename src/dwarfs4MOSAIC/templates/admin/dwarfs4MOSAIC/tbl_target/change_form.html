@@ -4,8 +4,6 @@
   It adds JavaScript logic to improve the user experience when creating new objects:
   - If a user creates an object and clicks "Save" or "Save and continue editing",
     a flag is stored in localStorage to mark the object as "just created".
-  - When the user is redirected to the change view after creation, the form
-    automatically scrolls to the bottom.
   - If the user clicks "Save and add another", the flag is not set.
 
   This behavior helps guide the user to the newly created content when editing it
@@ -52,7 +50,6 @@
         const justCreated = localStorage.getItem('justCreated');
 
         if (justCreated === 'true') {
-          form.scrollIntoView(false);  // Scroll to bottom of form
           localStorage.removeItem('justCreated');  // Only once
         }
       }

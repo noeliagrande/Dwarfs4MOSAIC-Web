@@ -10,6 +10,7 @@ from django.conf import settings
 from django.contrib import admin, messages
 from django.http import HttpResponseRedirect
 from django.urls import path
+from django.urls import reverse
 
 # Local application imports
 from ..forms import TargetAdminForm
@@ -256,15 +257,20 @@ class TargetAdmin(admin.ModelAdmin):
         elif "_continue" in request.POST or "_save" in request.POST:
             # For both 'Save and continue editing' and 'Save',
             # redirect to the change page of the newly created object
+            self.message_user(
+                request,
+                f'The target "{obj}" was added successfully. You may edit it again below.',
+                level=messages.SUCCESS
+            )
             url = self.get_change_url(obj)
-            return HttpResponseRedirect(url)
+            return HttpResponseRedirect(url + "#top")
         else:
             return super().response_add(request, obj, post_url_continue)
 
     # Build URL for change page of this object in admin
     def get_change_url(self, obj):
         opts = self.model._meta
-        return f"/admin/{opts.app_label}/{opts.model_name}/{obj.pk}/change/"
+        return reverse(f'admin:{opts.app_label}_{opts.model_name}_change', args=[obj.pk])
 
 
     # Override the change list template to add the custom "Import CSV" button
