@@ -31,6 +31,19 @@ def process_target_row(row, idx, errors):
         errors.append(f"Row {idx}: 'semester' field is empty, skipping")
         return None
 
+    # Build relative paths for image and datafiles based on the target name (safe filename)
+    safe_name = sanitize_filename(name)
+    base_path = os.path.join(settings.MEDIA_ROOT, safe_name)
+    image_path = os.path.join(base_path, "image")
+    datafiles_path = os.path.join(base_path, "datafiles")
+
+    # Create directories if they do not exist
+    os.makedirs(datafiles_path, exist_ok=True)
+    os.makedirs(image_path, exist_ok=True)
+
+    image = row.get("image")
+    image_file_path = os.path.join(image_path, image)
+
     # Prepare defaults
     defaults = {
         "type": row.get("type", "galaxy"),  # default defined in model
@@ -41,8 +54,8 @@ def process_target_row(row, idx, errors):
         "size": None,
         "semester": semester,
         "comments": row.get("comments", ""),
-        "image": row.get("image") or None,
-        "datafiles_path": row.get("datafiles_path") or None,
+        "image": os.path.relpath(image_file_path, settings.MEDIA_ROOT),
+        "datafiles_path": os.path.relpath(datafiles_path, settings.MEDIA_ROOT),
     }
 
     # Parse float fields (magnitude, redshift, size)
@@ -62,9 +75,6 @@ def process_target_row(row, idx, errors):
     )
 
     return created_flag
-
-
-
 
 
 # Register the Tbl_target model in the admin with custom settings
