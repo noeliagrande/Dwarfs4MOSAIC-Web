@@ -26,7 +26,8 @@ class CustomUserAdmin(DefaultUserAdmin):
     # Replace help_text for staff check_box
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
-        form.base_fields['is_staff'].help_text = "Designates whether the user can log into this site."
+        if 'is_staff' in form.base_fields:
+            form.base_fields['is_staff'].help_text = ("Designates whether the user can log into Dwarfs4MOSAIC site.")
         return form
 
     def change_view(self, request, object_id, form_url='', extra_context=None):
