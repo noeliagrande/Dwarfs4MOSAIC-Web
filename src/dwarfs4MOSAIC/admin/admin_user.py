@@ -15,6 +15,8 @@ from ..models import Tbl_researcher
 # Custom User admin to add link to linked Researcher if exists
 class CustomUserAdmin(DefaultUserAdmin):
 
+    add_form_template = 'admin/auth/user/change_form.html'
+
     # Hide fields "Superuser status" and "User permissions" in the admin form
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
