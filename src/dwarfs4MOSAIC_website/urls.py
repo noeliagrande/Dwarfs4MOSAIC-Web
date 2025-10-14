@@ -30,7 +30,7 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
 
     # Redirect the root URL to /home/
-    path('', RedirectView.as_view(url='/home/', permanent=False)),
+    path('', RedirectView.as_view(pattern_name='home', permanent=False)),
 
     # Include URLs from the dwarfs4MOSAIC application
     path('', include('dwarfs4MOSAIC.urls')),

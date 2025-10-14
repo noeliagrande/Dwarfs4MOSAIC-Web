@@ -139,12 +139,23 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
+# === URL settings by environment (production vs local) ===
+
+# Detects if we are on the production server (guaix.ucm.es) and sets the subdirectory
+# so that STATIC_URL, MEDIA_URL, and redirect paths work correctly.
+# In local development, SUBDIR is left empty to work with runserver.
+if 'guaix.ucm.es' in os.environ.get('HOSTNAME', ''):
+    # Production
+    SUBDIR = '/dwarfs4mosaic-data'
+else:
+    # Local development
+    SUBDIR = ''
 
 # === Static Files (CSS, JS, Images) ===
 
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = f'{SUBDIR}/static/'
 STATICFILES_DIRS = [BASE_DIR / "dwarfs4MOSAIC" / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
@@ -171,11 +182,11 @@ SESSION_SAVE_EVERY_REQUEST = True # Save the session on every request
 
 # === Media Files ===
 
-MEDIA_URL = '/media/' # URL to serve media files
+MEDIA_URL = f'{SUBDIR}/media/' # URL to serve media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Filesystem path where uploaded media files are stored
 
 # === Authentication Redirects ===
 
-LOGIN_URL = '/admin/login'
-LOGIN_REDIRECT_URL = '/home/'
-LOGOUT_REDIRECT_URL = '/home/'
+LOGIN_URL = f'{SUBDIR}/admin/login/'
+LOGIN_REDIRECT_URL = f'{SUBDIR}/home/'
+LOGOUT_REDIRECT_URL = f'{SUBDIR}/home/'

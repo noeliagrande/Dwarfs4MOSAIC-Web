@@ -39,7 +39,7 @@
             keepalive: true // Keep the request alive if the page unloads
         }).then(() => {
             // Redirect to the login page after successful logout
-            window.location.href = "{% url 'admin:login' %}?next=/home/";
+            window.location.href = "{% url 'admin:login' %}?next={% url 'home' %}";
         });
     }
 
