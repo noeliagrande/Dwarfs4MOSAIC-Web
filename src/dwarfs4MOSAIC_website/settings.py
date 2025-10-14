@@ -144,7 +144,7 @@ USE_TZ = True
 
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "dwarfs4MOSAIC" / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
@@ -171,11 +171,11 @@ SESSION_SAVE_EVERY_REQUEST = True # Save the session on every request
 
 # === Media Files ===
 
-MEDIA_URL = '/media/' # URL to serve media files
+MEDIA_URL = 'media/' # URL to serve media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Filesystem path where uploaded media files are stored
 
 # === Authentication Redirects ===
 
-LOGIN_URL = '/admin/login'
-LOGIN_REDIRECT_URL = '/home/'
-LOGOUT_REDIRECT_URL = '/home/'
+# LOGIN_URL = '/admin/login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
