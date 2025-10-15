@@ -4,6 +4,7 @@ This file defines how User admin model is displayed and managed in the Django Ad
 
 # Third-party libraries
 from django.contrib import admin
+from django.contrib import messages
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -48,6 +49,34 @@ class CustomUserAdmin(DefaultUserAdmin):
             extra_context['researcher_link'] = None
 
         return super().change_view(request, object_id, form_url, extra_context=extra_context)
+
+    # Avoid administrator deletion
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if "delete_selected" in actions:
+            actions["delete_selected"] = (self.custom_delete_selected, *actions["delete_selected"][1:])
+        return actions
+
+    def has_delete_permission(self, request, obj=None):
+        if obj and obj.is_superuser:
+            return False
+        return super().has_delete_permission(request, obj)
+
+    def custom_delete_selected(self, modeladmin, request, queryset):
+        # Exclude superuser
+        protected = queryset.filter(is_superuser=True)
+        to_delete = queryset.exclude(is_superuser=True)
+
+        count_deleted = to_delete.count()
+        to_delete.delete()
+
+        if protected.exists():
+            self.message_user(
+                request,
+                f"{protected.count()} superuser(s) were protected and not deleted.",
+                level=messages.WARNING
+            )
+        self.message_user(request, f"{count_deleted} user(s) deleted.")
 
 # Replace default User admin with custom one
 admin.site.unregister(User)
