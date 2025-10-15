@@ -201,8 +201,18 @@ def download_files_view(request, target_id):
     # Try to get the target by primary key, returns None if not found
     target = Tbl_target.objects.filter(pk=target_id).first()
 
-    # Get files only if target exists and has a datafiles_path, else empty list
-    files = get_files(target.datafiles_path) if target and target.datafiles_path else []
+    # Get files and size only if target exists and has a datafiles_path, else empty list
+    files = []
+
+    if target and target.datafiles_path:
+        source_dir = os.path.join(settings.MEDIA_ROOT, target.datafiles_path)
+        filenames = get_files(target.datafiles_path)
+
+        for filename in filenames:
+            file_path = os.path.join(source_dir, filename)
+            if os.path.isfile(file_path):
+                size_bytes = os.path.getsize(file_path)
+                files.append({'name': filename, 'size': size_bytes})
 
     if request.method == "POST":
         selected_files = request.POST.getlist('checkbox_single[]')
@@ -238,7 +248,7 @@ def download_files_view(request, target_id):
     # Render the file selection page
     return render(request, 'dwarfs4MOSAIC/download_files.html', {
         'target': target,
-        'lst_files': files,
+        'lst_files': files, # filenames and sizes
         'select_all_tooltip': 'Click to choose all files at once',
         'btn_download_tooltip': 'Download selected files',
     })

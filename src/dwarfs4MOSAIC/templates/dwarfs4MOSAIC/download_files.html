@@ -2,7 +2,7 @@
     Template for downloading data files associated with a specific target.
     Arguments:
     - target: Target object whose files are being listed.
-    - lst_files: List of available filenames for download.
+    - lst_files: List of available filenames and their sizes for download.
     - select_all_tooltip: Tooltip text for the "select all" checkbox.
     - btn_download_tooltip: Tooltip text for the download button.
 -->
@@ -44,6 +44,7 @@
                         <tr>
                             <th><input type="checkbox" id="checkbox_all" title="{{ select_all_tooltip }}"></th>
                             <th>FILE NAME</th>
+                            <th>SIZE</th>
                         </tr>
                     </thead>
 
@@ -52,10 +53,11 @@
                         {% for file in lst_files %}
                             <tr>
                                 <!-- Single file selection checkbox -->
-                                <td> <input type="checkbox" name="checkbox_single[]" value="{{ file }}"> </td>
+                                <td> <input type="checkbox" name="checkbox_single[]" value="{{ file.name }}"> </td>
 
                                 <!-- Display the file name -->
-                                <td> {{ file }} </td>
+                                <td> {{ file.name }} </td>
+                                <td>{{ file.size|filesizeformat }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
