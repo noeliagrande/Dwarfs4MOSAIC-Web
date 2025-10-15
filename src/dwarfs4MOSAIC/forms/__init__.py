@@ -6,9 +6,11 @@ allowing easy import of these models directly from 'forms'.
 
 from .form_group import GroupAdminForm
 from .form_observatory import ObservatoryAdminForm
+from .form_instrument import InstrumentAdminForm
 from .form_target import TargetAdminForm
 
 __all__ = ["GroupAdminForm",
            "ObservatoryAdminForm",
+           "InstrumentAdminForm",
            "TargetAdminForm",
            ]

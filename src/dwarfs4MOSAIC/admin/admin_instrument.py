@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.urls import path
 
 # Local application imports
+from ..forms import InstrumentAdminForm
 from ..forms.form_import_csv import CsvImportForm
 from ..models import Tbl_instrument, Tbl_telescope
 from ..utils import import_csv_file
@@ -44,6 +45,9 @@ def process_instrument_row(row, idx, errors):
 # Register the Tbl_instrument model in the admin with custom settings
 @admin.register(Tbl_instrument)
 class InstrumentAdmin(admin.ModelAdmin):
+
+    # Custom form
+    form = InstrumentAdminForm
 
     # Group fields into sections in the admin form
     fieldsets = [
