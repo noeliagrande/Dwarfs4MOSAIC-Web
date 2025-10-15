@@ -58,7 +58,8 @@ class Tbl_target(models.Model):
         help_text="Referenced to Vega System")
 
     # Redshift of the target
-    redshift = models.FloatField(
+    redshift = models.CharField(
+        max_length=15,
         null=True,
         blank=True,
         verbose_name="Redshift (z)")
@@ -115,6 +116,7 @@ class Tbl_target(models.Model):
         set it to 'other' for display, but preserve original in DB.
         """
         super().__init__(*args, **kwargs)
+
         valid_choices = [c[0] for c in self._meta.get_field('type').choices]
         if self.type not in valid_choices:
             self.type = 'other'

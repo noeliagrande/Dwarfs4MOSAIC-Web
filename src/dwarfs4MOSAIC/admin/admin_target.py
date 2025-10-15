@@ -130,6 +130,13 @@ class TargetAdmin(admin.ModelAdmin):
         # Detect if the object is new (being created)
         is_new = obj.pk is None
 
+        # Retrieve redshift value and error from the form;
+        # format as "value ± error" string, ensuring error is non-negative
+        value, error = form.cleaned_data.get('redshift', [None, None])
+        if value is not None:
+            error_str = f"{abs(error):g}" if error is not None else "0"
+            obj.redshift = f"{value:g} ± {error_str}"
+
         # Save the model normally first
         super().save_model(request, obj, form, change)
 
