@@ -32,6 +32,13 @@ class Tbl_observing_block(models.Model):
         blank=True,
         verbose_name="Description")
 
+    # Semester in which the observing block was executed
+    semester = models.CharField(
+        null=True,
+        blank=True,
+        max_length=10,
+        verbose_name="Observing semester")
+
     # Start date and time of the block
     start_time = models.DateTimeField(
         verbose_name="Start Time")

@@ -33,6 +33,7 @@
                     <th>NAME</th>
                     <th>OBSERVING RUN</th>
                     <th>DESCRIPTION</th>
+                    <th>OBSERVING SEMESTER</th>
                     <th>START TIME</th>
                     <th>END TIME</th>
                     <th>TARGET</th>
@@ -65,6 +66,9 @@
                             {{ block.description }}
                         </div>
                     </td>
+
+                    <!-- Observing semester -->
+                    <td>{{ block.semester }}</td>
 
                     <!-- Start and end time -->
                     <td>{{ block.start_time }}</td>

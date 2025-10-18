@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.urls import path
 
 # Local application imports
+from ..forms import ObservingBlockAdminForm
 from ..forms.form_import_csv import CsvImportForm
 from ..models import Tbl_observing_block, Tbl_observing_run, Tbl_target
 from ..utils import import_csv_file
@@ -58,6 +59,7 @@ def process_observing_block_row(row, idx, errors):
         defaults={
             "obs_run": obs_run_obj,
             "description": row.get("description", ""),
+            "semester": row.get("semester", ""),
             "start_time": start_time,
             "end_time": end_time,
             "observation_mode": row.get("observation_mode", "photometry"),
@@ -123,11 +125,14 @@ def process_observing_block_row(row, idx, errors):
 @admin.register(Tbl_observing_block)
 class ObservingBlockAdmin(admin.ModelAdmin):
 
+    # Custom form
+    form = ObservingBlockAdminForm
+
     # Group fields into sections in the admin form
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
-            "obs_run", "description", "start_time", "end_time", ]}),
+            "obs_run", "description", "semester", "start_time", "end_time", ]}),
         ("Observation Information", {"fields": [
             "observation_mode", "filters", "exposure_time", "seeing", "weather_conditions", "target"]}),
         ("Additional Data", {"fields": [
