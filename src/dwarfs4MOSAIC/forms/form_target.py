@@ -48,10 +48,15 @@ class TargetAdminForm(forms.ModelForm):
         exclude = ['image', 'datafiles_path']
 
         # visual sizes
-        fields = ['right_ascension', 'declination']
+        common_style = {'style': 'width:80px;'}
+
+        fields = ['right_ascension', 'declination', 'magnitude', 'size', 'semester']
         widgets = {
-            'right_ascension': forms.TextInput(attrs={'size': '10'}),
-            'declination': forms.TextInput(attrs={'size': '10'}),
+            'right_ascension': forms.TextInput(attrs = common_style),
+            'declination': forms.TextInput(attrs = common_style),
+            'magnitude': forms.NumberInput(attrs = common_style),
+            'size': forms.NumberInput(attrs = common_style),
+            'semester': forms.TextInput(attrs = common_style),
         }
 
     def __init__(self, *args, **kwargs):
