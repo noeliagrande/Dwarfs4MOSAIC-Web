@@ -37,6 +37,8 @@ def process_instrument_row(row, idx, errors):
             "tel_ins": telescope,
             "status": row.get("status", "unknown"),
             "website": row.get("website", ""),
+            "filters": row.get("filters", ""),
+            "configuration": row.get("configuration", ""),
         },
     )
     return created_flag
@@ -53,7 +55,9 @@ class InstrumentAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
-            "description", "tel_ins", "website", "status"]}),]
+            "description", "tel_ins", "website", "status"]}),
+        ("Additional Data", {"fields": [
+            "filters", "configuration"]}), ]
 
     # Override the change list template to add the custom "Import CSV" button
     change_list_template = "admin/dwarfs4MOSAIC/tbl_instrument_changelist.html"

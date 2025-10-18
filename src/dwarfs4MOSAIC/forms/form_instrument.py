@@ -14,8 +14,10 @@ class InstrumentAdminForm(forms.ModelForm):
         model = Tbl_instrument
 
         # visual sizes
-        fields = ['description']
+        fields = ['description', 'filters', 'configuration']
         widgets = {
             'description': forms.TextInput(attrs={'size': '75'}),
+            'filters': forms.Textarea(attrs={'rows': 3, 'cols': 30}),
+            'configuration': forms.Textarea(attrs={'rows': 3, 'cols': 30}),
         }
 

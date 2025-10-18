@@ -48,6 +48,29 @@ class Tbl_instrument(models.Model):
         blank=True,
         default="")
 
+    # List of filters, stored as comma-separated string
+    filters = models.TextField(
+        blank=True,
+        help_text="Comma-separated"
+    )
+
+    # List of configurations, stored as comma-separated string
+    configuration = models.TextField(
+        verbose_name="Configurations",
+        blank=True,
+        help_text="Comma-separated"
+    )
+
+    @property
+    def filters_list(self):
+        """Return filters as a Python list of strings."""
+        return [f.strip() for f in self.filters.split(',') if f.strip()]
+
+    @property
+    def configuration_list(self):
+        """Return configurations as a Python list of strings."""
+        return [c.strip() for c in self.configuration.split(',') if c.strip()]
+
     def __str__(self):
         # Returns the instrument name when printed or displayed
         return self.name

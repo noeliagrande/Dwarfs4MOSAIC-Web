@@ -33,6 +33,8 @@
                 <tr>
                     <th>NAME</th>
                     <th>DESCRIPTION</th>
+                    <th>FILTERS</th>
+                    <th>CONFIGURATION</th>
                     <th>TELESCOPE</th>
                     <th>STATUS</th>
                     <th>WEBSITE</th>
@@ -50,8 +52,22 @@
                     {% if instrument.description %}
                          <td> {{ instrument.description }} </td>
                     {% else %}
-                        <td></td>
+                        <td></td> <!-- empty instead of 'None' -->
                     {% endif %}
+
+                    <!-- Filters -->
+                    <td>
+                        {% for filter in instrument.filters_list %}
+                            {{ filter }}<br>
+                        {% endfor %}
+                    </td>
+
+                    <!-- Configurations -->
+                    <td>
+                        {% for conf in instrument.configuration_list %}
+                            {{ conf }}<br>
+                        {% endfor %}
+                    </td>
 
                     <!-- Link to the related telescope page -->
                     <td>
