@@ -44,6 +44,8 @@
                 <tr>
                     <th>INSTRUMENT</th>
                     <th>DESCRIPTION</th>
+                    <th>FILTERS</th>
+                    <th>CONFIGURATION</th>
                     <th>STATUS</th>
                     <th>WEBSITE</th>
                 </tr>
@@ -62,6 +64,20 @@
                     {% else %}
                         <td></td>
                     {% endif %}
+
+                    <!-- Filters -->
+                    <td>
+                        {% for filter in instrument.filters_list %}
+                            {{ filter }}<br>
+                        {% endfor %}
+                    </td>
+
+                    <!-- Configurations -->
+                    <td>
+                        {% for conf in instrument.configuration_list %}
+                            {{ conf }}<br>
+                        {% endfor %}
+                    </td>
 
                     <!-- Status (in red if 'inoperative') -->
                     <td style="color: {% if instrument.status == 'inoperative' %}red{% else %}black{% endif %};">
