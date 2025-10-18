@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.urls import path
 
 # Local application imports
+from ..forms import TelescopeAdminForm
 from ..forms.form_import_csv import CsvImportForm
 from ..models import Tbl_telescope, Tbl_observatory
 from ..utils import import_csv_file
@@ -46,6 +47,8 @@ def process_telescope_row(row, idx, errors):
 # Register the Tbl_telescope model in the admin with custom settings
 @admin.register(Tbl_telescope)
 class TelescopeAdmin(admin.ModelAdmin):
+    # Custom form
+    form = TelescopeAdminForm
 
     # Group fields into sections in the admin form
     fieldsets = [

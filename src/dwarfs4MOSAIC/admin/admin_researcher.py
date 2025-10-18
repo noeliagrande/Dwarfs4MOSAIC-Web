@@ -8,11 +8,16 @@ from django.shortcuts import redirect
 from django.urls import reverse
 
 # Local application imports
+from ..forms import ResearcherAdminForm
 from ..models import Tbl_researcher
 
 
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
+
+    # Custom form
+    form = ResearcherAdminForm
+
     # Organize fields into sections
     fieldsets = [
         (None, {"fields": ['user', 'role']}),

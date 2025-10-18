@@ -2,36 +2,32 @@
 Admin form for observing blocks, to set control size.
 """
 
-# Standard libraries
-import os
-
 # Third-party libraries
 from django import forms
-from django.conf import settings
-from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.utils.safestring import mark_safe
 
 # Local application imports
 from ..models import Tbl_observing_block
-from ..utils import SingleFileField, MultipleFileField
 
-
-# Admin form for observing blocks
 class ObservingBlockAdminForm(forms.ModelForm):
 
     class Meta:
         model = Tbl_observing_block
 
         # visual sizes
-        common_style = {'style': 'width:80px;'}
+        text_attrs = {'style': 'width:80px;'}
+        area_attrs = {'rows': 3, 'cols': 75}
 
-        fields = ['semester', 'filters', 'configuration', 'exposure_time', 'seeing']
+        fields = ['description', 'semester', 'filters', 'configuration',
+                  'exposure_time', 'seeing', 'weather_conditions', 'comments']
         widgets = {
-            'semester': forms.TextInput(attrs=common_style),
+            'description': forms.Textarea(attrs=area_attrs),
+            'semester': forms.TextInput(attrs=text_attrs),
             'filters': forms.Select(attrs={'style': 'width:120px;', 'class': 'dynamic-select'}),
             'configuration': forms.Select(attrs={'style': 'width:120px;', 'class': 'dynamic-select'}),
-            'exposure_time': forms.TextInput(attrs = common_style),
-            'seeing': forms.NumberInput(attrs=common_style),
+            'exposure_time': forms.TextInput(attrs = text_attrs),
+            'seeing': forms.NumberInput(attrs=text_attrs),
+            'weather_conditions': forms.Textarea(attrs=area_attrs),
+            'comments': forms.Textarea(attrs=area_attrs),
         }
 
     def __init__(self, *args, **kwargs):

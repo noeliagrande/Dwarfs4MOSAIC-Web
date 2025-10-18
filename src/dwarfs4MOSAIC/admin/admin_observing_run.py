@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.urls import path
 
 # Local application imports
+from ..forms import ObservingRunAdminForm
 from ..forms.form_import_csv import CsvImportForm
 from ..models import Tbl_observing_run, Tbl_instrument, Tbl_researcher
 from ..utils import import_csv_file
@@ -81,6 +82,9 @@ def process_observing_run_row(row, idx, errors):
 # Register the Tbl_observing_run model in the admin with custom settings
 @admin.register(Tbl_observing_run)
 class ObservingRunAdmin(admin.ModelAdmin):
+
+    # Custom form
+    form = ObservingRunAdminForm
 
     # Group fields into sections in the admin form
     fieldsets = [

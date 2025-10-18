@@ -17,7 +17,6 @@ from ..models import Tbl_target
 from ..utils import SingleFileField, MultipleFileField
 from .widgets.value_with_error_widget import ValueWithErrorField
 
-# Admin form for targets
 class TargetAdminForm(forms.ModelForm):
 
     redshift = ValueWithErrorField(label="Redshift (z)")
@@ -50,13 +49,14 @@ class TargetAdminForm(forms.ModelForm):
         # visual sizes
         common_style = {'style': 'width:80px;'}
 
-        fields = ['right_ascension', 'declination', 'magnitude', 'size', 'semester']
+        fields = ['right_ascension', 'declination', 'magnitude', 'size', 'semester', 'comments']
         widgets = {
             'right_ascension': forms.TextInput(attrs = common_style),
             'declination': forms.TextInput(attrs = common_style),
             'magnitude': forms.NumberInput(attrs = common_style),
             'size': forms.NumberInput(attrs = common_style),
             'semester': forms.TextInput(attrs = common_style),
+            'comments': forms.Textarea(attrs={'rows': 3, 'cols': 75}),
         }
 
     def __init__(self, *args, **kwargs):
