@@ -39,6 +39,7 @@
                     <th>TARGET</th>
                     <th>OBSERVATION MODE</th>
                     <th>FILTERS</th>
+                    <th>CONFIGURATION</th>
                     <th>EXPOSURE TIME</th>
                     <th>SEEING</th>
                     <th>WEATHER CONDITIONS</th>
@@ -68,12 +69,20 @@
                     </td>
 
                     <!-- Observing semester -->
-                    <td>{{ block.semester }}</td>
+                    {% if block.semester %}
+                         <td> {{ block.semester }} </td>
+                    {% else %}
+                        <td></td> <!-- empty instead of 'None' -->
+                    {% endif %}
 
                     <!-- Start and end time -->
                     <td>{{ block.start_time }}</td>
-                    <td>{{ block.end_time|default_if_none:"" }}</td>
-
+                    {% if block.end_time %}
+                         <td> {{ block.end_time }} </td>
+                    {% else %}
+                        <td></td> <!-- empty instead of 'None' -->
+                    {% endif %}
+                    
                     <!-- List of targets associated with this block -->
                     <td>
                         {% for target in block.target.all %}
@@ -85,10 +94,13 @@
                     <td>{{ block.observation_mode }}</td>
 
                     <!-- Filters (empty if None) -->
-                    <td>{{ block.filters|default_if_none:"" }}</td>
+                    <td>{{ block.filters|default:"" }}</td>
+
+                    <!-- Configuration (empty if None) -->
+                    <td>{{ block.configuration|default:"" }}</td>
 
                     <!-- Exposure time (empty if None) -->
-                    <td>{{ block.exposure_time|default_if_none:"" }}</td>
+                    <td>{{ block.exposure_time|default:"" }}</td>
 
                     <!-- Seeing (empty if None) -->
                     <td>{{ block.seeing|default_if_none:"" }}</td>

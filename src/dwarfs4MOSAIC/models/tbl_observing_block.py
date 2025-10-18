@@ -67,12 +67,19 @@ class Tbl_observing_block(models.Model):
         default='photometry',
         verbose_name="Observation Mode")
 
-    # Filters used during the observations
+    # Filter used during the observations
     filters = models.CharField(
-        max_length=100,
+        max_length=50,
         blank=True,
         null=True,
-        verbose_name="Filters")
+        verbose_name="Instrument filter")
+
+    # Configuration used during the observations
+    configuration = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        verbose_name="Instrument configuration")
 
     # Exposure time per observation (in seconds)
     exposure_time = models.DurationField(

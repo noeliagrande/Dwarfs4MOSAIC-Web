@@ -16,7 +16,7 @@ import zipfile
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import Group
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 from django.shortcuts import render
 
 # Local application imports
@@ -252,3 +252,21 @@ def download_files_view(request, target_id):
         'select_all_tooltip': 'Click to choose all files at once',
         'btn_download_tooltip': 'Download selected files',
     })
+
+# Return filters and configurations from the instrument of the given observing_run
+def ajax_get_instrument_choices(request):
+
+    run_id = request.GET.get('observing_run')
+    data = {"filters": [], "configuration": []}
+
+    if run_id:
+        try:
+            run = Tbl_observing_run.objects.get(pk=run_id)
+            instrument = getattr(run, 'instrument', None)
+            if instrument:
+                data['filters'] = instrument.filters_list
+                data['configuration'] = instrument.configuration_list
+        except Tbl_observing_run.DoesNotExist:
+            pass
+
+    return JsonResponse(data)

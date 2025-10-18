@@ -15,7 +15,9 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.urls import path
 
 # Local application imports
+from . import views
 from .views import *
+
 
 urlpatterns = [
     # Home page - requires login
@@ -52,4 +54,6 @@ urlpatterns = [
     # File download for a specific target - requires login
     path('download_files/<int:target_id>/', login_required(download_files_view), name='download_files_view'),
 
+
+    path('ajax/get-instrument-choices/', views.ajax_get_instrument_choices, name='ajax_get_instrument_choices'),
 ]

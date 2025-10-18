@@ -64,6 +64,7 @@ def process_observing_block_row(row, idx, errors):
             "end_time": end_time,
             "observation_mode": row.get("observation_mode", "photometry"),
             "filters": row.get("filters", ""),
+            "configuration": row.get("configuration", ""),
             "exposure_time": None,  # to parse below
             "seeing": None,         # to parse below
             "weather_conditions": row.get("weather_conditions", ""),
@@ -134,7 +135,8 @@ class ObservingBlockAdmin(admin.ModelAdmin):
         ("General Information", {"fields": [
             "obs_run", "description", "semester", "start_time", "end_time", ]}),
         ("Observation Information", {"fields": [
-            "observation_mode", "filters", "exposure_time", "seeing", "weather_conditions", "target"]}),
+            "observation_mode", "filters", "configuration",
+            "exposure_time", "seeing", "weather_conditions", "target"]}),
         ("Additional Data", {"fields": [
             "comments"]}),]
 
