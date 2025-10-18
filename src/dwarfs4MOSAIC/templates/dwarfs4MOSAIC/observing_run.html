@@ -99,6 +99,7 @@
                     <th>END TIME</th>
                     <th>OBSERVATION MODE</th>
                     <th>FILTERS</th>
+                    <th>CONFIGURATION</th>
                     <th>EXPOSURE TIME</th>
                     <th>SEEING</th>
                     <th>WEATHER CONDITIONS</th>
@@ -127,8 +128,11 @@
                         <!-- Observation mode -->
                         <td>{{ block.observation_mode }}</td>
 
-                        <!-- Filters (empty if None) -->
+                        <!-- Filters -->
                         <td>{{ block.filters|default_if_none:"" }}</td>
+
+                        <!-- Configurations -->
+                        <td>{{ block.configuration|default_if_none:"" }}</td>
 
                         <!-- Exposure time (empty if None) -->
                         <td>{{ block.exposure_time|default_if_none:"" }}</td>
