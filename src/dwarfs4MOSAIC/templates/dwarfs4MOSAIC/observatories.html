@@ -38,8 +38,8 @@
                 <tr>
                     <th>NAME</th>
                     <th>LOCATION</th>
-                    <th>LONGITUDE</th>
-                    <th>LATITUDE</th>
+                    <th>LONGITUDE (DD:MM:SS)</th>
+                    <th>LATITUDE (DD:MM:SS)</th>
                     <th>ALTITUDE (m)</th>
                     <th>WEBSITE</th>
                 </tr>
@@ -61,10 +61,10 @@
 
                     <!-- Coordinates in DMS format -->
                     <td>
-                        {{ observatory.longitude|convert_to_dms:"longitude" }}
+                        {{ observatory.longitude|default_if_none:"" }}
                     </td>
                     <td>
-                        {{ observatory.latitude|convert_to_dms:"latitude" }}
+                        {{ observatory.latitude|default_if_none:"" }}
                     </td>
 
                     <!-- Altitude -->
