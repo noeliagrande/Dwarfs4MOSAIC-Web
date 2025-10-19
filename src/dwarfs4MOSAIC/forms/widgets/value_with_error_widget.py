@@ -9,10 +9,8 @@ Displays the ± symbol between the fields.
 from django import forms
 from django.utils.safestring import mark_safe
 
-# Custom widget that shows two number input fields side by side:
-# - First field: value
-# - Second field: positive error
-# Inserts the '±' symbol between them in the rendered HTML.
+# Custom widget showing value ± error in two number inputs.
+# Forces decimal notation for small values instead of scientific notation.
 class ValueWithErrorWidget(forms.MultiWidget):
 
     def __init__(self, attrs=None, value_attrs=None, error_attrs=None):
@@ -45,6 +43,13 @@ class ValueWithErrorWidget(forms.MultiWidget):
                 return [None, None]
         return [value, None]
 
+    def format_value(self, val):
+        """Force decimal notation instead of scientific notation."""
+        if val is None:
+            return ''
+        # Use 10 decimals max, remove trailing zeros and dot
+        return f"{val:.10f}".rstrip('0').rstrip('.')
+
     def render(self, name, value, attrs=None, renderer=None):
         # Decompress value if needed
         if value is None:
@@ -54,11 +59,14 @@ class ValueWithErrorWidget(forms.MultiWidget):
         else:
             value = self.decompress(value)
 
+        # Format value and error
+        formatted_value = [self.format_value(v) for v in value]
+
         # Render each widget individually
         rendered_widgets = []
         for i, widget in enumerate(self.widgets):
             widget_name = f"{name}_{i}"
-            rendered_widgets.append(widget.render(widget_name, value[i], attrs=attrs, renderer=renderer))
+            rendered_widgets.append(widget.render(widget_name, formatted_value[i], attrs=attrs, renderer=renderer))
 
         # Join the two widgets with ± symbol and return safe HTML
         return mark_safe(f"{rendered_widgets[0]} &nbsp;&plusmn;&nbsp; {rendered_widgets[1]}")

@@ -77,6 +77,29 @@ def process_target_row(row, idx, errors):
 
     return created_flag
 
+def format_plain(value, error=None, max_decimals=10):
+    """
+    Format value and optional error in plain decimal notation without scientific notation.
+    - value: float
+    - error: float or None
+    - max_decimals: max number of decimals to display
+    Returns a string like: "0.05 ± 0.0000003"
+    """
+    if value is None:
+        return ""
+
+    # Format value in fixed-point notation
+    val_str = f"{value:.{max_decimals}f}".rstrip('0').rstrip('.')
+    if val_str == "-0":
+        val_str = "0"
+
+    if error is not None:
+        err_str = f"{abs(error):.{max_decimals}f}".rstrip('0').rstrip('.')
+        if err_str == "":
+            err_str = "0"
+        return f"{val_str} ± {err_str}"
+    else:
+        return val_str
 
 # Register the Tbl_target model in the admin with custom settings
 @admin.register(Tbl_target)
@@ -133,9 +156,7 @@ class TargetAdmin(admin.ModelAdmin):
         # Retrieve redshift value and error from the form;
         # format as "value ± error" string, ensuring error is non-negative
         value, error = form.cleaned_data.get('redshift', [None, None])
-        if value is not None:
-            error_str = f"{abs(error):g}" if error is not None else "0"
-            obj.redshift = f"{value:g} ± {error_str}"
+        obj.redshift = format_plain(value, error)
 
         # Save the model normally first
         super().save_model(request, obj, form, change)
@@ -235,6 +256,7 @@ class TargetAdmin(admin.ModelAdmin):
 
         # Save the model instance after file operations
         obj.save()
+
 
     # Override default bulk delete action with a custom version
     def get_actions(self, request):
