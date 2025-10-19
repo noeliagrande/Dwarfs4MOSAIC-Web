@@ -9,6 +9,7 @@ This module provides page rendering and logic for:
 
 # Standard libraries
 import os
+import re
 import tempfile
 import zipfile
 
@@ -17,7 +18,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.models import Group
 from django.http import FileResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Local application imports
 from .models import *
@@ -87,16 +88,36 @@ def home_view(request):
     return render(request, 'dwarfs4MOSAIC/home.html', context)
 
 # Info page showing any information relative to the platform
+
+# Path to the HTML file
 PLATFORM_INFO_PATH = os.path.join(settings.BASE_DIR, 'dwarfs4mosaic', 'platform_info.html')
+
 def info_view(request):
-    # Read file content
-    if os.path.exists(PLATFORM_INFO_PATH):
+    # Read current HTML content
+    try:
         with open(PLATFORM_INFO_PATH, 'r', encoding='utf-8') as f:
             content = f.read()
-    else:
-        content = 'No information available.'
+    except FileNotFoundError:
+        content = "<p>No platform info available.</p>"
 
-    return render(request, 'dwarfs4mosaic/info.html', {'content': content})
+    # Handle editing form submission (only for superuser)
+    if request.method == 'POST' and request.user.is_superuser:
+        new_content = request.POST.get('content', '')
+
+        # Normalize line endings and remove blank lines
+        new_content = re.sub(r'\r\n', '\n', new_content)  # convert Windows newlines to Unix
+        #new_content = re.sub(r'^\s*\n', '', new_content, flags=re.MULTILINE)  # remove blank lines
+
+        with open(PLATFORM_INFO_PATH, 'w', encoding='utf-8') as f:
+            f.write(new_content)
+        #messages.success(request, 'Platform information updated successfully.')
+        return redirect('info')  # reload page
+
+    # Render page with content and superuser flag
+    return render(request, 'dwarfs4MOSAIC/info.html', {
+        'content': content,
+        'is_superuser': request.user.is_superuser
+    })
 
 # Render static database overview page
 def database_view(request):

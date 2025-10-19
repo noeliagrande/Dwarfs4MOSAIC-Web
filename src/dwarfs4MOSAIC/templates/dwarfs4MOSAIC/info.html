@@ -25,7 +25,38 @@
 {# Render the HTML content safely without escaping it.
    Only do this for trusted content to avoid XSS issues. #}
 {% block content %}
+
+    <!-- Main heading -->
+    <h1>
+        Platform Information
+        {% if user.is_superuser %}
+            <a href="#edit-info" class="edit-link">(Edit)</a>
+        {% endif %}
+    </h1>
+    <br>
+
     <div class="platform-info">
         {{ content|safe }}
     </div>
+
+    {% if is_superuser %}
+        <br>
+        <hr>
+        <br>
+        <h2 id="edit-info">Edit Platform Info (Administrator only)</h2>
+        <br>
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="content" rows="20" style="width:100%;">{{ content }}</textarea>
+            <br><br>
+            <button type="submit"
+                id="action_button"
+                style="cursor:pointer; background-color: var(--breadcrumbs-color); color: white;
+                       padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;"
+                title="Save the changes">
+            Save changes
+        </button>
+        </form>
+    {% endif %}
+
 {% endblock %}
