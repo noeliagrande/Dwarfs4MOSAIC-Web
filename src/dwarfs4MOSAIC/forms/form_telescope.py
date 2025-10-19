@@ -14,7 +14,8 @@ class TelescopeAdminForm(forms.ModelForm):
         model = Tbl_telescope
 
         # visual sizes
-        fields = ['owner']
+        fields = ['owner', 'aperture']
         widgets = {
             'owner': forms.Textarea(attrs={'rows': 3, 'cols': 75}),
+            'aperture': forms.NumberInput(attrs={'style': 'width:80px;', 'min': '0'}),
         }

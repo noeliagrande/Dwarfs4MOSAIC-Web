@@ -11,6 +11,7 @@ import shutil
 
 # Third-party libraries
 from django.conf import settings
+from django.core.validators import MinValueValidator
 from django.db import models
 
 # Local application imports
@@ -68,6 +69,7 @@ class Tbl_target(models.Model):
     size = models.FloatField(
         null=True,
         blank=True,
+        validators=[MinValueValidator(0)],
         verbose_name="Size",
         help_text="arcsec",)
 

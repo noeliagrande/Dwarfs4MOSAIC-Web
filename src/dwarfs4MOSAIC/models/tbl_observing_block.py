@@ -7,6 +7,7 @@ behaviors for managing astronomical observation data.
 
 # Third-party libraries
 from django.contrib.auth.models import Group
+from django.core.validators import MinValueValidator
 from django.db import models
 
 # Local application imports
@@ -85,6 +86,7 @@ class Tbl_observing_block(models.Model):
     exposure_time = models.DurationField(
         null=True,
         blank=True,
+        validators=[MinValueValidator(0)],
         verbose_name="Exposure Time",
         help_text="seconds")
         
@@ -92,6 +94,7 @@ class Tbl_observing_block(models.Model):
     seeing = models.FloatField(
         null=True,
         blank=True,
+        validators=[MinValueValidator(0)],
         verbose_name="Seeing",
         help_text="arcsec")
         

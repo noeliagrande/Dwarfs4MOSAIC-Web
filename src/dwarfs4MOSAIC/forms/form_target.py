@@ -54,7 +54,7 @@ class TargetAdminForm(forms.ModelForm):
             'right_ascension': forms.TextInput(attrs = common_style),
             'declination': forms.TextInput(attrs = common_style),
             'magnitude': forms.NumberInput(attrs = common_style),
-            'size': forms.NumberInput(attrs = common_style),
+            'size': forms.NumberInput(attrs={'style': 'width:80px;', 'min': '0'}),
             'semester': forms.TextInput(attrs = common_style),
             'comments': forms.Textarea(attrs={'rows': 3, 'cols': 75}),
         }
