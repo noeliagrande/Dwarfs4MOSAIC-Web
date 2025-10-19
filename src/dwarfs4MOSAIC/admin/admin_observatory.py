@@ -26,8 +26,8 @@ def process_observatory_row(row, idx, errors):
         defaults={
             "location": row.get("location", ""),
             "website": row.get("website", ""),
-            "longitude": float(row.get("longitude") or 0),
-            "latitude": float(row.get("latitude") or 0),
+            "longitude": row.get("longitude") or 0,
+            "latitude": row.get("latitude") or 0,
             "altitude": float(row.get("altitude") or 0),
         },
     )
@@ -45,9 +45,7 @@ class ObservatoryAdmin(admin.ModelAdmin):
         ("General Information", {"fields": [
             "location", "website",]}),
         ("Coordinates", {"fields": [
-            ("longitude_deg", "longitude_min", "longitude_sec", "longitude_ew"),
-            ("latitude_deg", "latitude_min", "latitude_sec", "latitude_ns"),
-            "altitude"]}),]
+            "longitude", "latitude", "altitude"]}),]
 
     # Override the change list template to add the custom "Import CSV" button
     change_list_template = "admin/dwarfs4MOSAIC/tbl_observatory_changelist.html"

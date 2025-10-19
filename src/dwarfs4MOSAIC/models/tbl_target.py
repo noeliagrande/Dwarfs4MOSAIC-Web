@@ -42,7 +42,7 @@ class Tbl_target(models.Model):
         null=True,
         blank=True,
         verbose_name="Right Ascension",
-        help_text="HH:MM:SS",
+        help_text="HH:MM:SS[.sss]",
         validators=[validate_right_ascension],)
 
     # Declination in +/- degrees:minutes:seconds format (string)
@@ -51,7 +51,7 @@ class Tbl_target(models.Model):
         null=True,
         blank=True,
         verbose_name="Declination",
-        help_text="+/- deg:min:sec",
+        help_text="±DD:MM:SS[.sss]",
         validators=[validate_declination])
 
     # Apparent magnitude (Vega system)

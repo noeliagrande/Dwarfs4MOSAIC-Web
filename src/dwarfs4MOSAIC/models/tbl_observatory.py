@@ -8,6 +8,9 @@ behaviors for managing astronomical observation data.
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+# Local application imports
+from ..validators import validate_longitude, validate_latitude
+
 class Tbl_observatory(models.Model):
 
     # Name of the observatory
@@ -27,17 +30,24 @@ class Tbl_observatory(models.Model):
         verbose_name="Location",
         default="")
 
-    # Geographical longitude in degrees (-180 to 180)
-    longitude = models.FloatField(
+    # Geographical longitude in deg:min:sec format (string)
+    longitude = models.CharField(
+        max_length=15,
         null=True,
         blank=True,
-        validators=[MinValueValidator(-180), MaxValueValidator(180)])
+        verbose_name="Longitude",
+        help_text="DD:MM:SS[.sss][E/W]",
+        validators=[validate_longitude])
 
-    # Geographical latitude in degrees (-90 to 90)
-    latitude = models.FloatField(
+
+    # Geographical latitude in deg:min:sec format (string)
+    latitude = models.CharField(
+        max_length=15,
         null=True,
         blank=True,
-        validators=[MinValueValidator(-90), MaxValueValidator(90)])
+        verbose_name="Latitude",
+        help_text="DD:MM:SS[.sss][N/S]",
+        validators=[validate_latitude])
 
     # Altitude of the observatory in meters
     altitude = models.FloatField(
