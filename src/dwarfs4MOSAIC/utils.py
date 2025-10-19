@@ -18,18 +18,11 @@ import unicodedata
 from io import TextIOWrapper
 
 # Third-party libraries
-from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.utils.text import capfirst
 
-
-'''
----------------
-   FUNCTIONS
----------------
-'''
 
 # Convert all rows from a DB cursor into a list of dictionaries.
 # Each dictionary represents a row with column names as keys.
@@ -142,45 +135,3 @@ def import_csv_file(request, form_class, model, process_row_func, title=None):
         "app_label": model._meta.app_label,
     }
     return render(request, "admin/csv_form.html", context)
-
-
-'''
---------------
-   CLASSES
---------------
-'''
-
-# Custom widget for selecting a single file
-class CustomSingleFileButton(forms.ClearableFileInput):
-    template_name = 'dwarfs4MOSAIC/custom_widgets/custom_single_file_button.html'
-
-# File field that uses the custom single file widget
-class SingleFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("widget", CustomSingleFileButton())
-        super().__init__(*args, **kwargs)
-
-# Custom widget for selecting multiple files
-class MultipleFileInput(forms.ClearableFileInput):
-    allow_multiple_selected = True
-
-# Custom widget template for multiple file uploads
-class CustomMultipleFileButton(MultipleFileInput):
-    template_name = 'dwarfs4MOSAIC/custom_widgets/custom_multiple_file_button.html'
-
-# File field that allows multiple file uploads
-class MultipleFileField(forms.FileField):
-    def __init__(self, *args, **kwargs):
-        kwargs.setdefault("widget", CustomMultipleFileButton())
-        super().__init__(*args, **kwargs)
-
-    def clean(self, data, initial=None):
-        # Validate each uploaded file individually
-        single_file_clean = super().clean
-        if isinstance(data, (list, tuple)):
-            result = [single_file_clean(d, initial) for d in data]
-        else:
-            result = [single_file_clean(data, initial)]
-        return result
-
-

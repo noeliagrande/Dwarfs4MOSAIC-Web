@@ -21,7 +21,7 @@ from django.shortcuts import render
 
 # Local application imports
 from .models import *
-from .utils import get_files, get_unique_filename, sanitize_filename
+from .utils import get_files, sanitize_filename
 
 # Home page showing all targets and their files for authenticated users
 def home_view(request):

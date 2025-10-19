@@ -14,7 +14,7 @@ from django.utils.safestring import mark_safe
 
 # Local application imports
 from ..models import Tbl_target
-from ..utils import SingleFileField, MultipleFileField
+from .widgets.custom_widgets import SingleFileField, MultipleFileField
 from .widgets.value_with_error_widget import ValueWithErrorField
 
 class TargetAdminForm(forms.ModelForm):

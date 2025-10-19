@@ -6,7 +6,7 @@ Form definition to handle CSV file upload for data import.
 from django import forms
 
 # Local application imports
-from ..utils import SingleFileField
+from .widgets.custom_widgets import SingleFileField
 
 # Form to upload a single CSV file for import
 class CsvImportForm(forms.Form):
