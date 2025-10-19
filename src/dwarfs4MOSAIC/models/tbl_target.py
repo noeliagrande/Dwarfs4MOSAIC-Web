@@ -16,6 +16,7 @@ from django.db import models
 
 # Local application imports
 from ..utils import sanitize_filename
+from ..validators import validate_right_ascension, validate_declination
 
 class Tbl_target(models.Model):
 
@@ -41,7 +42,8 @@ class Tbl_target(models.Model):
         null=True,
         blank=True,
         verbose_name="Right Ascension",
-        help_text="HH:MM:SS")
+        help_text="HH:MM:SS",
+        validators=[validate_right_ascension],)
 
     # Declination in +/- degrees:minutes:seconds format (string)
     declination = models.CharField(
@@ -49,7 +51,8 @@ class Tbl_target(models.Model):
         null=True,
         blank=True,
         verbose_name="Declination",
-        help_text="+/- deg:min:sec")
+        help_text="+/- deg:min:sec",
+        validators=[validate_declination])
 
     # Apparent magnitude (Vega system)
     magnitude = models.FloatField(
