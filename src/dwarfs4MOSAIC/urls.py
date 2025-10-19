@@ -35,6 +35,9 @@ urlpatterns = [
     # path('reset-password/confirm/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
     # path('reset-password/complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
+    # Information page
+    path('info/', login_required(info_view), name='info'),
+
     # Database overview page - requires login
     path('database/', login_required(database_view), name='database'),
 

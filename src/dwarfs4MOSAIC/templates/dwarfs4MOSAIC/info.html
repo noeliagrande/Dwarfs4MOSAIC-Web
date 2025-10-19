@@ -1,0 +1,31 @@
+<!--
+    Info Page Template
+
+    Purpose:
+    - Display platform information stored in an HTML file.
+    - Rendered content may include formatting like bold, headings, bullets, and line breaks.
+
+    Context:
+    - user: current authenticated user (implicit)
+    - content: HTML string read from the platform_info.html file (passed from view)
+-->
+
+{# Base template #}
+{% extends 'dwarfs4MOSAIC/base.html' %}
+
+{# Static template tags #}
+{% load custom_tags %}
+
+{# Sets the page title #}
+{% block title %}{% html_title "Information" %}{% endblock %}
+
+{# Defines the breadcrumb text for navigation #}
+{% block breadcrumb %} Info {% endblock %}
+
+{# Render the HTML content safely without escaping it.
+   Only do this for trusted content to avoid XSS issues. #}
+{% block content %}
+    <div class="platform-info">
+        {{ content|safe }}
+    </div>
+{% endblock %}

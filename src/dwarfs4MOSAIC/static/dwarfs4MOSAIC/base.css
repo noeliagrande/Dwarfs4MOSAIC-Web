@@ -27,6 +27,21 @@ main {
     font-size: 20px;
 }
 
+/* Container for platform information */
+.platform-info {
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.platform-info h1, .platform-info h2 {
+    font-weight: bold;
+}
+
+.platform-info ul {
+    margin-left: 20px;
+    list-style-type: disc;
+}
+
 /* Container with horizontal scrolling enabled */
 .table-container {
     margin-top: 20px;

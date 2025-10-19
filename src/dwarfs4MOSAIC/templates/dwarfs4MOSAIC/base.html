@@ -55,6 +55,8 @@
 
                     <span>WELCOME, {{ user.get_short_name|default:user.username|upper }}&nbsp;/</span>
 
+                    <span><a href="{% url 'info' %}" title="{{ 'Information page' }}">INFO</a>&nbsp;/</span>
+
                     <!-- Admin-specific navigation options -->
                     {% if user.is_superuser %}
                         <span><a href="{% url 'home' %}" title="{{ 'Home page' }}">HOME</a>&nbsp;/</span>

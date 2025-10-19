@@ -86,6 +86,18 @@ def home_view(request):
     # Render the home page template with context
     return render(request, 'dwarfs4MOSAIC/home.html', context)
 
+# Info page showing any information relative to the platform
+PLATFORM_INFO_PATH = os.path.join(settings.BASE_DIR, 'dwarfs4mosaic', 'platform_info.html')
+def info_view(request):
+    # Read file content
+    if os.path.exists(PLATFORM_INFO_PATH):
+        with open(PLATFORM_INFO_PATH, 'r', encoding='utf-8') as f:
+            content = f.read()
+    else:
+        content = 'No information available.'
+
+    return render(request, 'dwarfs4mosaic/info.html', {'content': content})
+
 # Render static database overview page
 def database_view(request):
     return render(request, 'dwarfs4MOSAIC/database.html')
