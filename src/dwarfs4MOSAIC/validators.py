@@ -1,3 +1,12 @@
+"""
+Astronomical coordinate validators for Django models.
+
+This module provides functions to validate standard astronomical
+coordinates commonly used in observations and catalogs. The
+validators ensure that the input strings follow the correct
+format and represent physically meaningful values.
+
+"""
 
 # Standard libraries
 import re
