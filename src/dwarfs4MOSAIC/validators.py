@@ -20,15 +20,15 @@ def validate_longitude(value):
     if not value:
         return  # empty field
 
-    # Format DD:MM:SS[.sss][E/W].
-    # ^                                 -> start of string
-    # (?:[0-9]{1,2}|1[0-7][0-9]|180)    -> degrees, 0-180
-    # :[0-5][0-9]                       -> minutes, 00-59
-    # :[0-5][0-9]                       -> seconds, 00-59
-    # (?:\.\d+)?                        -> Optional decimal part for fractional seconds
-    # [EW]                              -> hemisphere, E or W
-    # $                                 -> end of string
-    pattern = r'^(?:[0-9]{1,2}|1[0-7][0-9]|180):[0-5][0-9]:[0-5][0-9](?:\.\d+)?[EW]$'
+    # Format DDD:MM:SS[.sss][E/W].
+    # ^                                     -> start of string
+    # (?:[0-9]{1,2}|[0-1][0-7][0-9]|180)    -> degrees, 0-180
+    # :[0-5][0-9]                           -> minutes, 00-59
+    # :[0-5][0-9]                           -> seconds, 00-59
+    # (?:\.\d+)?                            -> Optional decimal part for fractional seconds
+    # [EW]                                  -> hemisphere, E or W
+    # $                                     -> end of string
+    pattern = r'^(?:[0-9]{1,2}|[0-1][0-7][0-9]|180):[0-5][0-9]:[0-5][0-9](?:\.\d+)?[EW]$'
 
     if not re.match(pattern, value):
         raise ValidationError('Invalid format.')
@@ -60,7 +60,7 @@ def validate_latitude(value):
 
     # Format DD:MM:SS[.sss][N/S].
     # ^                     -> start of string
-    # (??:[0-8][0-9]|90)    -> degrees, 0-90
+    # (?:[0-8][0-9]|90)    -> degrees, 0-90
     # :[0-5][0-9]           -> minutes, 00-59
     # :[0-5][0-9]           -> seconds, 00-59
     # (?:\.\d+)?            -> Optional decimal part for fractional seconds
@@ -118,7 +118,7 @@ def validate_declination(value):
     # (?:[0-8][0-9]|90)     -> Degrees: 00-89 or exactly 90
     # :[0-5][0-9]           -> Minutes: 00-59
     # :[0-5][0-9]           -> Seconds: 00-59
-    # (?:\.\d+)?            -> Optional fractional seconds (e.g., 12.345)
+    # (?:\.\d+)?            -> Optional fractional seconds
     # $                     -> End of the string
     pattern = r'^[+-](?:[0-8][0-9]|90):[0-5][0-9]:[0-5][0-9](?:\.\d+)?$'
 

@@ -36,7 +36,7 @@ class Tbl_observatory(models.Model):
         null=True,
         blank=True,
         verbose_name="Longitude",
-        help_text="DD:MM:SS[.sss][E/W]",
+        help_text="DDD:MM:SS[.sss][E/W]",
         validators=[validate_longitude])
 
 

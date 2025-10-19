@@ -47,6 +47,12 @@ class ValueWithErrorWidget(forms.MultiWidget):
         """Force decimal notation instead of scientific notation."""
         if val is None:
             return ''
+
+        try:
+            val = float(val)
+        except (ValueError, TypeError):
+            return str(val)
+
         # Use 10 decimals max, remove trailing zeros and dot
         return f"{val:.10f}".rstrip('0').rstrip('.')
 
