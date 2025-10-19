@@ -47,7 +47,11 @@
         <br>
         <form method="post">
             {% csrf_token %}
-            <textarea name="content" rows="20" style="width:100%;">{{ content }}</textarea>
+            <textarea id="autoHeight" name="content" style="width:100%;">{{ content }}</textarea>
+            <script>
+                const ta = document.getElementById('autoHeight');
+                ta.style.height = ta.scrollHeight + "px";
+            </script>
             <br><br>
             <button type="submit"
                 id="action_button"
