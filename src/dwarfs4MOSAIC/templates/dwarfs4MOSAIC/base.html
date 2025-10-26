@@ -6,7 +6,7 @@
   - Sets up the HTML <head> with dynamic title, CSS, and favicon.
   - Displays a header with logo and navigation menus that adapt based on user authentication and groups.
   - Provides login/logout buttons.
-  - Shows a breadcrumb area with a welcome message for authenticated users.
+  - Shows a breadcrumb area with a welcome message for authenticated users and quick access to guides.
   - Defines main content block to be overridden by child templates.
   - Includes JavaScript scripts from a separate file.
   - Footer shows application version.
@@ -84,14 +84,32 @@
             {% endif %}
         </div>
 
-        <!-- Breadcrumb navigation shown only to superusers -->
-        {% if user.is_superuser %}
-            <div class="breadcrumb" style="display: flex; justify-content: space-between; align-items: center;">
-                <p>
-                    You are here:
-                    {% block breadcrumb %} {% endblock %}
-                </p>
-            </div>
+        <!-- Breadcrumb navigation -->
+        {% if user.is_authenticated %}
+        <div class="breadcrumb" style="display: flex; justify-content: space-between; align-items: center;">
+
+            <!-- Left side -->
+            <p>
+                You are here:
+                {% block breadcrumb %}{% endblock %}
+            </p>
+
+            <!-- Right side: link to guide -->
+            <p>
+                <img src="{% static 'dwarfs4MOSAIC/icons/book-solid.svg' %}"
+                     alt=""
+                     style="width: 18px; vertical-align: middle; margin-right: 6px;">
+                    {% if user.is_superuser %}
+                        <a href="{% static 'dwarfs4MOSAIC/docs/dwarfs4mosaic_Admin_Quick_Start_Guide.pdf' %}" target="_blank">
+                        Administrator's Guide
+                    {% else %}
+                        <a href="{% static 'dwarfs4MOSAIC/docs/dwarfs4mosaic_Users_Quick_Start_Guide.pdf' %}" target="_blank">
+                        User's Guide
+                    {% endif %}
+                </a>
+            </p>
+
+        </div>
         {% endif %}
 
         <!-- Main content block where child templates insert page-specific content -->
