@@ -42,6 +42,25 @@
             </span>
 
             {% if not user.is_authenticated %}
+                <!-- Welcome text with project and instrument links -->
+                <div style="color: white; text-align: center; font-size: 1.5rem;">
+                    <span>
+                        Welcome to
+                        <a href="https://guaix.ucm.es/dwarfs4mosaic/" target="_blank"
+                           style="color: white; opacity: 0.8; text-decoration: none;">Dwarfs4MOSAIC</a>!
+                    </span>
+                    <span style="color: orange; margin: 0 15px;"> • </span>
+
+                    <span>
+                        A pilot study for
+                        <a href="https://elt.eso.org/instrument/MOSAIC/" target="_blank"
+                           style="color: white; opacity: 0.8; text-decoration: none;">MOSAIC</a>
+                        at
+                        <a href="https://elt.eso.org/" target="_blank"
+                           style="color: white; opacity: 0.8; text-decoration: none;">ELT</a>.
+                    </span>
+                </div>
+
                 <!-- Login button linking to admin login page, if user is not authenticated -->
                 <span><a href="{% url 'admin:login' %}?next={% url 'home' %}" style="cursor:pointer;
                        background-color: var(--header-color); color: white;
