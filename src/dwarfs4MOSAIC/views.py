@@ -30,7 +30,7 @@ def home_view(request):
     if request.user.is_authenticated:
         if request.user.is_superuser or request.user.researcher.role == "core_team":
             # If user is admin or core team, show all targets with related data
-            lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run__instrument').distinct()
+            lst_targets = Tbl_target.objects.prefetch_related('observing_blocks__obs_run__instrument').distinct().order_by('right_ascension')
         else:
             # For collaborators, filter targets by allowed groups and exclude denied blocks
             denied_blocks = request.user.researcher.denied_blocks.all()
@@ -41,7 +41,7 @@ def home_view(request):
                 observing_blocks__in = denied_blocks
             ).prefetch_related(
                 'observing_blocks__obs_run__instrument'
-            ).distinct()
+            ).distinct().order_by('right_ascension')
 
         lst_targets_and_files = []
 
@@ -222,7 +222,7 @@ def observing_blocks_view(request):
 
 # List all targets
 def targets_view(request):
-    lst_targets = Tbl_target.objects.all()
+    lst_targets = Tbl_target.objects.all().order_by('right_ascension')
 
     return render(request, 'dwarfs4MOSAIC/targets.html', {
         'lst_targets': lst_targets})
