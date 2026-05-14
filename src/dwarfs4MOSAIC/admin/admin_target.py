@@ -49,6 +49,7 @@ def process_target_row(row, idx, errors):
     defaults = {
         "type": row.get("type", "galaxy"),  # default defined in model
         "right_ascension": row.get("right_ascension") or None,
+        "website": row.get("website", ""),
         "declination": row.get("declination") or None,
         "magnitude": None,
         "redshift": None,
@@ -117,7 +118,7 @@ class TargetAdmin(admin.ModelAdmin):
     def get_fieldsets(self, request, obj=None):
         base_fieldsets = [
             ("General Information", {"fields": [
-                "type", "right_ascension", "declination", "magnitude", "redshift", "size"]}),
+                "type", "website", "right_ascension", "declination", "magnitude", "redshift", "size"]}),
             ("Additional Data", {"fields": [
                 "semester", "comments",
                 ]}),

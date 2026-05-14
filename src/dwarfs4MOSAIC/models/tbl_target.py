@@ -36,6 +36,13 @@ class Tbl_target(models.Model):
         default='galaxy',
         verbose_name="Type")
 
+    # Optional website URL with more information about the target
+    website = models.URLField(
+        verbose_name="Website",
+        blank=True,
+        null=True,
+        default="")
+
     # Right Ascension in HH:MM:SS format (string)
     right_ascension = models.CharField(
         max_length=15,

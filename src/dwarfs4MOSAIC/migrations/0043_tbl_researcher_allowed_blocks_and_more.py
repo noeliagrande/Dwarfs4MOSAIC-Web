@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='tbl_target',
             name='magnitude',
-            field=models.FloatField(blank=True, help_text='Referenced to Vega System', null=True, verbose_name='Magnitude'),
+            field=models.FloatField(blank=True, null=True, verbose_name='Magnitude'),
         ),
         migrations.AlterField(
             model_name='tbl_target',
