@@ -54,12 +54,11 @@ class Tbl_target(models.Model):
         help_text="±DD:MM:SS[.sss]",
         validators=[validate_declination])
 
-    # Apparent magnitude (Vega system)
+    # Apparent magnitude
     magnitude = models.FloatField(
         null=True,
         blank=True,
-        verbose_name="Magnitude",
-        help_text="Referenced to Vega System")
+        verbose_name="Magnitude (r AB)")
 
     # Redshift of the target
     redshift = models.CharField(

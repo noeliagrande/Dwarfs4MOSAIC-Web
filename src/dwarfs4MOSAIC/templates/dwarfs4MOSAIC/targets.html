@@ -37,13 +37,7 @@
                     <th>TYPE</th>
                     <th>RA (HH:MM:SS)</th>
                     <th>DEC (±DD:MM:SS)</th>
-                    <th>
-                        MAG
-                        <!-- Info icon with tooltip explaining magnitude reference -->
-                        <img src="{% static 'dwarfs4MOSAIC/icons/circle-info-solid-white.svg' %}"
-                             alt="Info" style="width: 12px; height: 12px;"
-                             title="Referenced to Vega System">
-                    </th>
+                    <th>MAG r (AB)</th>
                     <th>REDSHIFT</th>
                     <th>SIZE (arcsec)</th>
                     <th>VISIBILITY SEMESTER</th>
@@ -88,7 +82,7 @@
                     <td>{{ target.declination|default_if_none:"" }}</td>
 
                     <!-- Magnitude (empty if not available) -->
-                    <td title="Magnitudes referenced to Vega System">{{ target.magnitude|default_if_none:"" }}</td>
+                    <td>{{ target.magnitude|default_if_none:"" }}</td>
 
                     <!-- Redshift (empty if not available) -->
                     <td>{{ target.redshift|default_if_none:"" }}</td>
