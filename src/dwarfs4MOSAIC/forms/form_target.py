@@ -49,19 +49,24 @@ class TargetAdminForm(forms.ModelForm):
         # visual sizes
         common_style = {'style': 'width:80px;'}
 
-        fields = ['right_ascension', 'declination', 'magnitude', 'size', 'semester', 'comments']
+        fields = ['right_ascension', 'declination', 'magnitude', 'size', 'semester', 'comments', 'website']
         widgets = {
             'right_ascension': forms.TextInput(attrs = common_style),
             'declination': forms.TextInput(attrs = common_style),
             'magnitude': forms.NumberInput(attrs = common_style),
             'size': forms.NumberInput(attrs={'style': 'width:80px;', 'min': '0'}),
-            'semester': forms.TextInput(attrs = common_style),
+            'semester': forms.TextInput(attrs = {'style': 'width:250px;'}),
             'comments': forms.Textarea(attrs={'rows': 3, 'cols': 75}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+        # Visual sizes
+        self.fields['website'].widget.attrs.update({
+            'style': 'width:1000px;'
+        })
+        
         # If the model has a redshift value, separate in value ± error
         if self.instance and self.instance.redshift:
             try:

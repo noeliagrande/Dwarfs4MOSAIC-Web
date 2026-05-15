@@ -18,9 +18,16 @@ class ObservatoryAdminForm(forms.ModelForm):
         # visual sizes
         common_style = {'style': 'width:80px;'}
 
-        fields = ['longitude', 'latitude', 'altitude']
+        fields = ['longitude', 'latitude', 'altitude', 'website']
         widgets = {
             'longitude': forms.TextInput(attrs=common_style),
             'latitude': forms.TextInput(attrs=common_style),
             'altitude': forms.TextInput(attrs=common_style),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['website'].widget.attrs.update({
+            'style': 'width:1000px;'
+        })

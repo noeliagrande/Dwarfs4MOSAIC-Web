@@ -21,7 +21,7 @@ class ObservingBlockAdminForm(forms.ModelForm):
                   'exposure_time', 'seeing', 'weather_conditions', 'comments']
         widgets = {
             'description': forms.Textarea(attrs=area_attrs),
-            'semester': forms.TextInput(attrs=text_attrs),
+            'semester': forms.TextInput(attrs = {'style': 'width:250px;'}),
             'filters': forms.Select(attrs={'style': 'width:120px;', 'class': 'dynamic-select'}),
             'configuration': forms.Select(attrs={'style': 'width:120px;', 'class': 'dynamic-select'}),
             'exposure_time': forms.NumberInput(attrs={'style': 'width:80px;', 'min': '0'}),
