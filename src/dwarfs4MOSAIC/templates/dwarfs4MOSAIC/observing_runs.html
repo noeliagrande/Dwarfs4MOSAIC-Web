@@ -56,7 +56,7 @@
                     <!-- Description with resizable text container -->
                     <td class="resizable-td">
                         <div class="resizable-div">
-                            {{ observing_run.description }}
+                            {{ observing_run.description|linebreaksbr }}
                         </div>
                     </td>
 
@@ -67,7 +67,7 @@
                     <!-- Comments with resizable text container -->
                     <td class="resizable-td">
                         <div class="resizable-div">
-                            {{ observing_run.comments }}
+                            {{ observing_run.comments|linebreaksbr }}
                         </div>
                     </td>
                 </tr>

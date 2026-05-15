@@ -76,7 +76,7 @@
                         <!-- Comments with resizable text container -->
                         <td class="resizable-td">
                             <div class="resizable-div">
-                                {{ researcher.comments }}
+                                {{ researcher.comments|linebreaksbr }}
                             </div>
                         </td>
                     </tr>
@@ -117,7 +117,7 @@
                         <!-- Comments with resizable text container -->
                         <td class="resizable-td">
                             <div class="resizable-div">
-                                {{ block.description }}
+                                {{ block.description|linebreaksbr }}
                             </div>
                         </td>
 
@@ -141,12 +141,12 @@
                         <td>{{ block.seeing|default_if_none:"" }}</td>
 
                         <!-- Weather conditions -->
-                        <td>{{ block.weather_conditions }}</td>
+                        <td>{{ block.weather_conditions|linebreaksbr }}</td>
 
                         <!-- Comments with resizable text container -->
                         <td class="resizable-td">
                             <div class="resizable-div">
-                                {{ block.comments }}
+                                {{ block.comments|linebreaksbr }}
                             </div>
                         </td>
                     </tr>
