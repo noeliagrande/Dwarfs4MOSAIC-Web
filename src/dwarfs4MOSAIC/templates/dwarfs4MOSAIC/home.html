@@ -63,7 +63,8 @@
                         <th>RA (HH:MM:SS)</th>
                         <th>DEC (±DD:MM:SS)</th>
                         <th>MAG r (AB)</th>
-                        <th>REDSHIFT</th>
+                        <th>REDSHIFT VALUE</th>
+                        <th>REDSHIFT ERROR</th>
                         <th>SIZE (arcsec)</th>
                         <th>VISIBILITY SEMESTER</th>
                         <th>OBSERVING RUN</th>
@@ -101,7 +102,8 @@
                         <td>{{ item.target.magnitude|default_if_none:"" }}</td>
 
                         <!-- Redshift (z) -->
-                        <td>{{ item.target.redshift|default_if_none:""}}</td>
+                        <td>{{ item.target.redshift_value|default_if_none:"" }}</td>
+                        <td>{{ item.target.redshift_error|default_if_none:"" }}</td>
 
                         <!-- Apparent size in arcseconds -->
                         <td>{{ item.target.size|default_if_none:"" }}</td>

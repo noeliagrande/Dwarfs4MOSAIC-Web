@@ -67,12 +67,18 @@ class Tbl_target(models.Model):
         blank=True,
         verbose_name="Magnitude (r AB)")
 
-    # Redshift of the target
-    redshift = models.CharField(
-        max_length=15,
+    # Redshift components of the target
+    redshift_value = models.FloatField(
         null=True,
         blank=True,
-        verbose_name="Redshift (z)")
+        verbose_name="Redshift value (z)"
+    )
+
+    redshift_error = models.FloatField(
+        null=True,
+        blank=True,
+        verbose_name="Redshift error"
+    )
 
     # Angular size of the object in arcseconds
     size = models.FloatField(
@@ -84,6 +90,8 @@ class Tbl_target(models.Model):
 
     # Semester in which the target is visible
     semester = models.CharField(
+        null=True,
+        blank=True,
         max_length=10,
         verbose_name="Visibility semester")
 
