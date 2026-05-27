@@ -85,7 +85,7 @@ class Tbl_target(models.Model):
         null=True,
         blank=True,
         validators=[MinValueValidator(0)],
-        verbose_name="Size",
+        verbose_name="Angular size",
         help_text="arcsec",)
 
     # Semester in which the target is visible
