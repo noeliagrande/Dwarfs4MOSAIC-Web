@@ -65,7 +65,8 @@ class Tbl_target(models.Model):
     magnitude = models.FloatField(
         null=True,
         blank=True,
-        verbose_name="Magnitude (r AB)")
+        verbose_name="Magnitude",
+        help_text="r band (AB system)")
 
     # Redshift components of the target
     redshift_value = models.FloatField(
