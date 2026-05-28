@@ -109,7 +109,7 @@
                         <td>{{ item.target.size|default_if_none:"" }}</td>
 
                         <!-- Visibility semester -->
-                        <td>{{ item.target.semester }}</td>
+                        <td>{{ item.target.semester|default_if_none:"" }}</td>
 
                         <!-- List unique runs -->
                         <td>

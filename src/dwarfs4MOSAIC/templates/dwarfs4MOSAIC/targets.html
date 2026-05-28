@@ -94,7 +94,7 @@
                     <td>{{ target.size|default_if_none:"" }}</td>
 
                     <!-- Visibility semester -->
-                    <td>{{ target.semester }}</td>
+                    <td>{{ target.semester|default_if_none:"" }}</td>
 
                     <!-- Comments with resizable text container -->
                     <td class="resizable-td">
