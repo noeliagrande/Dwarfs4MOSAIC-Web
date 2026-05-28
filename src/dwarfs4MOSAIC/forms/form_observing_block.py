@@ -6,6 +6,12 @@ Admin form for observing blocks, to set control size.
 from django import forms
 
 # Local application imports
+from ..constants import (
+    DROPBOX_WIDTH,
+    NAME_WIDTH,
+    NUMBER_WIDTH,
+    TEXT_AREA,
+)
 from ..models import Tbl_observing_block
 
 class ObservingBlockAdminForm(forms.ModelForm):
@@ -14,20 +20,23 @@ class ObservingBlockAdminForm(forms.ModelForm):
         model = Tbl_observing_block
 
         # visual sizes
-        text_attrs = {'style': 'width:80px;'}
-        area_attrs = {'rows': 3, 'cols': 75}
-
-        fields = ['description', 'semester', 'filters', 'configuration',
-                  'exposure_time', 'seeing', 'weather_conditions', 'comments']
+        fields = "__all__"
         widgets = {
-            'description': forms.Textarea(attrs=area_attrs),
-            'semester': forms.TextInput(attrs = {'style': 'width:250px;'}),
-            'filters': forms.Select(attrs={'style': 'width:120px;', 'class': 'dynamic-select'}),
-            'configuration': forms.Select(attrs={'style': 'width:120px;', 'class': 'dynamic-select'}),
-            'exposure_time': forms.NumberInput(attrs={'style': 'width:80px;', 'min': '0'}),
-            'seeing': forms.NumberInput(attrs={'style': 'width:80px;', 'min': '0'}),
-            'weather_conditions': forms.Textarea(attrs=area_attrs),
-            'comments': forms.Textarea(attrs=area_attrs),
+            'name': forms.TextInput(attrs = {'size': NAME_WIDTH}),
+
+            # General Information
+            'obs_run'       : forms.Select(attrs = {'style': f'width: {DROPBOX_WIDTH}px;'}),
+            'description'   : forms.Textarea(attrs = TEXT_AREA),
+            'semester'      : forms.TextInput(attrs = {'size': NAME_WIDTH}),
+
+            # Observation Information
+            'observation_mode'  : forms.Select(attrs = {'style': f'width: {DROPBOX_WIDTH}px;'}),
+            'filters'           : forms.Select(attrs = {'class': 'dynamic-select'}),
+            'configuration'     : forms.Select(attrs = {'class': 'dynamic-select'}),
+            'exposure_time'     : forms.NumberInput(attrs = {'style': f'width: {NUMBER_WIDTH}px;', 'min': '0'}),
+            'seeing'            : forms.NumberInput(attrs = {'style': f'width: {NUMBER_WIDTH}px;', 'min': '0'}),
+            'weather_conditions': forms.Textarea(attrs = TEXT_AREA),
+            'comments'          : forms.Textarea(attrs = TEXT_AREA),
         }
 
     def __init__(self, *args, **kwargs):
@@ -47,12 +56,12 @@ class ObservingBlockAdminForm(forms.ModelForm):
 
         # Replace text widgets with Select
         self.fields['filters'].widget = forms.Select(
-            choices=filter_choices,
-            attrs={'style': 'width:120px;'}
+            choices = filter_choices,
+            attrs   = {'style': f'width: {DROPBOX_WIDTH}px;'}
         )
         self.fields['configuration'].widget = forms.Select(
-            choices=config_choices,
-            attrs={'style': 'width:120px;'}
+            choices = config_choices,
+            attrs   = {'style': f'width: {DROPBOX_WIDTH}px;'}
         )
 
     class Media:
