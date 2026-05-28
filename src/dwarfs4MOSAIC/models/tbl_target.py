@@ -15,6 +15,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 # Local application imports
+from ..constants import NAME_MAX_LENGTH
 from ..utils import sanitize_filename
 from ..validators import validate_right_ascension, validate_declination
 
@@ -22,9 +23,9 @@ class Tbl_target(models.Model):
 
     # Unique target name
     name = models.CharField(
-        max_length=200,
-        unique=True,
-        verbose_name="Name")
+        max_length      = NAME_MAX_LENGTH,
+        unique          = True,
+        verbose_name    = "Name")
 
     # Target type with predefined choices
     type = models.CharField(
@@ -46,8 +47,6 @@ class Tbl_target(models.Model):
     # Right Ascension in HH:MM:SS format (string)
     right_ascension = models.CharField(
         max_length=15,
-        null=True,
-        blank=True,
         verbose_name="Right Ascension",
         help_text="HH:MM:SS[.sss]",
         validators=[validate_right_ascension],)
@@ -55,8 +54,6 @@ class Tbl_target(models.Model):
     # Declination in +/- degrees:minutes:seconds format (string)
     declination = models.CharField(
         max_length=15,
-        null=True,
-        blank=True,
         verbose_name="Declination",
         help_text="±DD:MM:SS[.sss]",
         validators=[validate_declination])
