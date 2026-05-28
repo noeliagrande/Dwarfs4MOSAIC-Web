@@ -13,30 +13,40 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.utils.safestring import mark_safe
 
 # Local application imports
+from ..constants import (
+    COORDINATE_WIDTH,
+    DROPBOX_WIDTH,
+    NAME_WIDTH,
+    NUMBER_WIDTH,
+    REDSHIFT_WIDTH,
+    TEXT_AREA,
+    URL_WIDTH,
+)
 from ..models import Tbl_target
 from .widgets.custom_widgets import SingleFileField, MultipleFileField
+
 
 class TargetAdminForm(forms.ModelForm):
 
     upload_image = SingleFileField(
-        required=False,
-        label="Image",
+        required    = False,
+        label       = "Image",
     )
 
     upload_datafiles = MultipleFileField(
-        required=False,
-        label="Data files",
+        required    = False,
+        label       = "Data files",
     )
 
     delete_image = forms.BooleanField(required=False, label="Delete image")
 
     # Field for selecting data files to delete
     datafiles = forms.MultipleChoiceField(
-        required=False,
-        label="",
-        help_text="Data files that will be deleted. "
-                  "Hold down “Control”, or “Command” on a Mac, to select more than one.",
-        widget=FilteredSelectMultiple("data files to delete", is_stacked=False)
+        required    = False,
+        label       = "",
+        help_text   = "Data files that will be deleted. "
+                      "Hold down “Control”, or “Command” on a Mac, to select more than one.",
+        widget      = FilteredSelectMultiple("data files to delete", is_stacked=False)
     )
 
     class Meta:
@@ -46,20 +56,31 @@ class TargetAdminForm(forms.ModelForm):
         # visual sizes
         common_style = {'style': 'width:80px;'}
 
-        fields = ['right_ascension', 'declination', 'magnitude', 'size', 'semester', 'comments', 'website']
+        fields = "__all__"
         widgets = {
-            'right_ascension': forms.TextInput(attrs = common_style),
-            'declination': forms.TextInput(attrs = common_style),
-            'magnitude': forms.NumberInput(attrs = common_style),
-            'size': forms.NumberInput(attrs={'style': 'width:80px;', 'min': '0'}),
-            'semester': forms.TextInput(attrs = {'style': 'width:250px;'}),
-            'comments': forms.Textarea(attrs={'rows': 3, 'cols': 75}),
+            'name': forms.TextInput(attrs={'size': NAME_WIDTH}),
+
+            # General Information
+            'type'              : forms.Select(attrs={'style': f'width: {DROPBOX_WIDTH}px;'}),
+            'right_ascension'   : forms.TextInput(attrs = {'size': COORDINATE_WIDTH}),
+            'declination'       : forms.TextInput(attrs = {'size': COORDINATE_WIDTH}),
+            'magnitude'         : forms.NumberInput(attrs = {'style': f'width: {NUMBER_WIDTH}px;'}),
+            'redshift_value'    : forms.NumberInput(attrs = {'style': f'width: {REDSHIFT_WIDTH}px;'}),
+            'redshift_error'    : forms.NumberInput(attrs={'style': f'width: {REDSHIFT_WIDTH}px;'}),
+            'size'              : forms.NumberInput(attrs = {'style': f'width: {NUMBER_WIDTH}px;', 'min': '0'}),
+
+            # Additional Data
+            'semester': forms.TextInput(attrs = {'size': NAME_WIDTH}),
+            'comments': forms.Textarea(attrs = TEXT_AREA),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         # Visual sizes
+        # Adjust width here to preserve Django's default URLField widget behavior
+        # without overriding the admin URL widget (current/change/clear links).
+        self.fields['website'].widget.attrs.update({'style': f'width: {URL_WIDTH}px;'})
         self.fields['website'].widget.attrs.update({
             'style': 'width:1000px;'
         })
