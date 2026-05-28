@@ -11,111 +11,117 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 # Local application imports
+from ..constants import(
+    NAME_MAX_LENGTH,
+    SHORT_DESCRIPTION_MAX_LENGTH,
+)
 from .tbl_observing_run import Tbl_observing_run
+
 
 class Tbl_observing_block(models.Model):
 
     # Name of the observing block
     name = models.CharField(
-        max_length=200,
-        verbose_name="Name")
+        max_length      = NAME_MAX_LENGTH,
+        verbose_name    = "Name")
 
     # Observing run where this block is executed (foreign key to Tbl_observing_run)
     obs_run = models.ForeignKey(
         Tbl_observing_run,
-        on_delete=models.PROTECT,
-        null=True,
-        verbose_name="Observing Run")
+        on_delete       = models.PROTECT,
+        null            = True,
+        verbose_name    = "Observing Run")
 
     # Optional description of the observing block
     description = models.TextField(
-        null=True,
-        blank=True,
-        verbose_name="Description")
+        null            = True,
+        blank           = True,
+        verbose_name    = "Description")
 
     # Semester in which the observing block was executed
     semester = models.CharField(
-        null=True,
-        blank=True,
-        max_length=10,
-        verbose_name="Observing semester")
+        null            = True,
+        blank           = True,
+        max_length      = NAME_MAX_LENGTH,
+        verbose_name    = "Observing semester")
 
     # Start date and time of the block
-    start_time = models.DateTimeField(
-        verbose_name="Start Time")
+    start_time          = models.DateTimeField(
+        null            = True,
+        blank           = True,
+        verbose_name    = "Start Time")
         
     # Optional end time (time only, no date) of the block
     end_time = models.TimeField(
-        null=True,
-        blank=True,
-        verbose_name="End Time")
+        null            = True,
+        blank           = True,
+        verbose_name    = "End Time")
 
     # Targets observed in this block (many-to-many relationship)
     target = models.ManyToManyField(
         'Tbl_target',
-        blank=True,
-        help_text= "Targets that belong to the block.",
-        related_name='observing_blocks'
+        blank           = True,
+        help_text       = "Targets that belong to the block.",
+        related_name    = 'observing_blocks'
     )
 
     # Observation mode used during the block
     observation_mode = models.CharField(
-        choices=[
-            ('photometry', 'Photometry'),
-            ('spectroscopy', 'Spectroscopy'),
-            ('imaging', 'Imaging')],
-        max_length=12,  # maximum length in choices
-        default='photometry',
-        verbose_name="Observation Mode")
+        choices         = [ ('photometry', 'Photometry'),
+                            ('spectroscopy', 'Spectroscopy'),
+                            ('imaging', 'Imaging') ],
+        max_length      = 12,  # must be long enough to hold the longest choice
+        default         = 'photometry',
+        verbose_name    = "Observation Mode")
 
     # Filter used during the observations
     filters = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        verbose_name="Instrument filter")
+        max_length      = NAME_MAX_LENGTH,
+        blank           = True,
+        null            = True,
+        verbose_name    = "Instrument filter")
 
     # Configuration used during the observations
     configuration = models.CharField(
-        max_length=50,
-        blank=True,
-        null=True,
-        verbose_name="Instrument configuration")
+        max_length      = NAME_MAX_LENGTH,
+        blank           = True,
+        null            = True,
+        verbose_name    = "Instrument configuration")
 
     # Exposure time per observation (in seconds)
-    exposure_time = models.DurationField(
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(0)],
-        verbose_name="Exposure Time",
-        help_text="seconds")
+    exposure_time = models.FloatField(
+        null            = True,
+        blank           = True,
+        validators      = [MinValueValidator(0)],
+        verbose_name    = "Exposure Time",
+        help_text       = "seconds")
         
     # Seeing value during the observation (in arcseconds)
     seeing = models.FloatField(
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(0)],
-        verbose_name="Seeing",
-        help_text="arcsec")
+        null            = True,
+        blank           = True,
+        validators      = [MinValueValidator(0)],
+        verbose_name    = "Seeing",
+        help_text       = "arcsec")
         
     # Weather conditions during the observing block
     weather_conditions = models.TextField(
-        blank=True, 
-        null=True,
-        verbose_name="Weather Conditions")
+        blank           = True,
+        null            = True,
+        verbose_name    = "Weather Conditions")
     
     # Additional notes or comments about the observing block
     comments = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name="Comments")
+        blank           = True,
+        null            = True,
+        verbose_name    = "Comments")
 
     # Groups that have access to this observing block
     allowed_groups = models.ManyToManyField(
         Group,
-        blank=True,
-        related_name="allowed_blocks",
-        help_text="Groups that have access to this observing block"
+        blank           = True,
+        related_name    = "allowed_blocks",
+        help_text       = "Groups that have access to this observing block"
     )
 
     @property
