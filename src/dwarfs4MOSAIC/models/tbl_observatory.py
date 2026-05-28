@@ -9,52 +9,57 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 # Local application imports
+from ..constants import(
+    COORDINATE_MAX_LENGTH,
+    NAME_MAX_LENGTH,
+    SHORT_DESCRIPTION_MAX_LENGTH,
+)
 from ..validators import validate_longitude, validate_latitude
 
 class Tbl_observatory(models.Model):
 
     # Name of the observatory
     name = models.CharField(
-        max_length=200,
-        verbose_name = "Name")
+        max_length      = NAME_MAX_LENGTH,
+        verbose_name    = "Name")
 
     # Optional official website URL
     website = models.URLField(
-        blank=True,
-        verbose_name = "Website",
-        default="")
+        blank           = True,
+        verbose_name    = "Website",
+        default         = "")
 
     # Location description (e.g., city or region)
     location = models.CharField(
-        max_length=200,
-        verbose_name="Location",
-        default="")
+        max_length      = SHORT_DESCRIPTION_MAX_LENGTH,
+        verbose_name    = "Location",
+        default         = "")
 
     # Geographical longitude in deg:min:sec format (string)
     longitude = models.CharField(
-        max_length=15,
-        null=True,
-        blank=True,
-        verbose_name="Longitude",
-        help_text="DDD:MM:SS[.sss][E/W]",
-        validators=[validate_longitude])
+        max_length      = COORDINATE_MAX_LENGTH,
+        null            = True,
+        blank           = True,
+        verbose_name=   " Longitude",
+        help_text       = "DDD:MM:SS[.sss][E/W]",
+        validators      = [validate_longitude])
 
 
     # Geographical latitude in deg:min:sec format (string)
     latitude = models.CharField(
-        max_length=15,
-        null=True,
-        blank=True,
-        verbose_name="Latitude",
-        help_text="DD:MM:SS[.sss][N/S]",
-        validators=[validate_latitude])
+        max_length      = COORDINATE_MAX_LENGTH,
+        null            = True,
+        blank           = True,
+        verbose_name    = "Latitude",
+        help_text       = "DD:MM:SS[.sss][N/S]",
+        validators      = [validate_latitude])
 
     # Altitude of the observatory in meters
     altitude = models.FloatField(
-        null=True,
-        blank=True,
-        verbose_name="Altitude",
-        help_text="meters")
+        null            = True,
+        blank           = True,
+        verbose_name    = "Altitude",
+        help_text       = "meters")
 
     # Telescopes are linked via a one-to-many relationship defined in Tbl_telescope.
     # Django automatically creates reverse accessors (observatory.tbl_telescope_set).
