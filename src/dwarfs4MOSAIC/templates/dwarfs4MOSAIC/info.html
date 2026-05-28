@@ -39,7 +39,7 @@
         {{ content|safe }}
     </div>
 
-    {% if is_superuser %}
+    {% if user.is_superuser %}
         <br>
         <hr>
         <br>
