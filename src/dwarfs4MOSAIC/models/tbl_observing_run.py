@@ -9,51 +9,55 @@ behaviors for managing astronomical observation data.
 from django.db import models
 
 # Local application imports
+from ..constants import NAME_MAX_LENGTH
 from .tbl_instrument import Tbl_instrument
+
 
 class Tbl_observing_run(models.Model):
 
     # Name of the observing run
     name = models.CharField(
-        max_length=200,
-        verbose_name="Name")
+        max_length      = NAME_MAX_LENGTH,
+        verbose_name    = "Name")
 
     # Optional description of the observing run
     description = models.TextField(
-        null=True,
-        blank=True,
-        verbose_name="Description")
+        null            = True,
+        blank           = True,
+        verbose_name    = "Description")
 
     # Instrument used during the observing run (foreign key to Tbl_instrument)
     instrument = models.ForeignKey(
         Tbl_instrument,
-        on_delete=models.PROTECT,
-        null=True,
-        verbose_name="Instrument")
+        on_delete       = models.PROTECT,
+        null            = True,
+        verbose_name    = "Instrument")
 
     # Start date of the observing run
     start_date = models.DateField(
-        verbose_name="Start Date")
+        null            = True,
+        blank           = True,
+        verbose_name    = "Start Date")
 
     # Optional end date of the observing run
     end_date = models.DateField(
-        null=True,
-        blank=True,
-        verbose_name="End Date")
+        null            = True,
+        blank           = True,
+        verbose_name    = "End Date")
 
     # Researchers participating in the observing run (many-to-many relationship)
     researchers = models.ManyToManyField(
         'Tbl_researcher',
-        blank=True,
-        help_text="Researchers who participated in the observing run.",
-        related_name='observing_runs'
+        blank           = True,
+        help_text       = "Researchers who participated in the observing run.",
+        related_name    = 'observing_runs'
     )
 
     # Additional notes or comments about the observing run
     comments = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name="Comments")
+        blank           = True,
+        null            = True,
+        verbose_name    = "Comments")
 
     def __str__(self):
         # Returns the observing run name when printed or displayed
