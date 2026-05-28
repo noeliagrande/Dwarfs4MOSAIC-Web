@@ -8,57 +8,61 @@ behaviors for managing astronomical observation data.
 from django.db import models
 
 # Local application imports
+from ..constants import(
+    NAME_MAX_LENGTH,
+    SHORT_DESCRIPTION_MAX_LENGTH,
+)
 from .tbl_telescope import Tbl_telescope
+
 
 class Tbl_instrument(models.Model):
 
     # Name of the instrument
     name = models.CharField(
-        max_length=200,
-        verbose_name = "Name")
+        max_length      = NAME_MAX_LENGTH,
+        verbose_name    = "Name")
 
     # Optional short description of the instrument
     description = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        verbose_name="Description")
+        max_length      = SHORT_DESCRIPTION_MAX_LENGTH,
+        null            = True,
+        blank           = True,
+        verbose_name    = "Description")
 
     # Telescope where the instrument is installed (foreign key to Tbl_telescope)
     tel_ins = models.ForeignKey(
         Tbl_telescope,
-        on_delete=models.PROTECT,
-        null=True,
-        verbose_name = "Telescope")
+        on_delete       = models.PROTECT,
+        null            = True,
+        verbose_name    = "Telescope")
 
     # Current operational status of the instrument
     status = models.CharField(
-        choices=[
-            ('unknown', 'Unknown'),
-            ('operational', 'Operational'),
-            ('inoperative', 'Inoperative'),
-            ('maintenance', 'Under Maintenance')],
-        max_length=11,  # must be long enough to hold the longest choice
-        default='unknown',
-        verbose_name="Status")
+        choices         = [ ('unknown', 'Unknown'),
+                            ('operational', 'Operational'),
+                            ('inoperative', 'Inoperative'),
+                            ('maintenance', 'Under Maintenance') ],
+        max_length      = 11,  # must be long enough to hold the longest choice
+        default         = 'unknown',
+        verbose_name    = "Status")
 
     # Optional website URL with more information about the instrument
     website = models.URLField(
-        verbose_name="Website",
-        blank=True,
-        default="")
+        verbose_name    = "Website",
+        blank           = True,
+        default         = "")
 
     # List of filters, stored as comma-separated string
     filters = models.TextField(
-        blank=True,
-        help_text="Comma-separated"
+        blank           = True,
+        help_text       = "Comma-separated"
     )
 
     # List of configurations, stored as comma-separated string
     configuration = models.TextField(
-        verbose_name="Configurations",
-        blank=True,
-        help_text="Comma-separated"
+        verbose_name    = "Configurations",
+        blank           = True,
+        help_text       = "Comma-separated"
     )
 
     @property
