@@ -8,6 +8,11 @@ Includes conversion between decimal degrees and DMS, and validation of input com
 from django import forms
 
 # Local application imports
+from ..constants import (
+    COORDINATE_WIDTH,
+    NAME_WIDTH,
+    URL_WIDTH,
+)
 from ..models import Tbl_observatory
 
 class ObservatoryAdminForm(forms.ModelForm):
@@ -16,18 +21,22 @@ class ObservatoryAdminForm(forms.ModelForm):
         model = Tbl_observatory
 
         # visual sizes
-        common_style = {'style': 'width:80px;'}
-
-        fields = ['longitude', 'latitude', 'altitude', 'website']
+        fields = "__all__"
         widgets = {
-            'longitude': forms.TextInput(attrs=common_style),
-            'latitude': forms.TextInput(attrs=common_style),
-            'altitude': forms.TextInput(attrs=common_style),
+            'name': forms.TextInput(attrs = {'size': NAME_WIDTH}),
+
+            # General Information
+            'location': forms.TextInput(attrs = {'size': NAME_WIDTH}),
+
+            # Coordinates
+            'longitude' : forms.TextInput(attrs = {'size': COORDINATE_WIDTH}),
+            'latitude'  : forms.TextInput(attrs = {'size': COORDINATE_WIDTH}),
+            'altitude'  : forms.TextInput(attrs = {'size': COORDINATE_WIDTH}),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['website'].widget.attrs.update({
-            'style': 'width:1000px;'
-        })
+        # Adjust width here to preserve Django's default URLField widget behavior
+        # without overriding the admin URL widget (current/change/clear links).
+        self.fields['website'].widget.attrs.update({'style': f'width: {URL_WIDTH}px;'})
