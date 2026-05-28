@@ -9,58 +9,66 @@ from django.core.validators import MinValueValidator
 from django.db import models
 
 # Local application imports
+from ..constants import (
+    NAME_MAX_LENGTH,
+    SHORT_DESCRIPTION_MAX_LENGTH
+)
 from .tbl_observatory import Tbl_observatory
+
 
 class Tbl_telescope(models.Model):
 
     # Name of the telescope
     name = models.CharField(
-        max_length=200,
-        verbose_name = "Name")
+        max_length      = NAME_MAX_LENGTH,
+        verbose_name    = "Name")
 
     # Optional short description of the telescope
     description = models.CharField(
-        max_length=200,
-        null=True,
-        blank=True,
-        verbose_name="Description")
+        max_length      = SHORT_DESCRIPTION_MAX_LENGTH,
+        null            = True,
+        blank           = True,
+        verbose_name    = "Description")
 
     # Observatory where the telescope is located (foreign key to Tbl_observatory)
     obs_tel = models.ForeignKey(
         Tbl_observatory,
-        on_delete=models.PROTECT,
-        null=True,
-        verbose_name = "Observatory")
+        on_delete       = models.PROTECT,
+        null            = True,
+        verbose_name    = "Observatory")
 
     # Institutional owner of the telescope
     owner = models.TextField(
-        default="",
-        verbose_name = "Institutional Owner")
+        null            = True,
+        blank           = True,
+        default         = "",
+        verbose_name    = "Institutional Owner")
 
     # Aperture size in meters (must be >= 0)
     aperture = models.FloatField(
-        verbose_name="Aperture",
-        default=0,
-        validators=[MinValueValidator(0)],
-        help_text="meters")
+        verbose_name    = "Aperture",
+        null            = True,
+        blank           = True,
+        default         = 0,
+        validators      = [MinValueValidator(0)],
+        help_text       = "meters")
 
     # Current operational status of the telescope
     status = models.CharField(
-        choices=[
-            ('unknown', 'Unknown'),
-            ('operational', 'Operational'),
-            ('inoperative', 'Inoperative'),
-            ('maintenance', 'Under Maintenance')],
-        max_length=11, # must be long enough to hold the longest choice
-        default='unknown',
-        verbose_name="Status")
+        choices         = [ ('unknown', 'Unknown'),
+                            ('operational', 'Operational'),
+                            ('inoperative', 'Inoperative'),
+                            ('maintenance', 'Under Maintenance') ],
+        max_length      = 11, # must be long enough to hold the longest choice
+        default         = 'unknown',
+        verbose_name    = "Status")
 
     # Optional website URL with more information about the telescope
     website = models.URLField(
-        verbose_name="Website",
-        blank=True,
-        null=True,
-        default="")
+        verbose_name    = "Website",
+        blank           = True,
+        null            = True,
+        default         = "")
 
     # Instruments are linked via a one-to-many relationship defined in Tbl_instrument.
     # Django automatically creates reverse accessors (telescope.tbl_instrument_set).
