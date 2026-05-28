@@ -9,56 +9,62 @@ behaviors for managing astronomical observation data.
 from django.contrib.auth.models import User
 from django.db import models
 
+# Local application imports
+from ..constants import (
+    NAME_MAX_LENGTH,
+    SHORT_DESCRIPTION_MAX_LENGTH,
+)
+
+
 class Tbl_researcher(models.Model):
 
     # Links the researcher to a Django User object (auth_user)
     user = models.OneToOneField(
         User,
-        on_delete=models.SET_NULL,  # if User is deleted, the researcher remains
-        related_name='researcher',
-        verbose_name="Username",
-        null=True,
-        blank=True,
+        on_delete       = models.SET_NULL,  # if User is deleted, the researcher remains
+        related_name    = 'researcher',
+        verbose_name    = "Username",
+        null            = True,
+        blank           = True,
     )
 
     # Full name of the researcher
     name = models.CharField(
-        max_length=200,
-        verbose_name="Name")
+        max_length      = NAME_MAX_LENGTH,
+        verbose_name    = "Name")
 
     # Optional email address of the researcher
     email = models.EmailField(
-        blank=True,
-        verbose_name="email")
+        blank           = True,
+        verbose_name    = "email")
 
     # Role of the researcher in the project
     role = models.CharField(
-        choices=[
-            ('core_team', 'Core Team'),
-            ('collaborator', 'Collaborator')],
-        max_length=15,  # must be long enough to hold the longest choice
-        default='collaborator',
-        null=False,
-        verbose_name="Role")
+        choices         = [ ('core_team', 'Core Team'),
+                            ('collaborator', 'Collaborator') ],
+        max_length      = 15,  # must be long enough to hold the longest choice
+        default         = 'collaborator',
+        null            = False,
+        verbose_name    = "Role")
 
     # Institutional affiliation of the researcher
     institution = models.CharField(
-        max_length=200,
-        default="",
-        null=True,
-        blank=True,
-        verbose_name="Institution")
+        max_length      = SHORT_DESCRIPTION_MAX_LENGTH,
+        default         = "",
+        null            = True,
+        blank           = True,
+        verbose_name    = "Institution")
 
     # Indicates whether the researcher is a PhD
     is_phd = models.BooleanField(
-        default=False,
-        verbose_name="Is PhD")
+        default         = False,
+        verbose_name    = "Is PhD")
 
     # Additional notes or comments about the researcher
     comments = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name="Comments")
+        blank           = True,
+        null            = True,
+        verbose_name    = "Comments")
 
     # Observing runs: Many-to-many relationship is defined in Tbl_observing_run.
     # Django automatically creates reverse accessors.
@@ -66,10 +72,10 @@ class Tbl_researcher(models.Model):
     # Observing blocks denied to this researcher
     denied_blocks = models.ManyToManyField(
         'Tbl_observing_block',
-        blank=True,
-        help_text="The user does not have authorized access to these blocks "
-                  "(even if they belong to a group that does have authorized access). ",
-        related_name='denied_researchers'
+        blank           = True,
+        help_text       = "The user does not have authorized access to these blocks "
+                          "(even if they belong to a group that does have authorized access). ",
+        related_name    = 'denied_researchers'
     )
 
     @property
