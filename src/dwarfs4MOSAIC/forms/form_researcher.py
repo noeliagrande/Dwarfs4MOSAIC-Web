@@ -6,6 +6,11 @@ Admin form for researchers, to set control size.
 from django import forms
 
 # Local application imports
+from ..constants import (
+    DROPBOX_WIDTH,
+    SHORT_DESCRIPTION_WIDTH,
+    TEXT_AREA,
+)
 from ..models import Tbl_researcher
 
 class ResearcherAdminForm(forms.ModelForm):
@@ -14,8 +19,11 @@ class ResearcherAdminForm(forms.ModelForm):
         model = Tbl_researcher
 
         # visual sizes
-        fields = ['institution', 'comments']
+        fields = "__all__"
         widgets = {
-            'institution': forms.TextInput(attrs={'size': '70'}),
-            'comments': forms.Textarea(attrs={'rows': 3, 'cols': 75}),
+            'role': forms.Select(attrs={'style': f'width: {DROPBOX_WIDTH}px;'}),
+
+            # General Information
+            'institution'   : forms.TextInput(attrs = {'size': SHORT_DESCRIPTION_WIDTH}),
+            'comments'      : forms.Textarea(attrs = TEXT_AREA),
         }
