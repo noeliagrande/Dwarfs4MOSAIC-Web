@@ -6,6 +6,11 @@ Admin form for observing runs, to set control size.
 from django import forms
 
 # Local application imports
+from ..constants import (
+    DROPBOX_WIDTH,
+    NAME_WIDTH,
+    TEXT_AREA,
+)
 from ..models import Tbl_observing_run
 
 class ObservingRunAdminForm(forms.ModelForm):
@@ -14,10 +19,14 @@ class ObservingRunAdminForm(forms.ModelForm):
         model = Tbl_observing_run
 
         # visual sizes
-        area_attrs = {'rows': 3, 'cols': 75}
-
-        fields = ['description', 'comments']
+        fields = "__all__"
         widgets = {
-            'description': forms.Textarea(attrs=area_attrs),
-            'comments': forms.Textarea(attrs=area_attrs),
+            'name': forms.TextInput(attrs = {'size': NAME_WIDTH}),
+
+            # General Information
+            'description'   : forms.Textarea(attrs = TEXT_AREA),
+            'instrument'    : forms.Select(attrs={'style': f'width: {DROPBOX_WIDTH}px;'}),
+
+            # Additional Data
+            'comments': forms.Textarea(attrs = TEXT_AREA),
         }
