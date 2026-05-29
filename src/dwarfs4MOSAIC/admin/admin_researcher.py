@@ -13,15 +13,20 @@ from ..forms import ResearcherAdminForm
 from ..models import Tbl_researcher
 
 
+# Admin interface for Tbl_researcher with enhanced UI
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
+
+    # Display main identifying fields for quick overview
     list_display = ("name", "institution", "role", "is_phd", "email")
+
+    # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("name"),"name")
 
-    # Custom form
+    # Custom ModelForm for validation and layout control
     form = ResearcherAdminForm
 
-    # Organize fields into sections
+    # Group fields into logical sections for better usability
     fieldsets = [
         (None, {"fields": ['user', 'role']}),
         ("General Information", {"fields": [
@@ -33,7 +38,7 @@ class ResearcherAdmin(admin.ModelAdmin):
     # Multi-select widget for denied_blocks
     filter_horizontal = ['denied_blocks']
 
-    # Redirect adding a Researcher to User creation page
+    # Redirect creation of a Researcher to the Django User creation page
     def add_view(self, request, form_url='', extra_context=None):
         user_admin_url = reverse('admin:auth_user_add')
         return redirect(user_admin_url)
@@ -42,7 +47,7 @@ class ResearcherAdmin(admin.ModelAdmin):
     def get_fieldsets(self, request, obj=None):
         return self.fieldsets
 
-    # Customize read-only fields
+    # Control field editability depending on whether the object is linked to a User
     def get_readonly_fields(self, request, obj=None):
         if obj is not None and obj.user is None:
             # If no linked user, make all fields read-only
@@ -52,6 +57,7 @@ class ResearcherAdmin(admin.ModelAdmin):
             return ['user']
         return super().get_readonly_fields(request, obj)
 
+    # Hide save buttons when researcher is not linked to a user account
     def changeform_view(self, request, object_id=None, form_url='', extra_context=None):
         # Hide save buttons if researcher has no linked user
         extra_context = extra_context or {}

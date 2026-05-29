@@ -123,16 +123,20 @@ def process_observing_block_row(row, idx, errors):
     return created_flag
 
 
-# Register the Tbl_observing_block model in the admin with custom settings
+# Admin interface for Tbl_observing_block with enhanced UI and CSV import support
 @admin.register(Tbl_observing_block)
 class ObservingBlockAdmin(admin.ModelAdmin):
+
+    # Display main identifying fields for quick overview
     list_display = ("name","obs_run", "observation_mode", "semester")
+
+    # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("name"),"name")
 
-    # Custom form
+    # Custom ModelForm for validation and layout control
     form = ObservingBlockAdminForm
 
-    # Group fields into sections in the admin form
+    # Group fields into logical sections for better usability
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [

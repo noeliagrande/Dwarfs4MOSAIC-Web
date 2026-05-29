@@ -79,17 +79,20 @@ def process_observing_run_row(row, idx, errors):
     return created_flag
 
 
-
-# Register the Tbl_observing_run model in the admin with custom settings
+# Admin interface for Tbl_observing_run with enhanced UI and CSV import support
 @admin.register(Tbl_observing_run)
 class ObservingRunAdmin(admin.ModelAdmin):
+
+    # Display main identifying fields for quick overview
     list_display = ("name", "instrument", "start_date", "end_date")
+
+    # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("name"),"name")
 
-    # Custom form
+    # Custom ModelForm for validation and layout control
     form = ObservingRunAdminForm
 
-    # Group fields into sections in the admin form
+    # Group fields into logical sections for better usability
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
