@@ -4,6 +4,7 @@ This file defines how Tbl_observatory model is displayed and managed in the Djan
 
 # Third-party libraries
 from django.contrib import admin
+from django.db.models.functions import Lower
 from django.urls import path
 
 # Local application imports
@@ -36,6 +37,8 @@ def process_observatory_row(row, idx, errors):
 # Register the Tbl_observatory model in the admin with custom settings
 @admin.register(Tbl_observatory)
 class ObservatoryAdmin(admin.ModelAdmin):
+    ordering = (Lower("name"),"name")
+
     form = ObservatoryAdminForm
     empty_value_display = ""  # Show empty string instead of None
 
