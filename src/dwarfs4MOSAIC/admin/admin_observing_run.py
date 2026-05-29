@@ -83,6 +83,7 @@ def process_observing_run_row(row, idx, errors):
 # Register the Tbl_observing_run model in the admin with custom settings
 @admin.register(Tbl_observing_run)
 class ObservingRunAdmin(admin.ModelAdmin):
+    list_display = ("name", "instrument", "start_date", "end_date")
     ordering = (Lower("name"),"name")
 
     # Custom form
