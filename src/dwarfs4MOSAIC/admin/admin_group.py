@@ -6,6 +6,7 @@ This file defines how Group admin model is displayed and managed in the Django A
 from django.contrib import admin, messages
 from django.contrib.auth.admin import GroupAdmin as DefaultGroupAdmin
 from django.contrib.auth.models import Group
+from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 
@@ -16,6 +17,7 @@ from ..forms import GroupAdminForm
 admin.site.unregister(Group)
 @admin.register(Group)
 class GroupAdmin(DefaultGroupAdmin):
+    ordering = (Lower("name"),"name")
 
     # Custom form with file upload fields
     form = GroupAdminForm
