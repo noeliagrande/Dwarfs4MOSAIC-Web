@@ -84,6 +84,9 @@ class TargetAdmin(admin.ModelAdmin):
     # Display main identifying fields plus custom formatted columns for quick overview
     list_display = ("name", "type", "has_image", "has_files", "website_link")
 
+    # Sidebar filters for quick data segmentation in the admin changelist view
+    list_filter = ("type", "semester")
+
     # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("name"), "name")
 

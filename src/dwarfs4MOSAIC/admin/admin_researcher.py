@@ -20,6 +20,9 @@ class ResearcherAdmin(admin.ModelAdmin):
     # Display main identifying fields for quick overview
     list_display = ("name", "institution", "role", "is_phd", "email")
 
+    # Sidebar filters for quick data segmentation in the admin changelist view
+    list_filter = ("user__groups", "role", "is_phd", "user__is_active", "user__is_staff")
+
     # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("name"),"name")
 

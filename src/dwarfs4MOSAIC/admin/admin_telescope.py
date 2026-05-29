@@ -53,6 +53,9 @@ class TelescopeAdmin(admin.ModelAdmin):
     # Display main identifying fields plus custom formatted columns for quick overview
     list_display = ("name", "description", "obs_tel", "status_colored", "website_link")
 
+    # Sidebar filters for quick data segmentation in the admin changelist view
+    list_filter = ("obs_tel", "status")
+
     # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("name"), "name")
 

@@ -17,6 +17,9 @@ from ..models import Tbl_researcher
 # Custom User admin to add link to linked Researcher if exists
 class CustomUserAdmin(DefaultUserAdmin):
 
+    # Sidebar filters for quick data segmentation in the admin changelist view
+    list_filter = ("is_staff", "is_active", "groups")
+
     # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("username"),"username")
 

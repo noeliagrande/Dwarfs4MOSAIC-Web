@@ -86,6 +86,9 @@ class ObservingRunAdmin(admin.ModelAdmin):
     # Display main identifying fields for quick overview
     list_display = ("name", "instrument", "start_date", "end_date")
 
+    # Sidebar filters for quick data segmentation in the admin changelist view
+    list_filter = ("instrument",)
+
     # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("name"),"name")
 
