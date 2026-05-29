@@ -148,7 +148,7 @@ class Tbl_observing_block(models.Model):
         else:
             obs_date = "No date"
 
-        return f"{name} - {instrument} ({obs_date})"
+        return f"{name}: {instrument} ({obs_date})"
 
     def __str__(self):
         # Returns the block name when printed or displayed
