@@ -6,6 +6,7 @@ This file defines how Tbl_instrument model is displayed and managed in the Djang
 from django.contrib import admin
 from django.db.models.functions import Lower
 from django.urls import path
+from django.utils.html import format_html
 
 # Local application imports
 from ..forms import InstrumentAdminForm
@@ -48,7 +49,24 @@ def process_instrument_row(row, idx, errors):
 # Register the Tbl_instrument model in the admin with custom settings
 @admin.register(Tbl_instrument)
 class InstrumentAdmin(admin.ModelAdmin):
+    list_display = ("name", "description", "tel_ins", "status_colored", "website")
     ordering = (Lower("name"),"name")
+
+    def status_colored(self, obj):
+
+        if obj.status == "inoperative":
+            color = "red"
+        else:
+            color = "black"
+
+        return format_html(
+            '<span style="color: {};">{}</span>',
+            color,
+            obj.status
+        )
+
+    status_colored.short_description = "status"
+
 
     # Custom form
     form = InstrumentAdminForm
