@@ -21,16 +21,11 @@ from ..utils import sanitize_filename, import_csv_file
 
 # Process each row of the CSV when importing observatories
 def process_target_row(row, idx, errors):
-    # Required fields: name, semester
+    # Required fields: name
     name = row.get("name")
-    semester = row.get("semester")
 
     if not name:
         errors.append(f"Row {idx}: 'name' field is empty, skipping")
-        return None
-
-    if not semester:
-        errors.append(f"Row {idx}: 'semester' field is empty, skipping")
         return None
 
     # Build relative paths for image and datafiles based on the target name (safe filename)
@@ -56,7 +51,7 @@ def process_target_row(row, idx, errors):
         "redshift_value": row.get("redshift_value") or None,
         "redshift_error": row.get("redshift_error") or None,
         "size": None,
-        "semester": semester,
+        "semester": row.get("semester"),
         "comments": row.get("comments", ""),
         "image": os.path.relpath(image_file_path, settings.MEDIA_ROOT),
         "datafiles_path": os.path.relpath(datafiles_path, settings.MEDIA_ROOT),
