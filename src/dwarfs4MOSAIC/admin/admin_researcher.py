@@ -4,6 +4,7 @@ This file defines how Tbl_researcher model is displayed and managed in the Djang
 
 # Third-party libraries
 from django.contrib import admin
+from django.db.models.functions import Lower
 from django.shortcuts import redirect
 from django.urls import reverse
 
@@ -14,6 +15,7 @@ from ..models import Tbl_researcher
 
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
+    ordering = (Lower("name"),"name")
 
     # Custom form
     form = ResearcherAdminForm
