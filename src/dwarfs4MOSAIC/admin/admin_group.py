@@ -17,6 +17,8 @@ from ..forms import GroupAdminForm
 admin.site.unregister(Group)
 @admin.register(Group)
 class GroupAdmin(DefaultGroupAdmin):
+
+    # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("name"),"name")
 
     # Custom form with file upload fields

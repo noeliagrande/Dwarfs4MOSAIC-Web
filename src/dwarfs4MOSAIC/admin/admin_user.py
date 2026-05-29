@@ -16,6 +16,8 @@ from ..models import Tbl_researcher
 
 # Custom User admin to add link to linked Researcher if exists
 class CustomUserAdmin(DefaultUserAdmin):
+
+    # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("username"),"username")
 
     add_form_template = 'admin/auth/user/change_form.html'
