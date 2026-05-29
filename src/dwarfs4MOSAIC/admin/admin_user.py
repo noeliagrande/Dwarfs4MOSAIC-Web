@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.contrib import messages
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.contrib.auth.models import User
+from django.db.models.functions import Lower
 from django.urls import reverse
 
 # Local application imports
@@ -15,6 +16,7 @@ from ..models import Tbl_researcher
 
 # Custom User admin to add link to linked Researcher if exists
 class CustomUserAdmin(DefaultUserAdmin):
+    ordering = (Lower("username"),"username")
 
     add_form_template = 'admin/auth/user/change_form.html'
 
