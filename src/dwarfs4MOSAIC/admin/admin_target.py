@@ -79,6 +79,33 @@ def process_target_row(row, idx, errors):
 # Register the Tbl_target model in the admin with custom settings
 @admin.register(Tbl_target)
 class TargetAdmin(admin.ModelAdmin):
+    list_display = ("name", "type", "has_image", "has_files", "website")
+
+    @admin.display(boolean=True, description="Image")
+    def has_image(self, obj):
+
+        if not obj.image:
+            return False
+
+        image_path = os.path.join(settings.MEDIA_ROOT, obj.image)
+        return os.path.isfile(image_path)
+
+    @admin.display(boolean=True, description="Data Files")
+    def has_files(self, obj):
+
+        if not obj.datafiles_path:
+            return False
+
+        directory = os.path.join(settings.MEDIA_ROOT, obj.datafiles_path)
+
+        if not os.path.isdir(directory):
+            return False
+
+        return any(
+            os.path.isfile(os.path.join(directory, filename))
+            for filename in os.listdir(directory)
+        )
+
     ordering = (Lower("name"),"name")
 
     # Custom form with file upload fields
