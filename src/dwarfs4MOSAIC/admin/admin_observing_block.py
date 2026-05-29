@@ -4,6 +4,7 @@ This file defines how Tbl_observing_block model is displayed and managed in the 
 
 # Third-party libraries
 from django.contrib import admin
+from django.db.models.functions import Lower
 from django.urls import path
 
 # Local application imports
@@ -125,6 +126,7 @@ def process_observing_block_row(row, idx, errors):
 # Register the Tbl_observing_block model in the admin with custom settings
 @admin.register(Tbl_observing_block)
 class ObservingBlockAdmin(admin.ModelAdmin):
+    ordering = (Lower("name"),"name")
 
     # Custom form
     form = ObservingBlockAdminForm
