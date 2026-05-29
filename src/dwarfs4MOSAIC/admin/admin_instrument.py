@@ -4,6 +4,7 @@ This file defines how Tbl_instrument model is displayed and managed in the Djang
 
 # Third-party libraries
 from django.contrib import admin
+from django.db.models.functions import Lower
 from django.urls import path
 
 # Local application imports
@@ -47,6 +48,7 @@ def process_instrument_row(row, idx, errors):
 # Register the Tbl_instrument model in the admin with custom settings
 @admin.register(Tbl_instrument)
 class InstrumentAdmin(admin.ModelAdmin):
+    ordering = (Lower("name"),"name")
 
     # Custom form
     form = InstrumentAdminForm
