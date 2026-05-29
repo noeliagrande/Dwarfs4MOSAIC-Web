@@ -29,92 +29,93 @@ class Tbl_target(models.Model):
 
     # Target type with predefined choices
     type = models.CharField(
-        choices=[
-            ('galaxy', 'Galaxy'),
-            ('calibration', 'Calibration'),
-            ('other', 'Other'), ],
-        max_length=20,  # maximum length in choices
-        default='galaxy',
-        verbose_name="Type")
+        choices         = [ ('galaxy', 'Galaxy'),
+                            ('calibration', 'Calibration'),
+                            ('other', 'Other'), ],
+        max_length      = 20,  # maximum length in choices
+        default         = 'galaxy',
+        verbose_name    = "Type")
 
     # Optional website URL with more information about the target
     website = models.URLField(
-        verbose_name="Website",
-        blank=True,
-        null=True,
-        default="")
+        verbose_name    = "Website",
+        blank           = True,
+        null            = True,
+        default         = "")
 
     # Right Ascension in HH:MM:SS format (string)
     right_ascension = models.CharField(
-        max_length=15,
-        verbose_name="Right Ascension",
-        help_text="HH:MM:SS[.sss]",
-        validators=[validate_right_ascension],)
+        max_length      = 15,
+        verbose_name    = "Right Ascension",
+        help_text       = "HH:MM:SS[.sss]",
+        validators      = [validate_right_ascension],
+        default         = "")
 
     # Declination in +/- degrees:minutes:seconds format (string)
     declination = models.CharField(
-        max_length=15,
-        verbose_name="Declination",
-        help_text="±DD:MM:SS[.sss]",
-        validators=[validate_declination])
+        max_length      = 15,
+        verbose_name    = "Declination",
+        help_text       = "±DD:MM:SS[.sss]",
+        validators      = [validate_declination],
+        default         = "")
 
     # Apparent magnitude
     magnitude = models.FloatField(
-        null=True,
-        blank=True,
-        verbose_name="Magnitude",
-        help_text="r band (AB system)")
+        null            = True,
+        blank           = True,
+        verbose_name    = "Magnitude",
+        help_text       ="r band (AB system)")
 
     # Redshift components of the target
     redshift_value = models.FloatField(
-        null=True,
-        blank=True,
-        verbose_name="Redshift value (z)"
+        null            = True,
+        blank           = True,
+        verbose_name    = "Redshift value (z)"
     )
 
     redshift_error = models.FloatField(
-        null=True,
-        blank=True,
-        verbose_name="Redshift error"
+        null            = True,
+        blank           = True,
+        verbose_name    = "Redshift error"
     )
 
     # Angular size of the object in arcseconds
     size = models.FloatField(
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(0)],
-        verbose_name="Angular size",
-        help_text="arcsec",)
+        null            = True,
+        blank           = True,
+        validators      = [MinValueValidator(0)],
+        verbose_name    = "Angular size",
+        help_text       = "arcsec",)
 
     # Semester in which the target is visible
     semester = models.CharField(
-        null=True,
-        blank=True,
-        max_length=10,
-        verbose_name="Visibility semester")
+        null            = True,
+        blank           = True,
+        max_length      = 10,
+        verbose_name    = "Visibility semester")
 
     # Optional comments or notes about the target
     comments = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name="Comments")
+        blank           = True,
+        null            = True,
+        verbose_name    = "Comments")
 
     # Relative path to the image file under MEDIA_ROOT (not editable in admin)
     image = models.CharField( # Image relative path to MEDIA_ROOT
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Image",
-        editable=False,
+        max_length      = 255,
+        blank           = True,
+        null            = True,
+        verbose_name    = "Image",
+        editable        = False,
     )
 
     # Relative path to associated data files under MEDIA_ROOT (not editable in admin)
     datafiles_path = models.CharField( # Data files relative path to MEDIA_ROOT
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name="Data files path",
-        editable=False,
+        max_length      = 255,
+        blank           = True,
+        null            = True,
+        verbose_name    = "Data files path",
+        editable        = False,
     )
 
     @property
