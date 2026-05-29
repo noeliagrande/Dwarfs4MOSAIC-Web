@@ -37,6 +37,7 @@ def process_observatory_row(row, idx, errors):
 # Register the Tbl_observatory model in the admin with custom settings
 @admin.register(Tbl_observatory)
 class ObservatoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "location", "website")
     ordering = (Lower("name"),"name")
 
     form = ObservatoryAdminForm
