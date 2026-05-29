@@ -16,7 +16,9 @@ import zipfile
 # Third-party libraries
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
+from django.db.models import Prefetch
+from django.db.models.functions import Lower
 from django.http import FileResponse, JsonResponse
 from django.shortcuts import render, redirect
 
@@ -30,19 +32,25 @@ def home_view(request):
     if request.user.is_authenticated:
         if request.user.is_superuser or request.user.researcher.role == "core_team":
             # If user is admin or core team, show all targets with related data
-            lst_targets = (Tbl_target.objects.prefetch_related('observing_blocks__obs_run__instrument').distinct().
-                           order_by('right_ascension', 'declination'))
+            lst_targets = (
+                Tbl_target.objects
+                .prefetch_related('observing_blocks__obs_run__instrument')
+                .distinct()
+                .order_by('right_ascension', 'declination')
+            )
+
         else:
             # For collaborators, filter targets by allowed groups and exclude denied blocks
             denied_blocks = request.user.researcher.denied_blocks.all()
 
-            lst_targets = Tbl_target.objects.filter(
-                observing_blocks__allowed_groups__in = request.user.groups.all()
-            ).exclude(
-                observing_blocks__in = denied_blocks
-            ).prefetch_related(
-                'observing_blocks__obs_run__instrument'
-            ).distinct().order_by('right_ascension', 'declination')
+            lst_targets = (
+                Tbl_target.objects
+                .filter(observing_blocks__allowed_groups__in=request.user.groups.all())
+                .exclude(observing_blocks__in=denied_blocks)
+                .prefetch_related('observing_blocks__obs_run__instrument')
+                .distinct()
+                .order_by('right_ascension', 'declination')
+            ) #TODO: hours y deg cuando estén
 
         lst_targets_and_files = []
 
@@ -126,7 +134,22 @@ def database_view(request):
 
 # List all user groups except 'admin'
 def groups_view(request):
-    lst_groups = Group.objects.exclude(name='admin').order_by("name")
+    lst_groups = (
+        Group.objects
+        .exclude(name='admin')
+        # Order users inside each group
+        .prefetch_related(
+            Prefetch(
+                'user_set',
+                queryset=User.objects.order_by(Lower('username'), "username")),
+        # Order observing blocks inside each group
+            Prefetch(
+                'allowed_blocks',
+                queryset=Tbl_observing_block.objects.order_by(Lower('name'), 'name'))
+        )
+        # Order table rows (by group name)
+        .order_by(Lower("name"), 'name')
+    )
 
     return render(request, 'dwarfs4MOSAIC/groups.html', {
         'lst_groups': lst_groups
@@ -134,7 +157,10 @@ def groups_view(request):
 
 # List all observatories ordered by name
 def observatories_view(request):
-    lst_observatories = Tbl_observatory.objects.all().order_by("name")
+    lst_observatories = (
+        Tbl_observatory.objects
+        .order_by(Lower("name"), 'name')
+    )
 
     return render(request, 'dwarfs4MOSAIC/observatories.html', {
         'lst_observatories': lst_observatories
@@ -143,10 +169,17 @@ def observatories_view(request):
 # Show one observatory and its telescopes
 def observatory_view(request, observatory_name):
     # Try to get the observatory by name, returns None if not found
-    observatory = Tbl_observatory.objects.filter(name=observatory_name).first()
+    observatory = (
+        Tbl_observatory.objects
+        .filter(name=observatory_name)
+    ).first()
 
     # Get telescopes for the observatory only if the observatory exists, otherwise return an empty list
-    telescopes = Tbl_telescope.objects.filter(obs_tel=observatory) if observatory else []
+    telescopes = (
+        Tbl_telescope.objects
+        .filter(obs_tel=observatory)
+        .order_by(Lower("name"), 'name')
+    ) if observatory else []
 
     return render(request, 'dwarfs4MOSAIC/observatory.html', {
         'observatory_name': observatory_name,
@@ -155,7 +188,11 @@ def observatory_view(request, observatory_name):
 
 # List all telescopes with related observatories
 def telescopes_view(request):
-    lst_telescopes = Tbl_telescope.objects.all().select_related("obs_tel").order_by("name")
+    lst_telescopes = (
+        Tbl_telescope.objects
+        .select_related("obs_tel")
+        .order_by(Lower("name"), 'name')
+    )
 
     return render(request, 'dwarfs4MOSAIC/telescopes.html', {
         'lst_telescopes': lst_telescopes
@@ -164,10 +201,17 @@ def telescopes_view(request):
 # Show one telescope and its instruments
 def telescope_view(request, telescope_name):
     # Try to get the telescope by name, returns None if not found
-    telescope = Tbl_telescope.objects.filter(name=telescope_name).first()
+    telescope = (
+        Tbl_telescope.objects
+        .filter(name=telescope_name)
+    ).first()
 
     # Get instruments for the telescope only if the telescope exists, otherwise return an empty list
-    instruments = Tbl_instrument.objects.filter(tel_ins=telescope) if telescope else []
+    instruments = (
+        Tbl_instrument.objects
+        .filter(tel_ins=telescope)
+        .order_by(Lower("name"), 'name')
+    ) if telescope else []
 
     return render(request, 'dwarfs4MOSAIC/telescope.html', {
         'telescope': telescope,
@@ -176,7 +220,11 @@ def telescope_view(request, telescope_name):
 
 # List all instruments with related telescopes
 def instruments_view(request):
-    lst_instruments = Tbl_instrument.objects.all().select_related("tel_ins").order_by("name")
+    lst_instruments = (
+        Tbl_instrument.objects
+        .select_related("tel_ins")
+        .order_by(Lower("name"), 'name')
+    )
 
     return render(request, 'dwarfs4MOSAIC/instruments.html', {
         'lst_instruments': lst_instruments
@@ -184,7 +232,10 @@ def instruments_view(request):
 
 # List all researchers
 def researchers_view(request):
-    lst_researchers = Tbl_researcher.objects.all()
+    lst_researchers = (
+        Tbl_researcher.objects
+        .order_by(Lower("name"), 'name')
+    )
 
     return render(request, 'dwarfs4MOSAIC/researchers.html', {
         'lst_researchers': lst_researchers
@@ -192,7 +243,11 @@ def researchers_view(request):
 
 # List all observing runs with related instruments
 def observing_runs_view(request):
-    lst_observing_runs = Tbl_observing_run.objects.all().select_related('instrument')
+    lst_observing_runs = (
+        Tbl_observing_run.objects
+        .select_related('instrument')
+        .order_by(Lower('instrument__name'), Lower('name'), 'id')
+    )
 
     return render(request, 'dwarfs4MOSAIC/observing_runs.html', {
         'lst_observing_runs': lst_observing_runs
@@ -201,13 +256,23 @@ def observing_runs_view(request):
 # Show details for one observing run, including blocks and researchers
 def observing_run_view(request, observing_run_name):
     # Try to get the observing run by name, returns None if not found
-    observing_run = Tbl_observing_run.objects.filter(name=observing_run_name).first()
+    observing_run = (
+        Tbl_observing_run.objects
+        .filter(name=observing_run_name)
+    ).first()
 
     # Get observing blocks of the observing run only if the observing run exists, else empty list
-    observing_blocks = Tbl_observing_block.objects.filter(obs_run=observing_run.id) if observing_run else []
+    observing_blocks = (
+        Tbl_observing_block.objects
+        .filter(obs_run=observing_run)
+        .order_by(Lower('name'), 'name')
+    ) if observing_run else []
 
     # Get researchers involved only if the observing run exists, else empty queryset
-    researchers = observing_run.researchers.all() if observing_run else []
+    researchers = (
+        observing_run.researchers.all()
+        .order_by(Lower('name'), 'name')
+    ) if observing_run else []
 
     return render(request, 'dwarfs4MOSAIC/observing_run.html', {
         'observing_run': observing_run,
@@ -216,14 +281,22 @@ def observing_run_view(request, observing_run_name):
 
 # List all observing blocks with related observing runs and targets
 def observing_blocks_view(request):
-    lst_observing_blocks = Tbl_observing_block.objects.all().select_related('obs_run').prefetch_related('target')
+    lst_observing_blocks = (
+        Tbl_observing_block.objects
+        .select_related('obs_run')
+        .prefetch_related('target')
+        .order_by(Lower('name'), 'name', Lower('obs_run__name'),)
+    )
 
     return render(request, 'dwarfs4MOSAIC/observing_blocks.html', {
         'lst_observing_blocks': lst_observing_blocks})
 
 # List all targets
 def targets_view(request):
-    lst_targets = Tbl_target.objects.all().order_by('right_ascension', 'declination')
+    lst_targets = (
+        Tbl_target.objects
+        .order_by('right_ascension', 'declination')
+    )
 
     return render(request, 'dwarfs4MOSAIC/targets.html', {
         'lst_targets': lst_targets})
