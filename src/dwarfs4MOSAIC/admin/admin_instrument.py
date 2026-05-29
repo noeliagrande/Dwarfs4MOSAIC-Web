@@ -52,6 +52,7 @@ class InstrumentAdmin(admin.ModelAdmin):
     list_display = ("name", "description", "tel_ins", "status_colored", "website")
     ordering = (Lower("name"),"name")
 
+    @admin.display(description="status")
     def status_colored(self, obj):
 
         if obj.status == "inoperative":
@@ -64,9 +65,6 @@ class InstrumentAdmin(admin.ModelAdmin):
             color,
             obj.status
         )
-
-    status_colored.short_description = "status"
-
 
     # Custom form
     form = InstrumentAdminForm
