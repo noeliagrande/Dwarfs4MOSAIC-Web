@@ -8,6 +8,7 @@ import os
 # Third-party libraries
 from django.conf import settings
 from django.contrib import admin, messages
+from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect
 from django.urls import path
 from django.urls import reverse
@@ -83,6 +84,7 @@ def process_target_row(row, idx, errors):
 # Register the Tbl_target model in the admin with custom settings
 @admin.register(Tbl_target)
 class TargetAdmin(admin.ModelAdmin):
+    ordering = (Lower("name"),"name")
 
     # Custom form with file upload fields
     form = TargetAdminForm
