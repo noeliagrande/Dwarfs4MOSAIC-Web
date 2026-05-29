@@ -126,6 +126,7 @@ def process_observing_block_row(row, idx, errors):
 # Register the Tbl_observing_block model in the admin with custom settings
 @admin.register(Tbl_observing_block)
 class ObservingBlockAdmin(admin.ModelAdmin):
+    list_display = ("name","obs_run", "observation_mode", "semester")
     ordering = (Lower("name"),"name")
 
     # Custom form
