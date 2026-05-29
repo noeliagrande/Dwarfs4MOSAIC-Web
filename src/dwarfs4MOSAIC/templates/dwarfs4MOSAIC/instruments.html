@@ -79,7 +79,7 @@
                     <!-- Instrument status with color-coded text -->
                     <td style="color:
                             {% if instrument.status == 'inoperative' %} red
-                            {% elif instrument.status == 'maintenance'%} orange
+                            {% elif instrument.status == 'maintenance'%} #ff6200
                             {% else %} black
                             {% endif %};">
                         {{ instrument.status }}
