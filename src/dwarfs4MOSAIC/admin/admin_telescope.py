@@ -6,6 +6,7 @@ This file defines how Tbl_telescope model is displayed and managed in the Django
 from django.contrib import admin
 from django.db.models.functions import Lower
 from django.urls import path
+from django.utils.html import format_html
 
 # Local application imports
 from ..forms import TelescopeAdminForm
@@ -48,6 +49,24 @@ def process_telescope_row(row, idx, errors):
 # Register the Tbl_telescope model in the admin with custom settings
 @admin.register(Tbl_telescope)
 class TelescopeAdmin(admin.ModelAdmin):
+    list_display = ("name", "description", "obs_tel", "status_colored", "website")
+
+    @admin.display(description="status")
+    def status_colored(self, obj):
+
+        if obj.status == "inoperative":
+            color = "red"
+        elif obj.status == "maintenance":
+            color = "#ff6200"
+        else:
+            color = "black"
+
+        return format_html(
+            '<span style="color: {};">{}</span>',
+            color,
+            obj.status
+        )
+
     ordering = (Lower("name"),"name")
 
     # Custom form
