@@ -6,6 +6,7 @@ This file defines how Tbl_observatory model is displayed and managed in the Djan
 from django.contrib import admin
 from django.db.models.functions import Lower
 from django.urls import path
+from django.utils.html import format_html
 
 # Local application imports
 from ..forms import ObservatoryAdminForm
@@ -34,16 +35,33 @@ def process_observatory_row(row, idx, errors):
     )
     return created_flag
 
-# Register the Tbl_observatory model in the admin with custom settings
+# Admin interface for Tbl_observatory with enhanced UI and CSV import support
 @admin.register(Tbl_observatory)
 class ObservatoryAdmin(admin.ModelAdmin):
-    list_display = ("name", "location", "website")
+
+    # Display main identifying fields for quick overview
+    list_display = ("name", "location", "website_link")
+
+    # Default ordering in changelist (case-insensitive + fallback)
     ordering = (Lower("name"),"name")
 
-    form = ObservatoryAdminForm
-    empty_value_display = ""  # Show empty string instead of None
+    # External website link opening in a new tab
+    @admin.display(description="website")
+    def website_link(self, obj):
+        if not obj.website:
+            return "-"
 
-    # Group fields into sections in the admin form
+        return format_html(
+            '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>',
+            obj.website,
+            obj.website
+        )
+
+    # Custom ModelForm and shows empty values as empty strings instead of None
+    form = ObservatoryAdminForm
+    empty_value_display = ""
+
+    # Group fields into logical sections for better usability
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [

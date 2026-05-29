@@ -12,6 +12,7 @@ from django.db.models.functions import Lower
 from django.http import HttpResponseRedirect
 from django.urls import path
 from django.urls import reverse
+from django.utils.html import format_html
 
 # Local application imports
 from ..forms import TargetAdminForm
@@ -76,11 +77,17 @@ def process_target_row(row, idx, errors):
     return created_flag
 
 
-# Register the Tbl_target model in the admin with custom settings
+# Admin interface for Tbl_target with enhanced UI and CSV import support
 @admin.register(Tbl_target)
 class TargetAdmin(admin.ModelAdmin):
-    list_display = ("name", "type", "has_image", "has_files", "website")
 
+    # Display main identifying fields plus custom formatted columns for quick overview
+    list_display = ("name", "type", "has_image", "has_files", "website_link")
+
+    # Default ordering in changelist (case-insensitive + fallback)
+    ordering = (Lower("name"), "name")
+
+    # Indicate whether an image exists on disk for this target
     @admin.display(boolean=True, description="Image")
     def has_image(self, obj):
 
@@ -90,6 +97,7 @@ class TargetAdmin(admin.ModelAdmin):
         image_path = os.path.join(settings.MEDIA_ROOT, obj.image)
         return os.path.isfile(image_path)
 
+    # Indicate whether the target has at least one file in its data directory
     @admin.display(boolean=True, description="Data Files")
     def has_files(self, obj):
 
@@ -106,9 +114,19 @@ class TargetAdmin(admin.ModelAdmin):
             for filename in os.listdir(directory)
         )
 
-    ordering = (Lower("name"),"name")
+    # External website link opening in a new tab
+    @admin.display(description="website")
+    def website_link(self, obj):
+        if not obj.website:
+            return "-"
 
-    # Custom form with file upload fields
+        return format_html(
+            '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>',
+            obj.website,
+            obj.website
+        )
+
+    # Custom ModelForm for validation and layout control
     form = TargetAdminForm
 
     # Include necessary CSS and JS for admin widgets
@@ -116,7 +134,7 @@ class TargetAdmin(admin.ModelAdmin):
         css = {'all': ('admin/css/widgets.css',)}
         js = ('admin/js/core.js', 'admin/js/SelectBox.js', 'admin/js/SelectFilter2.js',)
 
-    # Group fields into sections in the admin form
+    # Group fields into logical sections for better usability
     def get_fieldsets(self, request, obj=None):
         base_fieldsets = [
             ("General Information", {"fields": [
@@ -151,6 +169,7 @@ class TargetAdmin(admin.ModelAdmin):
             )
 
         return base_fieldsets
+
 
     # On save, selected files (old ones) are deleted before new uploads occur.
     def save_model(self, request, obj, form, change):
@@ -303,7 +322,6 @@ class TargetAdmin(admin.ModelAdmin):
     def get_change_url(self, obj):
         opts = self.model._meta
         return reverse(f'admin:{opts.app_label}_{opts.model_name}_change', args=[obj.pk])
-
 
     # Override the change list template to add the custom "Import CSV" button
     change_list_template = "admin/dwarfs4MOSAIC/tbl_target_changelist.html"

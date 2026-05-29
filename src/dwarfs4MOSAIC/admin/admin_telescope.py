@@ -46,11 +46,17 @@ def process_telescope_row(row, idx, errors):
     return created_flag
 
 
-# Register the Tbl_telescope model in the admin with custom settings
+# Admin interface for Tbl_telescope with enhanced UI and CSV import support
 @admin.register(Tbl_telescope)
 class TelescopeAdmin(admin.ModelAdmin):
-    list_display = ("name", "description", "obs_tel", "status_colored", "website")
 
+    # Display main identifying fields plus custom formatted columns for quick overview
+    list_display = ("name", "description", "obs_tel", "status_colored", "website_link")
+
+    # Default ordering in changelist (case-insensitive + fallback)
+    ordering = (Lower("name"), "name")
+
+    # Custom formatted status column (color-coded)
     @admin.display(description="status")
     def status_colored(self, obj):
 
@@ -67,12 +73,22 @@ class TelescopeAdmin(admin.ModelAdmin):
             obj.status
         )
 
-    ordering = (Lower("name"),"name")
+    # External website link opening in a new tab
+    @admin.display(description="website")
+    def website_link(self, obj):
+        if not obj.website:
+            return "-"
 
-    # Custom form
+        return format_html(
+            '<a href="{}" target="_blank" rel="noopener noreferrer">{}</a>',
+            obj.website,
+            obj.website
+        )
+
+    # Custom ModelForm for validation and layout control
     form = TelescopeAdminForm
 
-    # Group fields into sections in the admin form
+    # Group fields into logical sections for better usability
     fieldsets = [
         (None, {"fields": ["name"]}),
         ("General Information", {"fields": [
