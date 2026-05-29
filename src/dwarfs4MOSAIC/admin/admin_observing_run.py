@@ -4,6 +4,7 @@ This file defines how Tbl_observing_run model is displayed and managed in the Dj
 
 # Third-party libraries
 from django.contrib import admin
+from django.db.models.functions import Lower
 from django.urls import path
 
 # Local application imports
@@ -82,6 +83,7 @@ def process_observing_run_row(row, idx, errors):
 # Register the Tbl_observing_run model in the admin with custom settings
 @admin.register(Tbl_observing_run)
 class ObservingRunAdmin(admin.ModelAdmin):
+    ordering = (Lower("name"),"name")
 
     # Custom form
     form = ObservingRunAdminForm
