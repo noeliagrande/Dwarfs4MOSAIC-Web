@@ -51,6 +51,13 @@ class Tbl_target(models.Model):
         validators      = [validate_right_ascension],
         default         = "")
 
+    # Right Ascension in hours
+    right_ascension_hours = models.FloatField(
+        null            = True,
+        blank           = True,
+        editable        = False,
+    )
+
     # Declination in +/- degrees:minutes:seconds format (string)
     declination = models.CharField(
         max_length      = 15,
@@ -58,6 +65,13 @@ class Tbl_target(models.Model):
         help_text       = "±DD:MM:SS[.sss]",
         validators      = [validate_declination],
         default         = "")
+
+    # Declination in degrees
+    declination_deg = models.FloatField(
+        null            = True,
+        blank           = True,
+        editable        = False,
+    )
 
     # Apparent magnitude
     magnitude = models.FloatField(
@@ -138,6 +152,25 @@ class Tbl_target(models.Model):
         valid_choices = [c[0] for c in self._meta.get_field('type').choices]
         if self.type not in valid_choices:
             self.type = 'other'
+
+    def save(self, *args, **kwargs):
+
+        # RA -> hours
+        if self.right_ascension:
+            h, m, s = self.right_ascension.split(":")
+            self.right_ascension_hours = (
+                    int(h) + int(m) / 60 + float(s) / 3600
+            )
+
+        # DEC -> degrees
+        if self.declination:
+            sign = 1 if self.declination[0] == '+' else -1
+            d, m, s = self.declination[1:].split(":")
+            self.declination_deg = sign * (
+                    int(d) + int(m) / 60 + float(s) / 3600
+            )
+
+        super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         """

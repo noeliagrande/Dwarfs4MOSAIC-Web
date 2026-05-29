@@ -36,7 +36,7 @@ def home_view(request):
                 Tbl_target.objects
                 .prefetch_related('observing_blocks__obs_run__instrument')
                 .distinct()
-                .order_by('right_ascension', 'declination')
+                .order_by('right_ascension_hours', 'declination_deg')
             )
 
         else:
@@ -49,8 +49,8 @@ def home_view(request):
                 .exclude(observing_blocks__in=denied_blocks)
                 .prefetch_related('observing_blocks__obs_run__instrument')
                 .distinct()
-                .order_by('right_ascension', 'declination')
-            ) #TODO: hours y deg cuando estén
+                .order_by('right_ascension_hours', 'declination_deg')
+            )
 
         lst_targets_and_files = []
 
@@ -295,7 +295,7 @@ def observing_blocks_view(request):
 def targets_view(request):
     lst_targets = (
         Tbl_target.objects
-        .order_by('right_ascension', 'declination')
+        .order_by('right_ascension_hours', 'declination_deg')
     )
 
     return render(request, 'dwarfs4MOSAIC/targets.html', {
