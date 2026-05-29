@@ -15,6 +15,7 @@ from ..models import Tbl_researcher
 
 @admin.register(Tbl_researcher)
 class ResearcherAdmin(admin.ModelAdmin):
+    list_display = ("name", "institution", "role", "is_phd", "email")
     ordering = (Lower("name"),"name")
 
     # Custom form
