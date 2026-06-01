@@ -4,7 +4,6 @@ Admin form for groups with custom allowed blocks field
 
 # Third-party libraries
 from django import forms
-from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.contrib.auth.models import Group
 
@@ -20,7 +19,7 @@ class GroupAdminForm(forms.ModelForm):
         label = '',
         help_text = 'Authorized blocks for users belonging to the group. '
                     'Hold down “Control”, or “Command” on a Mac, to select more than one.',
-        widget=admin.widgets.FilteredSelectMultiple("Observing Blocks", is_stacked=False)
+        widget=FilteredSelectMultiple("Observing Blocks", is_stacked=False)
     )
 
     class Meta:
