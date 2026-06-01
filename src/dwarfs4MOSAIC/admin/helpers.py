@@ -1,13 +1,7 @@
 """
-Utility functions and custom form fields for database queries, file handling, and CSV imports.
+Utility module for shared Django application helpers.
 
-Includes:
-- Convert DB cursor results to list of dicts.
-- List files in MEDIA_ROOT subfolders.
-- Generate unique filenames to avoid overwriting.
-- Sanitize filenames for safe filesystem use.
-- Import CSV files with row processing callback.
-- Custom Django form widgets and fields for single and multiple file uploads.
+Contains reusable functions for common backend tasks.
 """
 
 # Standard libraries
