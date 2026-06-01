@@ -66,6 +66,8 @@ class InstrumentAdmin(admin.ModelAdmin):
 
         if obj.status == "inoperative":
             color = "red"
+        elif obj.status == "maintenance":
+            color = "#ff6200"
         else:
             color = "black"
 

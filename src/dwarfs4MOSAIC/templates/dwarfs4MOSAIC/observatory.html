@@ -71,8 +71,14 @@
                         </div>
                     </td>
 
-                    <!-- Status -->
-                    <td>{{ telescope.status }}</td>
+                    <!-- Telescope status with color-coded text -->
+                    <td style="color:
+                            {% if telescope.status == 'inoperative' %} red
+                            {% elif telescope.status == 'maintenance'%} #ff6200
+                            {% else %} black
+                            {% endif %};">
+                        {{ telescope.status }}
+                    </td>
 
                      <!-- Aperture -->
                     <td>{{ telescope.aperture }}</td>

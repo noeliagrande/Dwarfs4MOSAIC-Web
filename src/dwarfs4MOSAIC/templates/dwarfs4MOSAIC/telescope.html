@@ -79,8 +79,12 @@
                         {% endfor %}
                     </td>
 
-                    <!-- Status (in red if 'inoperative') -->
-                    <td style="color: {% if instrument.status == 'inoperative' %}red{% else %}black{% endif %};">
+                    <!-- Telescope status with color-coded text -->
+                    <td style="color:
+                            {% if instrument.status == 'inoperative' %} red
+                            {% elif instrument.status == 'maintenance'%} #ff6200
+                            {% else %} black
+                            {% endif %};">
                         {{ instrument.status }}
                     </td>
 
