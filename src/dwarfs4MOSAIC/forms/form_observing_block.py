@@ -6,6 +6,7 @@ Admin form for observing blocks, to set control size.
 from django import forms
 
 # Local application imports
+from ..admin.helpers import set_related_view_only
 from ..constants import (
     DROPBOX_WIDTH,
     NAME_WIDTH,
@@ -63,6 +64,10 @@ class ObservingBlockAdminForm(forms.ModelForm):
             choices = config_choices,
             attrs   = {'style': f'width: {DROPBOX_WIDTH}px;'}
         )
+
+        # Restrict related field widget to view-only mode
+        # (disable add/edit/delete links in admin form)
+        set_related_view_only(self.fields["obs_run"])
 
     class Media:
         js = ('js/observing_block.js',)

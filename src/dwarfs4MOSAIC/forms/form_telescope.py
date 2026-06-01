@@ -6,6 +6,7 @@ Admin form for telescopes, to set control size.
 from django import forms
 
 # Local application imports
+from ..admin.helpers import set_related_view_only
 from ..constants import (
     DROPBOX_OBSERVATORY_WIDTH,
     DROPBOX_WIDTH,
@@ -44,3 +45,7 @@ class TelescopeAdminForm(forms.ModelForm):
         # Adjust width here to preserve Django's default URLField widget behavior
         # without overriding the admin URL widget (current/change/clear links).
         self.fields['website'].widget.attrs.update({'style': f'width: {URL_WIDTH}px;'})
+
+        # Restrict related field widget to view-only mode
+        # (disable add/edit/delete links in admin form)
+        set_related_view_only(self.fields["obs_tel"])

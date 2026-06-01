@@ -13,6 +13,14 @@ from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.utils.text import capfirst
 
+# Configure a related field widget to allow viewing the related object
+# while preventing add, edit and delete actions from the admin form.
+def set_related_view_only(field):
+    field.widget.can_add_related = False
+    field.widget.can_change_related = False
+    field.widget.can_delete_related = False
+    field.widget.can_view_related = True
+
 
 # Handle CSV file upload and import rows via callback function.
 # 'process_row_func' is called for each CSV row; it should return:
