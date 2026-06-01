@@ -13,15 +13,6 @@ import unicodedata
 from django.conf import settings
 
 
-# Convert all rows from a DB cursor into a list of dictionaries.
-# Each dictionary represents a row with column names as keys.
-def dictfetchall(cursor):
-    columns = [col[0] for col in cursor.description]
-    return [
-        dict(zip(columns, row))
-        for row in cursor.fetchall()
-    ]
-
 # List files inside a directory relative to MEDIA_ROOT.
 # Returns a list of filenames or empty list if directory does not exist.
 def get_files(path):
@@ -35,19 +26,6 @@ def get_files(path):
         return files
     except FileNotFoundError:
         return []
-
-# Generate a unique filename by adding a numeric suffix if needed.
-# Example: file.txt → file (1).txt → file (2).txt, etc.
-def get_unique_filename(dest_dir, filename):
-    base, ext = os.path.splitext(filename)
-    counter = 1
-    new_filename = filename
-
-    while os.path.exists(os.path.join(dest_dir, new_filename)):
-        new_filename = f"{base} ({counter}){ext}"
-        counter += 1
-
-    return new_filename
 
 # Sanitize a filename by:
 # - Removing accents and special Unicode characters.
