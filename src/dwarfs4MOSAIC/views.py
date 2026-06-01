@@ -23,7 +23,7 @@ from django.http import FileResponse, JsonResponse
 from django.shortcuts import render, redirect
 
 # Local application imports
-from .models import *
+from . import models
 from .utils import get_files, sanitize_filename
 
 # Home page showing all targets and their files for authenticated users
@@ -33,7 +33,7 @@ def home_view(request):
         if request.user.is_superuser or request.user.researcher.role == "core_team":
             # If user is admin or core team, show all targets with related data
             lst_targets = (
-                Tbl_target.objects
+                models.Tbl_target.objects
                 .prefetch_related('observing_blocks__obs_run__instrument')
                 .distinct()
                 .order_by('right_ascension_hours', 'declination_deg')
@@ -44,7 +44,7 @@ def home_view(request):
             denied_blocks = request.user.researcher.denied_blocks.all()
 
             lst_targets = (
-                Tbl_target.objects
+                models.Tbl_target.objects
                 .filter(observing_blocks__allowed_groups__in=request.user.groups.all())
                 .exclude(observing_blocks__in=denied_blocks)
                 .prefetch_related('observing_blocks__obs_run__instrument')
@@ -145,7 +145,7 @@ def groups_view(request):
         # Order observing blocks inside each group
             Prefetch(
                 'allowed_blocks',
-                queryset=Tbl_observing_block.objects.order_by(Lower('name'), 'name'))
+                queryset=models.Tbl_observing_block.objects.order_by(Lower('name'), 'name'))
         )
         # Order table rows (by group name)
         .order_by(Lower("name"), 'name')
@@ -158,7 +158,7 @@ def groups_view(request):
 # List all observatories ordered by name
 def observatories_view(request):
     lst_observatories = (
-        Tbl_observatory.objects
+        models.Tbl_observatory.objects
         .order_by(Lower("name"), 'name')
     )
 
@@ -170,13 +170,13 @@ def observatories_view(request):
 def observatory_view(request, observatory_name):
     # Try to get the observatory by name, returns None if not found
     observatory = (
-        Tbl_observatory.objects
+        models.Tbl_observatory.objects
         .filter(name=observatory_name)
     ).first()
 
     # Get telescopes for the observatory only if the observatory exists, otherwise return an empty list
     telescopes = (
-        Tbl_telescope.objects
+        models.Tbl_telescope.objects
         .filter(obs_tel=observatory)
         .order_by(Lower("name"), 'name')
     ) if observatory else []
@@ -189,7 +189,7 @@ def observatory_view(request, observatory_name):
 # List all telescopes with related observatories
 def telescopes_view(request):
     lst_telescopes = (
-        Tbl_telescope.objects
+        models.Tbl_telescope.objects
         .select_related("obs_tel")
         .order_by(Lower("name"), 'name')
     )
@@ -202,13 +202,13 @@ def telescopes_view(request):
 def telescope_view(request, telescope_name):
     # Try to get the telescope by name, returns None if not found
     telescope = (
-        Tbl_telescope.objects
+        models.Tbl_telescope.objects
         .filter(name=telescope_name)
     ).first()
 
     # Get instruments for the telescope only if the telescope exists, otherwise return an empty list
     instruments = (
-        Tbl_instrument.objects
+        models.Tbl_instrument.objects
         .filter(tel_ins=telescope)
         .order_by(Lower("name"), 'name')
     ) if telescope else []
@@ -221,7 +221,7 @@ def telescope_view(request, telescope_name):
 # List all instruments with related telescopes
 def instruments_view(request):
     lst_instruments = (
-        Tbl_instrument.objects
+        models.Tbl_instrument.objects
         .select_related("tel_ins")
         .order_by(Lower("name"), 'name')
     )
@@ -233,7 +233,7 @@ def instruments_view(request):
 # List all researchers
 def researchers_view(request):
     lst_researchers = (
-        Tbl_researcher.objects
+        models.Tbl_researcher.objects
         .order_by(Lower("name"), 'name')
     )
 
@@ -244,7 +244,7 @@ def researchers_view(request):
 # List all observing runs with related instruments
 def observing_runs_view(request):
     lst_observing_runs = (
-        Tbl_observing_run.objects
+        models.Tbl_observing_run.objects
         .select_related('instrument')
         .order_by(Lower('instrument__name'), Lower('name'), 'id')
     )
@@ -257,13 +257,13 @@ def observing_runs_view(request):
 def observing_run_view(request, observing_run_name):
     # Try to get the observing run by name, returns None if not found
     observing_run = (
-        Tbl_observing_run.objects
+        models.Tbl_observing_run.objects
         .filter(name=observing_run_name)
     ).first()
 
     # Get observing blocks of the observing run only if the observing run exists, else empty list
     observing_blocks = (
-        Tbl_observing_block.objects
+        models.Tbl_observing_block.objects
         .filter(obs_run=observing_run)
         .order_by(Lower('name'), 'name')
     ) if observing_run else []
@@ -282,7 +282,7 @@ def observing_run_view(request, observing_run_name):
 # List all observing blocks with related observing runs and targets
 def observing_blocks_view(request):
     lst_observing_blocks = (
-        Tbl_observing_block.objects
+        models.Tbl_observing_block.objects
         .select_related('obs_run')
         .prefetch_related('target')
         .order_by(Lower('name'), 'name', Lower('obs_run__name'),)
@@ -294,7 +294,7 @@ def observing_blocks_view(request):
 # List all targets
 def targets_view(request):
     lst_targets = (
-        Tbl_target.objects
+        models.Tbl_target.objects
         .order_by('right_ascension_hours', 'declination_deg')
     )
 
@@ -306,7 +306,7 @@ def targets_view(request):
 # - Multiple files compressed into a ZIP archive
 def download_files_view(request, target_id):
     # Try to get the target by primary key, returns None if not found
-    target = Tbl_target.objects.filter(pk=target_id).first()
+    target = models.Tbl_target.objects.filter(pk=target_id).first()
 
     # Get files and size only if target exists and has a datafiles_path, else empty list
     files = []
@@ -368,12 +368,12 @@ def ajax_get_instrument_choices(request):
 
     if run_id:
         try:
-            run = Tbl_observing_run.objects.get(pk=run_id)
+            run = models.Tbl_observing_run.objects.get(pk=run_id)
             instrument = getattr(run, 'instrument', None)
             if instrument:
                 data['filters'] = instrument.filters_list
                 data['configuration'] = instrument.configuration_list
-        except Tbl_observing_run.DoesNotExist:
+        except models.Tbl_observing_run.DoesNotExist:
             pass
 
     return JsonResponse(data)
