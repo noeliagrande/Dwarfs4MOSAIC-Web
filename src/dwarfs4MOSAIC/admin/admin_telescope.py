@@ -9,10 +9,11 @@ from django.urls import path
 from django.utils.html import format_html
 
 # Local application imports
+from helpers import import_csv_file
 from ..forms import TelescopeAdminForm
 from ..forms.form_import_csv import CsvImportForm
 from ..models import Tbl_telescope, Tbl_observatory
-from ..utils import import_csv_file
+
 
 # Process each row of the CSV when importing telescopes
 def process_telescope_row(row, idx, errors):

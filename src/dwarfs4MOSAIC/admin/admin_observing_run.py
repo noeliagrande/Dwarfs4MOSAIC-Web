@@ -8,10 +8,11 @@ from django.db.models.functions import Lower
 from django.urls import path
 
 # Local application imports
+from helpers import import_csv_file
 from ..forms import ObservingRunAdminForm
 from ..forms.form_import_csv import CsvImportForm
 from ..models import Tbl_observing_run, Tbl_instrument, Tbl_researcher
-from ..utils import import_csv_file
+
 
 # Process each row of the CSV when importing observing runs
 def process_observing_run_row(row, idx, errors):
