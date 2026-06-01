@@ -13,7 +13,6 @@ from django.db import models
 # Local application imports
 from ..constants import(
     NAME_MAX_LENGTH,
-    SHORT_DESCRIPTION_MAX_LENGTH,
 )
 from .tbl_observing_run import Tbl_observing_run
 

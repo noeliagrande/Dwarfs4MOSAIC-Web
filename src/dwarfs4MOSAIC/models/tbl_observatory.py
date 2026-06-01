@@ -5,7 +5,6 @@ behaviors for managing astronomical observation data.
 """
 
 # Third-party libraries
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 # Local application imports
