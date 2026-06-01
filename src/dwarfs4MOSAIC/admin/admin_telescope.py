@@ -99,8 +99,14 @@ class TelescopeAdmin(admin.ModelAdmin):
         ("Characteristics", {"fields": [
             "aperture"]}),]
 
+    # CSV import
+    # ----------
+    # CSV import functionality temporarily disabled.
+    # The implementation is preserved for potential future reactivation.
+    # To restore it, uncomment change_list_template line.
+
     # Override the change list template to add the custom "Import CSV" button
-    change_list_template = "admin/dwarfs4MOSAIC/tbl_telescope_changelist.html"
+    # change_list_template = "admin/dwarfs4MOSAIC/tbl_telescope_changelist.html"
 
     # Add a custom URL for CSV import view
     def get_urls(self):

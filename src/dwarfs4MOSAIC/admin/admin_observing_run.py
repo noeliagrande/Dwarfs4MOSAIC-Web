@@ -108,8 +108,14 @@ class ObservingRunAdmin(admin.ModelAdmin):
     # Multi-select widget for researchers
     filter_horizontal = ['researchers']
 
+    # CSV import
+    # ----------
+    # CSV import functionality temporarily disabled.
+    # The implementation is preserved for potential future reactivation.
+    # To restore it, uncomment change_list_template line.
+
     # Override the change list template to add the custom "Import CSV" button
-    change_list_template = "admin/dwarfs4MOSAIC/tbl_observing_run_changelist.html"
+    # change_list_template = "admin/dwarfs4MOSAIC/tbl_observing_run_changelist.html"
 
     # Add a custom URL for CSV import view
     def get_urls(self):
