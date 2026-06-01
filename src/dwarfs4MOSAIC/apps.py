@@ -22,4 +22,4 @@ class Dwarfs4MOSAICConfig(AppConfig):
 
     def ready(self):
         # Import signals to connect model events to handlers
-        from . import signals
+        from . import signals # noqa: F401 (seemingly unused, but imported for side effects)
