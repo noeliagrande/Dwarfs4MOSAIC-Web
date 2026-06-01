@@ -16,12 +16,11 @@ from django.urls import path
 
 # Local application imports
 from . import views
-from .views import *
 
 
 urlpatterns = [
     # Home page - requires login
-    path('home/', home_view, name='home'),
+    path('home/', views.home_view, name='home'),
 
     # Login and logout pages using Django's built-in views
     path('login/', LoginView.as_view(template_name='admin/login.html'), name='login'),
@@ -36,26 +35,26 @@ urlpatterns = [
     # path('reset-password/complete/', auth_views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     # Information page
-    path('info/', login_required(info_view), name='info'),
+    path('info/', login_required(views.info_view), name='info'),
 
     # Database overview page - requires login
-    path('database/', login_required(database_view), name='database'),
+    path('database/', login_required(views.database_view), name='database'),
 
     # Pages showing lists or details of different database tables, all requiring login:
-    path('groups/', login_required(groups_view), name='groups'),
-    path('observatories/', login_required(observatories_view), name='observatories'),
-    path('observatory/<str:observatory_name>/', login_required(observatory_view), name='observatory'),
-    path('telescopes/', login_required(telescopes_view), name='telescopes'),
-    path('telescope/<str:telescope_name>/', login_required(telescope_view), name='telescope'),
-    path('instruments/', login_required(instruments_view), name='instruments'),
-    path('researchers/', login_required(researchers_view), name='researchers'),
-    path('observing_runs/', login_required(observing_runs_view), name='observing_runs'),
-    path('observing_run/<str:observing_run_name>/', login_required(observing_run_view), name='observing_run'),
-    path('observing_blocks/', login_required(observing_blocks_view), name='observing_blocks'),
-    path('target/', login_required(targets_view), name='targets'),
+    path('groups/', login_required(views.groups_view), name='groups'),
+    path('observatories/', login_required(views.observatories_view), name='observatories'),
+    path('observatory/<str:observatory_name>/', login_required(views.observatory_view), name='observatory'),
+    path('telescopes/', login_required(views.telescopes_view), name='telescopes'),
+    path('telescope/<str:telescope_name>/', login_required(views.telescope_view), name='telescope'),
+    path('instruments/', login_required(views.instruments_view), name='instruments'),
+    path('researchers/', login_required(views.researchers_view), name='researchers'),
+    path('observing_runs/', login_required(views.observing_runs_view), name='observing_runs'),
+    path('observing_run/<str:observing_run_name>/', login_required(views.observing_run_view), name='observing_run'),
+    path('observing_blocks/', login_required(views.observing_blocks_view), name='observing_blocks'),
+    path('target/', login_required(views.targets_view), name='targets'),
 
     # File download for a specific target - requires login
-    path('download_files/<int:target_id>/', login_required(download_files_view), name='download_files_view'),
+    path('download_files/<int:target_id>/', login_required(views.download_files_view), name='download_files_view'),
 
 
     path('ajax/get-instrument-choices/', views.ajax_get_instrument_choices, name='ajax_get_instrument_choices'),
