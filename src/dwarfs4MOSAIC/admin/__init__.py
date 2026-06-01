@@ -8,12 +8,6 @@ This allows easy and clean import from `admin.py`.
 
 # Third-party libraries
 from django.contrib import admin
-
-# Set custom header and title for the admin site
-admin.site.site_header = "Dwarfs4MOSAIC Administration" # default: "Django administration"
-admin.site.site_title = "Dwarfs4MOSAIC Admin Portal"
-admin.site.index_title = "dwarfs4MOSAIC Administration" # default: "Site administration"
-
 from . import admin_group
 from . import admin_instrument
 from . import admin_observatory
@@ -24,6 +18,10 @@ from . import admin_target
 from . import admin_telescope
 from . import admin_user
 
+# Set custom header and title for the admin site
+admin.site.site_header = "Dwarfs4MOSAIC Administration" # default: "Django administration"
+admin.site.site_title = "Dwarfs4MOSAIC Admin Portal"
+admin.site.index_title = "dwarfs4MOSAIC Administration" # default: "Site administration"
 
 __all__ = ["admin_group",
            "admin_instrument",
