@@ -1,5 +1,5 @@
 """
-Application version (displayed  in templates and admin footer)
+Application version (displayed in templates and admin footer)
 
 Versioning follows the Semantic Versioning (SemVer) system:
 - MAJOR version: incompatible API changes
@@ -8,4 +8,4 @@ Versioning follows the Semantic Versioning (SemVer) system:
 """
 
 
-__version__ = "v5.0.0 (June 2026)"
+__version__ = "v5.0.1 (July 2026)"

@@ -99,7 +99,7 @@ def home_view(request):
 # Info page showing any information relative to the platform
 
 # Path to the HTML file
-PLATFORM_INFO_PATH = os.path.join(settings.BASE_DIR, 'dwarfs4mosaic', 'platform_info.html')
+PLATFORM_INFO_PATH = os.path.join(settings.BASE_DIR, 'dwarfs4MOSAIC', 'platform_info.html')
 
 def info_view(request):
     # Read current HTML content
