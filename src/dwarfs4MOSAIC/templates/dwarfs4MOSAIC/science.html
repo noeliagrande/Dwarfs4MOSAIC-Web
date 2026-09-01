@@ -1,13 +1,13 @@
 <!--
-    Info Page Template
+    Science Page Template
 
     Purpose:
-    - Display platform information stored in an HTML file.
+    - Display science information stored in an HTML file.
     - Rendered content may include formatting like bold, headings, bullets, and line breaks.
 
     Context:
     - user: current authenticated user (implicit)
-    - content: HTML string read from the platform_info.html file (passed from view)
+    - content: HTML string read from the science.html file (passed from view)
 -->
 
 {# Base template #}
@@ -17,10 +17,10 @@
 {% load custom_tags %}
 
 {# Sets the page title #}
-{% block title %}{% html_title "Information" %}{% endblock %}
+{% block title %}{% html_title "Science" %}{% endblock %}
 
 {# Defines the breadcrumb text for navigation #}
-{% block breadcrumb %} Info {% endblock %}
+{% block breadcrumb %} Science {% endblock %}
 
 {# Render the HTML content safely without escaping it.
    Only do this for trusted content to avoid XSS issues. #}
@@ -28,14 +28,14 @@
 
     <!-- Main heading -->
     <h1>
-        Platform Information
+        Science
         {% if user.is_superuser %}
-            <a href="#edit-info" class="edit-link">(Edit)</a>
+            <a href="#edit-science" class="edit-link">(Edit)</a>
         {% endif %}
     </h1>
     <br>
 
-    <div class="platform-info">
+    <div class="science">
         {{ content|safe }}
     </div>
 
@@ -43,7 +43,7 @@
         <br>
         <hr>
         <br>
-        <h2 id="edit-info">Edit Platform Info (Administrator only)</h2>
+        <h2 id="edit-science">Edit Science Info (Administrator only)</h2>
         <br>
         Enter the text in HTML format.
         <br><br>

@@ -98,7 +98,7 @@ def home_view(request):
 
 # Info page showing any information relative to the platform
 
-# Path to the HTML file
+# Path to the HTML files
 PLATFORM_INFO_PATH = os.path.join(settings.BASE_DIR, 'dwarfs4MOSAIC', 'platform_info.html')
 
 def info_view(request):
@@ -124,6 +124,36 @@ def info_view(request):
 
     # Render page with content and superuser flag
     return render(request, 'dwarfs4MOSAIC/info.html', {
+        'content': content,
+        'is_superuser': request.user.is_superuser
+    })
+
+# Path to the HTML files
+SCIENCE_PATH = os.path.join(settings.BASE_DIR, 'dwarfs4MOSAIC', 'science.html')
+
+def science_view(request):
+    # Read current HTML content
+    try:
+        with open(SCIENCE_PATH, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except FileNotFoundError:
+        content = "<p>No science info available.</p>"
+
+    # Handle editing form submission (only for superuser)
+    if request.method == 'POST' and request.user.is_superuser:
+        new_content = request.POST.get('content', '')
+
+        # Normalize line endings and remove blank lines
+        new_content = re.sub(r'\r\n', '\n', new_content)  # convert Windows newlines to Unix
+        #new_content = re.sub(r'^\s*\n', '', new_content, flags=re.MULTILINE)  # remove blank lines
+
+        with open(SCIENCE_PATH, 'w', encoding='utf-8') as f:
+            f.write(new_content)
+        #messages.success(request, 'Science information updated successfully.')
+        return redirect('science')  # reload page
+
+    # Render page with content and superuser flag
+    return render(request, 'dwarfs4MOSAIC/science.html', {
         'content': content,
         'is_superuser': request.user.is_superuser
     })
