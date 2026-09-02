@@ -7,6 +7,7 @@ from django.contrib import admin
 from django.contrib import messages
 from django.contrib.auth.admin import UserAdmin as DefaultUserAdmin
 from django.contrib.auth.models import User
+from django.db.models import Case, When, Value, IntegerField
 from django.db.models.functions import Lower
 from django.urls import reverse
 
@@ -20,8 +21,17 @@ class CustomUserAdmin(DefaultUserAdmin):
     # Sidebar filters for quick data segmentation in the admin changelist view
     list_filter = ("is_staff", "is_active", "groups")
 
-    # Default ordering in changelist (case-insensitive + fallback)
-    ordering = (Lower("username"),"username")
+    # Default ordering in changelist (case-insensitive + fallback).
+    # First entry is the Administrator
+    ordering = (
+        Case(
+            When(is_superuser=True, then=Value(0)),
+            default=Value(1),
+            output_field=IntegerField(),
+        ),
+        Lower("username"),
+        "username",
+    )
 
     add_form_template = 'admin/auth/user/change_form.html'
 
