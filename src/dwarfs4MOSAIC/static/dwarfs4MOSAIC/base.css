@@ -19,12 +19,29 @@
     --breadcrumbs-color: #264b5d;
 }
 
+/* Page style */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    color: black;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 main {
     padding: 20px var(--left-padding);
+    flex: 1;
 }
 
 .view-explanation {
     font-size: 20px;
+}
+
+.site-footer {
+    text-align: center;
+    padding: 1em;
+    color: #777;
 }
 
 /* Administrator editor layout */
@@ -82,13 +99,6 @@ main {
 a {
     color: var(--link-color);
     text-decoration: none; /* Remove underline from links */
-}
-
-/* Page body style */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: black;
 }
 
 /* Logo container style within the admin toolbar */
