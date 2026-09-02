@@ -8,4 +8,4 @@ Versioning follows the Semantic Versioning (SemVer) system:
 """
 
 
-__version__ = "v5.0.1 (July 2026)"
+__version__ = "v5.1.0 (September 2026)"
