@@ -1,0 +1,145 @@
+<!--
+    Editable Information Page Template
+
+    Purpose:
+    - Display information stored in an HTML file.
+    - Rendered content may include formatting like bold, headings, bullets, and line breaks.
+    - Superusers can enter an editing mode.
+
+    Context:
+    - page_name: name of the page displayed (e.g. "Platform Information" or "Science")
+    - user: current authenticated user (implicit)
+    - content: HTML string read from a .html file (passed from view)
+-->
+
+{# Base template #}
+{% extends 'dwarfs4MOSAIC/base.html' %}
+
+{# Static template tags #}
+{% load static %}
+{% load custom_tags %}
+
+{# Sets the page title #}
+{% block title %}{% html_title page_name %}{% endblock %}
+
+{# Defines the breadcrumb text for navigation #}
+{% block breadcrumb %}
+    {% if user.is_superuser and request.GET.edit == "1" %}
+        <a href="?">{{ page_name }}</a> &gt; Edit
+    {% else %}
+        {{ page_name }}
+    {% endif %}
+{% endblock %}
+
+{# Render the HTML content safely without escaping it.
+Only do this for trusted content to avoid XSS issues. #}
+{% block content %}
+
+    {% if user.is_superuser and request.GET.edit == "1" %}
+
+        <!-- Administrator edit view -->
+
+        <h1 class="html-info-title">Editing '{{ page_name }}'</h1>
+
+        <div class="info-editor-container">
+
+            <!-- Content preview -->
+            <div class="info-preview-column">
+
+                <div id="info-content" class="html-info">
+                    {{ content|safe }}
+                </div>
+
+            </div>
+
+            <!-- Content editor -->
+            <div class="info-edit-column">
+
+                <div class="editor-instruction">
+                    <strong>Editing in HTML:</strong>
+                    enter the content using HTML tags for formatting.
+                </div>
+                <br>
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <textarea id="content-editor"
+                              name="content"
+                              style="width:100%;">{{ content }}</textarea>
+
+                    <script>
+                        const content_editor =
+                            document.getElementById('content-editor');
+
+                        content_editor.style.height =
+                            content_editor.scrollHeight + "px";
+                    </script>
+
+                    <br><br>
+
+                    <button type="button"
+                        id="cancel_button"
+                        style="cursor:pointer; background-color: var(--breadcrumbs-color); color: white;
+                               padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;"
+                        title="Cancel the changes">
+                            Cancel
+                    </button>
+
+                    <button type="submit"
+                        id="save_button"
+                        style="cursor:pointer; background-color: var(--breadcrumbs-color); color: white;
+                               padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;"
+                        title="Save the changes">
+                            Save
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Live preview -->
+        <script>
+            document.getElementById('content-editor').addEventListener(
+                'input',
+                function() {
+                    const info_content = document.getElementById('info-content');
+                    info_content.innerHTML = this.value;
+                }
+            );
+        </script>
+
+        <!-- Cancel editing -->
+        <script>
+            document.getElementById('cancel_button').addEventListener(
+                'click',
+                function() {
+                    window.location.href = window.location.pathname;
+                }
+            );
+        </script>
+
+    {% else %}
+
+        <!-- Normal view -->
+        {% if user.is_superuser %}
+            <h1 class="html-info-title">
+
+                {{ page_name }}
+                <a href="?edit=1"
+                   class="edit-link"
+                   title="Edit {{ page_name }}"
+                   aria-label="Edit {{ page_name }}">
+                    <img src="{% static 'dwarfs4MOSAIC/icons/pen-to-square-solid.svg' %}"
+                         alt=""
+                         style="width: 30px; vertical-align: -4px;">
+                </a>
+            </h1>
+        {% endif %}
+
+        <div id="info-content" class="html-info">
+            {{ content|safe }}
+        </div>
+
+    {% endif %}
+
+{% endblock %}

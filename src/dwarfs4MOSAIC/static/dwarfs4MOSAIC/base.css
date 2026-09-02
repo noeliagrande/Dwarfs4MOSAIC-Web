@@ -27,19 +27,48 @@ main {
     font-size: 20px;
 }
 
-/* Container for platform information */
-.platform-info {
+/* Administrator editor layout */
+.html-info-title {
+    font-size: 28px;
+    margin-bottom: 40px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--breadcrumbs-color);
+}
+
+.html-info {
     font-size: 18px;
     line-height: 1.5;
 }
 
-.platform-info h1, .platform-info h2 {
+.html-info h1, .html-info h2 {
     font-weight: bold;
 }
 
-.platform-info ul {
+.html-info ul {
     margin-left: 20px;
     list-style-type: disc;
+}
+
+.info-editor-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: start;
+}
+
+.info-preview-column {
+    min-width: 0;
+}
+
+.info-edit-column {
+    min-width: 0;
+    padding-left: 40px;
+    border-left: 1px solid var(--breadcrumbs-color);
+}
+
+.info-edit-column textarea {
+    box-sizing: border-box;
+    resize: vertical;
 }
 
 /* Container with horizontal scrolling enabled */

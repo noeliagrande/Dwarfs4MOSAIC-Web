@@ -96,67 +96,52 @@ def home_view(request):
     # Render the home page template with context
     return render(request, 'dwarfs4MOSAIC/home.html', context)
 
-# Info page showing any information relative to the platform
+# Info pages showing information
+def html_editor_view(request, page_name, file_path, redirect_name):
+    # Read current HTML content
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except FileNotFoundError:
+        content = ""
 
-# Path to the HTML files
-PLATFORM_INFO_PATH = os.path.join(settings.BASE_DIR, 'dwarfs4MOSAIC', 'platform_info.html')
+    # Handle editing form submission (only for superuser)
+    if request.method == 'POST' and request.user.is_superuser:
+        new_content = request.POST.get('content', '')
 
+        # Normalize line endings
+        new_content = re.sub(r'\r\n', '\n', new_content) # convert Windows newlines to Unix
+        # new_content = re.sub(r'^\s*\n', '', new_content, flags=re.MULTILINE)  # remove blank lines
+
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(new_content)
+
+        return redirect(redirect_name)
+
+    # Render page with content and superuser flag
+    return render(request, 'dwarfs4MOSAIC/html_editor.html', {
+        'page_name': page_name,
+        'content': content,
+        'is_superuser': request.user.is_superuser
+    })
+
+# Page for platform information
 def info_view(request):
-    # Read current HTML content
-    try:
-        with open(PLATFORM_INFO_PATH, 'r', encoding='utf-8') as f:
-            content = f.read()
-    except FileNotFoundError:
-        content = "<p>No platform info available.</p>"
+    return html_editor_view(
+        request,
+        "Platform Information",
+        os.path.join(settings.BASE_DIR, 'dwarfs4MOSAIC', 'platform_info.html'),
+        "info"
+    )
 
-    # Handle editing form submission (only for superuser)
-    if request.method == 'POST' and request.user.is_superuser:
-        new_content = request.POST.get('content', '')
-
-        # Normalize line endings and remove blank lines
-        new_content = re.sub(r'\r\n', '\n', new_content)  # convert Windows newlines to Unix
-        #new_content = re.sub(r'^\s*\n', '', new_content, flags=re.MULTILINE)  # remove blank lines
-
-        with open(PLATFORM_INFO_PATH, 'w', encoding='utf-8') as f:
-            f.write(new_content)
-        #messages.success(request, 'Platform information updated successfully.')
-        return redirect('info')  # reload page
-
-    # Render page with content and superuser flag
-    return render(request, 'dwarfs4MOSAIC/info.html', {
-        'content': content,
-        'is_superuser': request.user.is_superuser
-    })
-
-# Path to the HTML files
-SCIENCE_PATH = os.path.join(settings.BASE_DIR, 'dwarfs4MOSAIC', 'science.html')
-
+# Page for science information
 def science_view(request):
-    # Read current HTML content
-    try:
-        with open(SCIENCE_PATH, 'r', encoding='utf-8') as f:
-            content = f.read()
-    except FileNotFoundError:
-        content = "<p>No science info available.</p>"
-
-    # Handle editing form submission (only for superuser)
-    if request.method == 'POST' and request.user.is_superuser:
-        new_content = request.POST.get('content', '')
-
-        # Normalize line endings and remove blank lines
-        new_content = re.sub(r'\r\n', '\n', new_content)  # convert Windows newlines to Unix
-        #new_content = re.sub(r'^\s*\n', '', new_content, flags=re.MULTILINE)  # remove blank lines
-
-        with open(SCIENCE_PATH, 'w', encoding='utf-8') as f:
-            f.write(new_content)
-        #messages.success(request, 'Science information updated successfully.')
-        return redirect('science')  # reload page
-
-    # Render page with content and superuser flag
-    return render(request, 'dwarfs4MOSAIC/science.html', {
-        'content': content,
-        'is_superuser': request.user.is_superuser
-    })
+    return html_editor_view(
+        request,
+        "Science",
+        os.path.join(settings.BASE_DIR, 'dwarfs4MOSAIC', 'science.html'),
+        "science"
+    )
 
 # Render static database overview page
 def database_view(request):
